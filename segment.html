@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Segment & Route</title>
+
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: #f4f6f9;
+        color: #1a1a1a;
+      }
+
+      .hidden {
+        display: none;
+      }
+
+      /* ===== Header ===== */
+      .header {
+        background: linear-gradient(135deg, #1a7f4f, #2ba572);
+        color: white;
+        padding: 18px 32px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .header h2 {
+        font-size: 22px;
+        font-weight: 700;
+      }
+
+      .header button {
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: 600;
+      }
+
+      /* ===== Layout ===== */
+      .container {
+        max-width: 1200px;
+        margin: auto;
+        padding: 24px 16px;
+      }
+
+      pre {
+        background: #eef1f4;
+        padding: 20px;
+        border-radius: 8px;
+      }
+
+      /* ===== Cards ===== */
+      .section {
+        background: white;
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 24px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+      }
+
+      .section h3 {
+        font-size: 16px;
+        font-weight: 700;
+        margin-bottom: 14px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid #2ba572;
+      }
+
+      /* ===== Shipment Info ===== */
+      .info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 14px;
+      }
+
+      .info-row {
+        background: #f8f9fa;
+        border-left: 4px solid #2ba572;
+        border-radius: 8px;
+        padding: 10px;
+        font-size: 14px;
+      }
+
+      .info-row b {
+        display: block;
+        font-size: 12px;
+        color: #666;
+        margin-bottom: 4px;
+      }
+
+      .status-badge {
+        display: inline-block;
+        padding: 4px 10px;
+        border-radius: 6px;
+        font-size: 12px;
+        font-weight: 700;
+        background: #fff3cd;
+        color: #856404;
+      }
+
+      /* ===== Items ===== */
+      .items-list ul {
+        list-style: none;
+        margin-top: 10px;
+      }
+
+      .items-list li {
+        padding: 10px;
+        background: #f8f9fa;
+        border-left: 4px solid #2ba572;
+        border-radius: 6px;
+        margin-bottom: 8px;
+        font-size: 14px;
+      }
+
+      /* ===== Segment Cards ===== */
+      .segment-card {
+        border: 1px solid #dfe6ec;
+        border-radius: 12px;
+        padding: 18px;
+        margin-bottom: 20px;
+        background: #fbfdff;
+      }
+
+      .segment-card h4 {
+        font-size: 15px;
+        font-weight: 700;
+        color: #1a7f4f;
+        margin-bottom: 12px;
+      }
+
+      .segment-items {
+        background: #ffffff;
+        border-radius: 8px;
+        padding: 12px;
+        margin-bottom: 12px;
+        border: 1px dashed #dfe6ec;
+      }
+
+      .segment-item {
+        display: grid;
+        grid-template-columns: 2fr 1fr auto;
+        gap: 10px;
+        margin-bottom: 10px;
+        align-items: center;
+      }
+
+      .segment-item:last-child {
+        margin-bottom: 0;
+      }
+
+      select,
+      input,
+      textarea {
+        width: 100%;
+        padding: 8px 10px;
+        border-radius: 6px;
+        border: 1px solid #dfe6ec;
+        font-size: 13px;
+      }
+
+      select:focus,
+      input:focus,
+      textarea:focus {
+        outline: none;
+        border-color: #2ba572;
+      }
+
+      .segment-item button {
+        background: #e74c3c;
+        color: white;
+        border: none;
+        padding: 8px 12px;
+        border-radius: 6px;
+        cursor: pointer;
+      }
+
+      /* ===== Buttons ===== */
+      .btn-add-item {
+        background: #2ba572;
+        color: white;
+        border: none;
+        padding: 8px 14px;
+        border-radius: 6px;
+        margin-top: 10px;
+        cursor: pointer;
+        font-size: 13px;
+      }
+
+      .btn-add-segment {
+        background: #3498db;
+        color: white;
+        border: none;
+        padding: 10px 16px;
+        border-radius: 8px;
+        font-size: 14px;
+        cursor: pointer;
+      }
+
+      .actions {
+        display: flex;
+        gap: 12px;
+        margin-top: 20px;
+      }
+
+      .btn-submit {
+        background: #2ba572;
+        color: white;
+        border: none;
+        padding: 12px 24px;
+        border-radius: 8px;
+        font-size: 15px;
+        cursor: pointer;
+      }
+
+      .btn-cancel {
+        background: #e74c3c;
+        color: white;
+        border: none;
+        padding: 12px 24px;
+        border-radius: 8px;
+        font-size: 15px;
+        cursor: pointer;
+      }
+
+      /* ===== Success ===== */
+      .success-message {
+        background: #d4edda;
+        color: #155724;
+        padding: 16px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        border-left: 4px solid #28a745;
+        font-weight: 600;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="header">
+      <h2 id="title">Segment & Route</h2>
+      <button onclick="goBack()">⬅ Back</button>
+    </div>
+
+    <div class="container">
+      <pre id="loading">Loading...</pre>
+
+      <div id="content" class="hidden">
+        <!-- SHIPMENT SUMMARY -->
+        <div class="section">
+          <h3>Shipment Details</h3>
+          <div class="info-grid">
+            <div class="info-row">
+              <b>Shipment No</b>
+              <span id="shipmentNumber"></span>
+            </div>
+            <div class="info-row">
+              <b>Status</b>
+              <span id="status" class="status-badge"></span>
+            </div>
+            <div class="info-row">
+              <b>Total KG</b>
+              <span id="totalKg"></span>
+            </div>
+            <div class="info-row">
+              <b>Trader</b>
+              <span id="traderName"></span>
+            </div>
+          </div>
+
+          <div class="items-list" style="margin-top:16px">
+            <h4>Current Items</h4>
+            <ul id="itemsList"></ul>
+          </div>
+        </div>
+
+        <!-- SUCCESS -->
+        <div id="successMessage" class="success-message hidden"></div>
+
+        <!-- SEGMENTS -->
+        <div id="segmentSection" class="section">
+          <h3>📦 Segment & Route</h3>
+
+          <div id="segmentsList"></div>
+
+          <button class="btn-add-segment" onclick="addSegment()">
+            ➕ Add Segment
+          </button>
+
+          <div class="actions">
+            <button class="btn-submit" onclick="submitSegmentation()">
+              ✅ Segment & Route Shipment
+            </button>
+            <button class="btn-cancel" onclick="goBack()">❌ Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+ 
+    <script>
+      const API_BASE =
+        "https://supercycle-api-855015056699.europe-west1.run.app";
+      const token = localStorage.getItem("token");
+      if (!token) location.href = "index.html";
+
+      const shipmentId = new URLSearchParams(location.search).get("id");
+
+      let shipmentData = null;
+      let DOSH_TYPES = [];
+      let VEHICLES = [];
+      let FACTORIES = [];
+      let WAREHOUSES = [];
+      let segments = [];
+
+      /* ================= UTIL ================= */
+      function goBack() {
+        location.href = "shipments.html";
+      }
+
+      /* ================= LOAD DATA ================= */
+      async function loadShipment() {
+        try {
+          const res = await fetch(`${API_BASE}/shipments/${shipmentId}`, {
+            headers: { Authorization: "Bearer " + token },
+          });
+          const json = await res.json();
+          shipmentData = json.data;
+
+          loading.style.display = "none";
+          content.classList.remove("hidden");
+
+          title.innerText = `${shipmentData.shipmentNumber} - Segment & Route`;
+          shipmentNumber.innerText = shipmentData.shipmentNumber;
+
+          const statusEl = document.getElementById("status");
+          statusEl.innerText = shipmentData.status || "Unknown";
+          statusEl.className =
+            "status-badge status-" +
+            (shipmentData.status || "").toLowerCase();
+
+          totalKg.innerText = shipmentData.totalQuantityKg || "0";
+          traderName.innerText =
+            shipmentData.traderId?.bussinessName || "-";
+
+          itemsList.innerHTML = "";
+          if (
+            shipmentData.items &&
+            shipmentData.items.length > 0
+          ) {
+            shipmentData.items.forEach((i) => {
+              itemsList.innerHTML += `<li><b>${i.doshType.name}</b> - ${i.quantityKg} KG</li>`;
+            });
+          } else {
+            itemsList.innerHTML = "<li>No items</li>";
+          }
+        } catch (err) {
+          alert("Error loading shipment: " + err.message);
+        }
+      }
+
+      async function loadDoshTypes() {
+        try {
+          const res = await fetch(`${API_BASE}/dosh/types`);
+          const json = await res.json();
+          DOSH_TYPES = json.data || [];
+        } catch (err) {
+          console.error("Error loading dosh types:", err);
+        }
+      }
+
+      async function loadVehicles() {
+        try {
+          const res = await fetch(
+            `${API_BASE}/admin/vehicles?page=1&limit=100`,
+            {
+              headers: { Authorization: "Bearer " + token },
+            }
+          );
+          const json = await res.json();
+          VEHICLES = json.data?.data || [];
+        } catch (err) {
+          console.error("Error loading vehicles:", err);
+        }
+      }
+
+      async function loadFactories() {
+        try {
+          const res = await fetch(`${API_BASE}/admin/factories`, {
+            headers: { Authorization: "Bearer " + token },
+          });
+          const json = await res.json();
+          FACTORIES = json.data || [];
+        } catch (err) {
+          console.error("Error loading factories:", err);
+        }
+      }
+
+      async function loadWarehouses() {
+        try {
+          const res = await fetch(
+            `${API_BASE}/admin/warehouses`,
+            {
+              headers: { Authorization: "Bearer " + token },
+            }
+          );
+          const json = await res.json();
+          WAREHOUSES = json.data || [];
+        } catch (err) {
+          console.error("Error loading warehouses:", err);
+        }
+      }
+
+      /* ================= SEGMENT MANAGEMENT ================= */
+      function addSegment() {
+        const segmentIndex = segments.length;
+        const segment = {
+          items: [],
+          vehicleId: "",
+          destinationType: "factory",
+          destinationId: "",
+          scheduledFor: "",
+        };
+
+        segments.push(segment);
+        renderSegments();
+      }
+
+      function removeSegment(index) {
+        segments.splice(index, 1);
+        renderSegments();
+      }
+
+      function addSegmentItem(segmentIndex) {
+        if (!segments[segmentIndex]) return;
+
+        const item = {
+          doshType: "",
+          quantityKg: 0,
+        };
+
+        segments[segmentIndex].items.push(item);
+        renderSegments();
+      }
+
+      function removeSegmentItem(segmentIndex, itemIndex) {
+        if (segments[segmentIndex]) {
+          segments[segmentIndex].items.splice(itemIndex, 1);
+          renderSegments();
+        }
+      }
+
+      function updateSegmentItem(segmentIndex, itemIndex, field, value) {
+        if (segments[segmentIndex] && segments[segmentIndex].items[itemIndex]) {
+          segments[segmentIndex].items[itemIndex][field] = value;
+        }
+      }
+
+      function updateSegmentField(segmentIndex, field, value) {
+        if (segments[segmentIndex]) {
+          segments[segmentIndex][field] = value;
+        }
+      }
+
+      function renderSegments() {
+        segmentsList.innerHTML = "";
+
+        segments.forEach((seg, segIndex) => {
+          const div = document.createElement("div");
+          div.className = "segment-card";
+
+          let itemsHtml = `<div class="segment-items">`;
+          seg.items.forEach((item, itemIndex) => {
+            itemsHtml += `
+              <div class="segment-item">
+                <select onchange="updateSegmentItem(${segIndex}, ${itemIndex}, 'doshType', this.value)">
+                  <option value="">-- Select Dosh Type --</option>
+                  ${DOSH_TYPES.map(
+                    (d) =>
+                      `<option value="${d.id}" ${
+                        item.doshType === d.id ? "selected" : ""
+                      }>${d.name}</option>`
+                  ).join("")}
+                </select>
+                <input
+                  type="number"
+                  placeholder="Quantity KG"
+                  min="0"
+                  value="${item.quantityKg}"
+                  onchange="updateSegmentItem(${segIndex}, ${itemIndex}, 'quantityKg', this.value)"
+                />
+                <button onclick="removeSegmentItem(${segIndex}, ${itemIndex})">
+                  🗑 Remove
+                </button>
+              </div>
+            `;
+          });
+          itemsHtml += `</div>`;
+
+          itemsHtml += `
+            <button class="btn-add-item" onclick="addSegmentItem(${segIndex})">
+              ➕ Add Item
+            </button>
+          `;
+
+          div.innerHTML = `
+            <h4>Segment ${segIndex + 1}</h4>
+
+            <label><b>Items</b></label>
+            ${itemsHtml}
+
+            <div class="form-group">
+              <label><b>Vehicle</b></label>
+              <select onchange="updateSegmentField(${segIndex}, 'vehicleId', this.value)">
+                <option value="">-- Select Vehicle --</option>
+                ${VEHICLES.map(
+                  (v) =>
+                    `<option value="${v.id}" ${
+                      seg.vehicleId === v.id ? "selected" : ""
+                    }>${v.vehicleType} - ${v.licensePlate} | ${v.driver.name} | ${v.maxLoadKg} KG</option>`
+                ).join("")}
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label><b>Destination Type</b></label>
+              <select onchange="updateSegmentField(${segIndex}, 'destinationType', this.value); renderSegments();">
+                <option value="factory" ${seg.destinationType === "factory" ? "selected" : ""}>Factory</option>
+                <option value="warehouse" ${seg.destinationType === "warehouse" ? "selected" : ""}>Warehouse</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label><b>Destination</b></label>
+              <select onchange="updateSegmentField(${segIndex}, 'destinationId', this.value)">
+                <option value="">-- Select Destination --</option>
+                ${(seg.destinationType === "factory" ? FACTORIES : WAREHOUSES)
+                  .map(
+                    (d) =>
+                      `<option value="${d._id}" ${
+                        seg.destinationId === d._id ? "selected" : ""
+                      }>${d.name || d.warehouseName}</option>`
+                  )
+                  .join("")}
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label><b>Scheduled For (Optional)</b></label>
+              <input
+                type="datetime-local"
+                value="${seg.scheduledFor}"
+                onchange="updateSegmentField(${segIndex}, 'scheduledFor', this.value)"
+              />
+            </div>
+
+            <button onclick="removeSegment(${segIndex})" style="background: #dc3545; color: white;">
+              ❌ Remove Segment
+            </button>
+          `;
+
+          segmentsList.appendChild(div);
+        });
+      }
+
+      /* ================= SUBMIT ================= */
+      function submitSegmentation() {
+        if (segments.length === 0) {
+          alert("❌ يجب إضافة قطاع واحد على الأقل");
+          return;
+        }
+
+        // Validation
+        for (let i = 0; i < segments.length; i++) {
+          const seg = segments[i];
+
+          if (!seg.items || seg.items.length === 0) {
+            alert(`❌ القطاع ${i + 1}: يجب إضافة عنصر واحد على الأقل`);
+            return;
+          }
+
+          for (let j = 0; j < seg.items.length; j++) {
+            const item = seg.items[j];
+            if (!item.doshType) {
+              alert(
+                `❌ القطاع ${i + 1} العنصر ${j + 1}: اختر نوع الدوش`
+              );
+              return;
+            }
+            if (!item.quantityKg || item.quantityKg <= 0) {
+              alert(
+                `❌ القطاع ${i + 1} العنصر ${j + 1}: أدخل وزن صحيح`
+              );
+              return;
+            }
+          }
+
+          if (!seg.vehicleId) {
+            alert(`❌ القطاع ${i + 1}: اختر عربية`);
+            return;
+          }
+
+          if (!seg.destinationId) {
+            alert(`❌ القطاع ${i + 1}: اختر وجهة`);
+            return;
+          }
+        }
+
+        safePatch(segments);
+      }
+
+      async function safePatch(segs) {
+        try {
+          const payload = {
+            segments: segs.map((s) => ({
+              items: s.items,
+              vehicleId: s.vehicleId,
+              destinationType: s.destinationType,
+              destinationId: s.destinationId,
+              scheduledFor: s.scheduledFor
+                ? new Date(s.scheduledFor).toISOString()
+                : undefined,
+            })),
+          };
+
+          const res = await fetch(
+            `${API_BASE}/admin/shipments/${shipmentId}/segment-and-route`,
+            {
+              method: "PATCH",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: "Bearer " + token,
+              },
+              body: JSON.stringify(payload),
+            }
+          );
+
+          const json = await res.json();
+          if (!res.ok) {
+            alert(json.message || "Failed to segment shipment");
+            return;
+          }
+
+          segmentSection.classList.add("hidden");
+          successMessage.innerText =
+            "✅ تم تقسيم الشحنة والتوجيه بنجاح";
+          successMessage.classList.remove("hidden");
+
+          setTimeout(() => {
+            goBack();
+          }, 2000);
+        } catch (err) {
+          alert("Error: " + err.message);
+        }
+      }
+
+      /* ================= INIT ================= */
+      loadShipment();
+      loadDoshTypes();
+      loadVehicles();
+      loadFactories();
+      loadWarehouses();
+    </script>
+  </body>
+</html>
