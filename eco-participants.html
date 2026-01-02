@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Eco Participants – SuperCycle</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background: #f4f6f9;
+      color: #1a1a1a;
+    }
+
+    .header {
+      background: linear-gradient(135deg, #1a7f4f, #2ba572);
+      color: white;
+      padding: 18px 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .back-btn {
+      background: rgba(255,255,255,0.2);
+      border: none;
+      color: white;
+      padding: 8px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .container {
+      max-width: 1300px;
+      margin: auto;
+      padding: 32px 16px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+    }
+
+    th, td {
+      padding: 14px 16px;
+      border-bottom: 1px solid #e6ebf0;
+      font-size: 13px;
+    }
+
+    th {
+      background: #f0f3f6;
+      font-weight: 700;
+      font-size: 12px;
+      text-transform: uppercase;
+    }
+
+    .eco-btn {
+      background: #2ba572;
+      color: white;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 999;
+    }
+
+    .modal-content {
+      background: white;
+      padding: 24px;
+      border-radius: 12px;
+      width: 400px;
+      text-align: center;
+    }
+
+    .btn-confirm {
+      background: #2ba572;
+      color: white;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 6px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .btn-cancel {
+      background: #ddd;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="header">
+  <h1>🌱 Eco Participants</h1>
+  <button class="back-btn" onclick="goBack()">← Dashboard</button>
+</div>
+
+<div class="container">
+  <table>
+    <thead>
+      <tr>
+        <th>Business</th>
+        <th>Manager</th>
+        <th>Phone</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody id="rows"></tbody>
+  </table>
+</div>
+
+<div class="modal" id="confirmModal">
+  <div class="modal-content">
+    <h3>Convert to Eco Participant?</h3>
+    <p id="modalText"></p>
+    <br />
+    <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+    <button class="btn-confirm" onclick="confirmEco()">Confirm</button>
+  </div>
+</div>
+
+<script>
+  const API_BASE = "http://localhost:4000";
+  const token = localStorage.getItem("token");
+  if (!token) location.href = "index.html";
+
+  let data = [];
+  let selectedUserId = null;
+
+  function goBack() {
+    location.href = "dashboard.html";
+  }
+
+  async function loadData() {
+    const res = await fetch(`${API_BASE}/admin/traders/not-eco-participants`, {
+      headers: {
+        Authorization: "Bearer " + token
+      }
+    });
+
+    const json = await res.json();
+    data = json.data?.data || [];
+    render();
+  }
+
+  function render() {
+    const rows = document.getElementById("rows");
+    rows.innerHTML = "";
+
+    data.forEach(d => {
+      rows.innerHTML += `
+        <tr>
+          <td><b>${d.bussinessName || "-"}</b></td>
+          <td>${d.doshMangerName || "-"}</td>
+          <td>${d.doshMangerPhone || "-"}</td>
+          <td>
+            <button class="eco-btn"
+              onclick="openModal('${d.userId}', '${d.bussinessName || ""}')">
+              Convert
+            </button>
+          </td>
+        </tr>
+      `;
+    });
+  }
+
+  function openModal(userId, name) {
+    selectedUserId = userId;
+    document.getElementById("modalText").innerText =
+      `Convert "${name}" to Eco participant?`;
+    document.getElementById("confirmModal").style.display = "flex";
+  }
+
+  function closeModal() {
+    selectedUserId = null;
+    document.getElementById("confirmModal").style.display = "none";
+  }
+
+  // ✅ FIXED FUNCTION (BODY + CONTENT-TYPE)
+  async function confirmEco() {
+    if (!selectedUserId) return;
+
+    const res = await fetch(
+      `${API_BASE}/admin/eco/participants/${selectedUserId}`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + token
+        },
+        body: JSON.stringify({
+          isEcoParticipant: true,
+          ecoNotes: "تم إضافته للنظام البيئي بواسطة الأدمن"
+        })
+      }
+    );
+
+    if (!res.ok) {
+      const err = await res.json();
+      alert(err.message || "Failed to convert trader");
+      return;
+    }
+
+    closeModal();
+    loadData();
+  }
+
+  loadData();
+</script>
+
+</body>
+</html>

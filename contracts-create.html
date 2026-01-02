@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8" />
+  <title>SuperCycle – Create Contracted Trader</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "Segoe UI", Tahoma, sans-serif;
+      background: #f5f7fa;
+      color: #1a1a1a;
+    }
+
+    .header {
+      background: linear-gradient(135deg, #1a7f4f, #2ba572);
+      color: white;
+      padding: 20px 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .header h1 {
+      font-size: 22px;
+      font-weight: 700;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: auto;
+      padding: 30px 20px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 24px;
+      box-shadow: 0 2px 8px rgba(0,0,0,.06);
+    }
+
+    h3 {
+      margin-bottom: 16px;
+      border-bottom: 2px solid #2ba572;
+      padding-bottom: 8px;
+    }
+
+    label {
+      font-weight: 600;
+      margin-top: 12px;
+      display: block;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 10px;
+      margin-top: 6px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+    }
+
+    .branch {
+      border: 1px dashed #ccc;
+      padding: 16px;
+      border-radius: 10px;
+      margin-top: 16px;
+    }
+
+    button {
+      padding: 10px 18px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .add {
+      background: #3498db;
+      color: white;
+      margin-top: 10px;
+    }
+
+    .remove {
+      background: #e74c3c;
+      color: white;
+      margin-top: 10px;
+    }
+
+    .submit {
+      background: #2ba572;
+      color: white;
+      font-size: 16px;
+      margin-top: 20px;
+      width: 100%;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="header">
+  <h1>📄 Create Contracted Trader</h1>
+  <button onclick="goBack()">⬅ Back</button>
+</div>
+
+<div class="container">
+
+  <!-- BASIC INFO -->
+  <div class="card">
+    <h3>Trader Info</h3>
+    <div class="grid">
+      <input id="email" placeholder="Email" />
+      <input id="phone" placeholder="Phone" />
+      <input id="password" placeholder="Password" type="password" />
+      <input id="bussinessName" placeholder="Business Name" />
+      <input id="rawBusinessType" placeholder="Business Type" />
+      <input id="bussinessAdress" placeholder="Business Address" />
+      <input id="doshMangerName" placeholder="Dosh Manager Name" />
+      <input id="doshMangerPhone" placeholder="Dosh Manager Phone" />
+    </div>
+  </div>
+
+  <!-- CONTRACT -->
+  <div class="card">
+    <h3>Contract</h3>
+    <div class="grid">
+      <input id="startDate" type="date" />
+      <input id="endDate" type="date" />
+
+      <select id="paymentMethod">
+        <option value="monthly">Monthly</option>
+        <option value="per_shipment">Per Shipment</option>
+      </select>
+
+      <!-- ✅ FIXED DAY DROPDOWN -->
+      <select id="fixedShipmentDay">
+        <option value="">-- Fixed Shipment Day --</option>
+        <option value="0">Sunday</option>
+        <option value="1">Monday</option>
+        <option value="2">Tuesday</option>
+        <option value="3">Wednesday</option>
+        <option value="4">Thursday</option>
+        <option value="5">Friday</option>
+        <option value="6">Saturday</option>
+      </select>
+
+      <input
+        id="estimatedquantityPerShipment"
+        placeholder="Estimated Qty / Shipment"
+        type="number"
+      />
+    </div>
+  </div>
+
+  <!-- BRANCHES -->
+  <div class="card">
+    <h3>Branches </h3>
+    <div id="branches"></div>
+    <button class="add" onclick="addBranch()">➕ Add Branch</button>
+  </div>
+
+  <button class="submit" onclick="submitForm()">
+    ✅ Create Contracted Trader
+  </button>
+
+</div>
+
+<script>
+  const API_BASE = "https://supercycle-api-855015056699.europe-west1.run.app";
+  const token = localStorage.getItem("token");
+  let DOSH_TYPES = [];
+
+  if (!token) location.href = "index.html";
+
+  function goBack() {
+    location.href = "dashboard.html";
+  }
+
+  async function loadDoshTypes() {
+    const res = await fetch(`${API_BASE}/dosh/types`);
+    const json = await res.json();
+    DOSH_TYPES = json.data || [];
+  }
+
+  function addBranch() {
+    const div = document.createElement("div");
+    div.className = "branch";
+
+    div.innerHTML = `
+      <input placeholder="Branch Name" class="branchName"/>
+      <input placeholder="Address" class="address"/>
+      <input placeholder="Contact Name" class="contactName"/>
+      <input placeholder="Contact Phone" class="contactPhone"/>
+      <input type="number" placeholder="Estimated Qty / Shipment" class="estimatedQuantityPerShipment"/>
+      <input placeholder="Shipment Days (comma e.g. 2,5)" class="shipmentDays"/>
+
+      <select class="scheduleType">
+        <option value="weekly">Weekly</option>
+        <option value="biweekly">Biweekly</option>
+      </select>
+
+      <select class="doshTypeId">
+        <option value="">-- Select Dosh Type --</option>
+        ${DOSH_TYPES.map(d => `<option value="${d.id}">${d.name}</option>`).join("")}
+      </select>
+
+      <input placeholder="Custom Dates (YYYY-MM-DD, comma)" class="customDates"/>
+      <button class="remove" onclick="this.parentElement.remove()">❌ Remove</button>
+    `;
+
+    document.getElementById("branches").appendChild(div);
+  }
+
+  async function submitForm() {
+    const fixedDayValue =
+      document.getElementById("fixedShipmentDay").value;
+
+    const branches = [...document.querySelectorAll(".branch")].map(b => ({
+      branchName: b.querySelector(".branchName").value,
+      address: b.querySelector(".address").value,
+      contactName: b.querySelector(".contactName").value,
+      contactPhone: b.querySelector(".contactPhone").value,
+      estimatedQuantityPerShipment: Number(
+        b.querySelector(".estimatedQuantityPerShipment").value
+      ),
+      shipmentDays: b.querySelector(".shipmentDays").value
+        ? b.querySelector(".shipmentDays").value.split(",").map(Number)
+        : [],
+      scheduleType: b.querySelector(".scheduleType").value,
+      doshTypeId: b.querySelector(".doshTypeId").value,
+      customDates: b.querySelector(".customDates").value
+        ? b.querySelector(".customDates").value.split(",")
+        : []
+    }));
+
+    const body = {
+      email: email.value,
+      phone: phone.value,
+      password: password.value,
+      bussinessName: bussinessName.value,
+      rawBusinessType: rawBusinessType.value,
+      bussinessAdress: bussinessAdress.value,
+      doshMangerName: doshMangerName.value,
+      doshMangerPhone: doshMangerPhone.value,
+      contract: {
+        startDate: startDate.value,
+        endDate: endDate.value,
+        paymentMethod: paymentMethod.value,
+        fixedShipmentDays:
+          fixedDayValue !== "" ? [Number(fixedDayValue)] : [],
+        estimatedquantityPerShipment: Number(
+          estimatedquantityPerShipment.value
+        ),
+        branches: branches.length ? branches : undefined
+      }
+    };
+
+    const res = await fetch(`${API_BASE}/admin/traders/contracted`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + token
+      },
+      body: JSON.stringify(body)
+    });
+
+    const json = await res.json();
+    if (!res.ok) return alert(json.message || "Failed");
+
+    alert("✅ Contracted Trader Created Successfully");
+    location.href = "dashboard.html";
+  }
+
+  loadDoshTypes();
+</script>
+
+</body>
+</html>

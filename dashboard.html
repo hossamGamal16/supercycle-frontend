@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>SuperCycle – Admin Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --primary: #1a7f4f;
+      --primary-light: #2ba572;
+      --primary-lighter: #4db895;
+      --primary-dark: #155d3b;
+      --success: #08783b;
+      --success-light: #d4f4e1;
+      --warning: #d97706;
+      --warning-light: #fef3c7;
+      --danger: #c5192d;
+      --danger-light: #fee2e2;
+      --gray-900: #0f172a;
+      --gray-700: #374151;
+      --gray-600: #4b5563;
+      --gray-500: #6b7280;
+      --gray-200: #e5e7eb;
+      --gray-100: #f3f4f6;
+      --white: #ffffff;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+        "Ubuntu", "Cantarell", sans-serif;
+      background: var(--gray-100);
+      color: var(--gray-900);
+      line-height: 1.5;
+    }
+
+    /* ===== Header ===== */
+    .header {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 50%, var(--primary) 100%);
+      color: var(--white);
+      padding: 24px 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 4px 16px rgba(26, 127, 79, 0.15);
+    }
+
+    .header h1 {
+      font-size: 24px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      letter-spacing: -0.5px;
+    }
+
+    .logout-btn {
+      background: rgba(255, 255, 255, 0.2);
+      color: var(--white);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      padding: 10px 18px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 14px;
+      transition: all 0.2s ease;
+    }
+
+    .logout-btn:hover {
+      background: rgba(255, 255, 255, 0.3);
+      border-color: rgba(255, 255, 255, 0.5);
+    }
+
+    /* ===== Layout ===== */
+    .container {
+      max-width: 1360px;
+      margin: auto;
+      padding: 40px 32px;
+    }
+
+    .section {
+      margin-bottom: 52px;
+    }
+
+    .section h2 {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 28px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--gray-900);
+      letter-spacing: -0.3px;
+    }
+
+    /* ===== Cards Grid ===== */
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 28px;
+    }
+
+    /* ===== Card Base Styles ===== */
+    .card {
+      background: var(--white);
+      border: none;
+      border-radius: 14px;
+      padding: 0;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      min-height: 260px;
+    }
+
+    .card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
+    }
+
+    /* Card Header with Icon */
+    .card-header {
+      padding: 32px 28px 24px;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      position: relative;
+    }
+
+    .card-icon {
+      font-size: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 70px;
+      height: 70px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.5);
+      filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+    }
+
+    .badge {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: var(--danger);
+      color: var(--white);
+      border-radius: 20px;
+      padding: 6px 14px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+      min-width: 36px;
+      text-align: center;
+      box-shadow: 0 2px 8px rgba(197, 25, 45, 0.3);
+    }
+
+    /* Card Body */
+    .card-body {
+      padding: 0 28px 28px;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .card h3 {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: var(--gray-900);
+    }
+
+    .card p {
+      font-size: 14px;
+      color: var(--gray-600);
+      line-height: 1.6;
+      margin-bottom: 0;
+    }
+
+    /* ===== Operations Cards (Orange) ===== */
+    .card.operations {
+      background: linear-gradient(135deg, #fff8f0 0%, #fffbf7 100%);
+    }
+
+    .card.operations .card-header {
+      background: linear-gradient(135deg, #f39c12 0%, #e8860f 100%);
+      color: var(--white);
+    }
+
+    .card.operations .card-icon {
+      background: rgba(255, 255, 255, 0.25);
+    }
+
+    .card.operations h3 {
+      color: #d97706;
+    }
+
+    .card.operations:hover {
+      background: linear-gradient(135deg, #fff5e6 0%, #fffdf5 100%);
+    }
+
+    /* ===== Eco Cards (Green) ===== */
+    .card.eco {
+      background: linear-gradient(135deg, #f0fdf4 0%, #f7fcf5 100%);
+    }
+
+    .card.eco .card-header {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+      color: var(--white);
+    }
+
+    .card.eco .card-icon {
+      background: rgba(255, 255, 255, 0.25);
+    }
+
+    .card.eco h3 {
+      color: var(--primary-dark);
+    }
+
+    .card.eco:hover {
+      background: linear-gradient(135deg, #f5fef5 0%, #fafdfa 100%);
+    }
+
+    /* ===== Accounts Cards (Blue) ===== */
+    .card.accounts {
+      background: linear-gradient(135deg, #eff6ff 0%, #f7fafc 100%);
+    }
+
+    .card.accounts .card-header {
+      background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+      color: var(--white);
+    }
+
+    .card.accounts .card-icon {
+      background: rgba(255, 255, 255, 0.25);
+    }
+
+    .card.accounts h3 {
+      color: #2c3e50;
+    }
+
+    .card.accounts:hover {
+      background: linear-gradient(135deg, #f0f8ff 0%, #f5f9ff 100%);
+    }
+
+    /* ===== Responsive ===== */
+    @media (max-width: 768px) {
+      .header {
+        padding: 20px 20px;
+        flex-direction: column;
+        gap: 12px;
+        text-align: center;
+      }
+
+      .header h1 {
+        justify-content: center;
+        font-size: 20px;
+      }
+
+      .container {
+        padding: 32px 20px;
+      }
+
+      .cards {
+        grid-template-columns: 1fr;
+        gap: 24px;
+      }
+
+      .section h2 {
+        justify-content: center;
+        margin-bottom: 24px;
+      }
+
+      .card {
+        min-height: 240px;
+      }
+
+      .card-header {
+        padding: 28px 24px 20px;
+      }
+
+      .card-icon {
+        width: 60px;
+        height: 60px;
+        font-size: 40px;
+      }
+
+      .card-body {
+        padding: 0 24px 24px;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .header h1 {
+        font-size: 18px;
+      }
+
+      .card-header {
+        padding: 24px 20px 16px;
+      }
+
+      .card-body {
+        padding: 0 20px 20px;
+      }
+
+      .card h3 {
+        font-size: 16px;
+      }
+
+      .card p {
+        font-size: 13px;
+      }
+
+      .card-icon {
+        width: 52px;
+        height: 52px;
+        font-size: 32px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ===== Header ===== -->
+  <div class="header">
+    <h1><span>♻️</span>SuperCycle – Admin Dashboard</h1>
+    <button class="logout-btn" onclick="logout()">Logout</button>
+  </div>
+
+  <div class="container">
+
+    <!-- ===== OPERATIONS ===== -->
+    <div class="section">
+      <h2>📦 Operations</h2>
+      <div class="cards">
+
+        <div class="card operations" onclick="go('shipments.html?type=approval')">
+          <div class="card-header">
+            <div class="card-icon">📋</div>
+            <span class="badge" id="pendingApprovalCount">–</span>
+          </div>
+          <div class="card-body">
+            <div>
+              <h3>Pending Approvals</h3>
+              <p>Review and approve shipments waiting for admin verification</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="card operations" onclick="go('shipments.html?type=segmentation')">
+          <div class="card-header">
+            <div class="card-icon">🔀</div>
+            <span class="badge" id="pendingSegmentationCount">–</span>
+          </div>
+          <div class="card-body">
+            <div>
+              <h3>Pending Segmentation</h3>
+              <p>Route and segment shipments for optimal logistics planning</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ===== ECO PROGRAM ===== -->
+    <div class="section">
+      <h2>🌱 Eco Program</h2>
+      <div class="cards">
+
+        <div class="card eco" onclick="go('eco-participants.html')">
+          <div class="card-header">
+            <div class="card-icon">👥</div>
+          </div>
+          <div class="card-body">
+            <div>
+              <h3>Eco Participants</h3>
+              <p>Enroll and manage environmental program participants</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="card eco" onclick="go('eco-redeems.html')">
+          <div class="card-header">
+            <div class="card-icon">🎁</div>
+            <span class="badge" id="ecoRedeemCount">–</span>
+          </div>
+          <div class="card-body">
+            <div>
+              <h3>Redemption Requests</h3>
+              <p>Process approvals and track environmental impact metrics</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ===== ACCOUNTS ===== -->
+    <div class="section">
+      <h2>👤 Accounts</h2>
+      <div class="cards">
+
+        <div class="card accounts" onclick="go('representatives-create.html')">
+          <div class="card-header">
+            <div class="card-icon">👨‍💼</div>
+          </div>
+          <div class="card-body">
+            <div>
+              <h3>Field Representatives</h3>
+              <p>Create and manage field operations representatives</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="card accounts" onclick="go('contracts-create.html')">
+          <div class="card-header">
+            <div class="card-icon">📄</div>
+          </div>
+          <div class="card-body">
+            <div>
+              <h3>Contracts & Pricing</h3>
+              <p>Establish trader contracts and configure pricing models</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    const API_BASE =
+      "https://supercycle-api-855015056699.europe-west1.run.app";
+
+    const token = localStorage.getItem("token");
+    if (!token) location.href = "index.html";
+
+    function logout() {
+      localStorage.removeItem("token");
+      location.href = "index.html";
+    }
+
+    function go(path) {
+      location.href = path;
+    }
+
+    // OPTIONAL: load counts later
+    async function loadCounts() {
+      // Future endpoint:
+      // GET /admin/dashboard/summary
+      // For now, placeholders
+      document.getElementById("pendingApprovalCount").innerText = "–";
+      document.getElementById("pendingSegmentationCount").innerText = "–";
+      document.getElementById("ecoRedeemCount").innerText = "–";
+    }
+
+    loadCounts();
+  </script>
+
+</body>
+</html>

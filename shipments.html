@@ -4,12 +4,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>SuperCycle - Shipments Management</title>
+
+  <!-- ====== STYLES (زي ما هي) ====== -->
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -44,12 +42,6 @@
       cursor: pointer;
       font-weight: 600;
       font-size: 14px;
-      transition: all 0.3s ease;
-    }
-
-    .logout-btn:hover {
-      background: rgba(255, 255, 255, 0.3);
-      border-color: white;
     }
 
     .container {
@@ -64,11 +56,6 @@
       margin-bottom: 40px;
       overflow: hidden;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-      transition: all 0.3s ease;
-    }
-
-    .section:hover {
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
     }
 
     .section-header {
@@ -89,15 +76,6 @@
       background: #eafaf1;
     }
 
-    .section h2 {
-      font-size: 20px;
-      font-weight: 700;
-      margin: 0;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
     .badge-count {
       background: #e74c3c;
       color: white;
@@ -109,42 +87,27 @@
       justify-content: center;
       font-weight: 700;
       font-size: 16px;
-      box-shadow: 0 4px 12px rgba(231, 76, 60, 0.3);
-    }
-
-    .table-wrapper {
-      overflow-x: auto;
     }
 
     table {
       width: 100%;
       border-collapse: collapse;
-      margin: 0;
     }
 
-    thead tr {
-      background: #f8f9fa;
-      border-bottom: 2px solid #e8ecf1;
+    th, td {
+      padding: 16px 20px;
+      border-bottom: 1px solid #e8ecf1;
+      font-size: 13px;
     }
 
     th {
-      padding: 16px 20px;
-      text-align: left;
+      background: #f8f9fa;
       font-weight: 700;
-      color: #555;
-      font-size: 13px;
       text-transform: uppercase;
-      letter-spacing: 0.4px;
-    }
-
-    td {
-      padding: 16px 20px;
-      border-bottom: 1px solid #e8ecf1;
     }
 
     tr.clickable {
       cursor: pointer;
-      transition: background 0.2s ease;
     }
 
     tr.clickable:hover {
@@ -155,27 +118,11 @@
       display: inline-block;
       padding: 6px 12px;
       border-radius: 6px;
-      font-weight: 600;
       font-size: 12px;
-      text-transform: uppercase;
-      letter-spacing: 0.3px;
+      font-weight: 600;
     }
 
-    .status-pending {
-      background: #fff3cd;
-      color: #856404;
-    }
-
-    .status-approved {
-      background: #d4edda;
-      color: #155724;
-    }
-
-    .status-routed {
-      background: #d1ecf1;
-      color: #0c5460;
-    }
-
+    .status-pending,
     .status-pending_admin_review {
       background: #fff3cd;
       color: #856404;
@@ -183,223 +130,156 @@
 
     .empty-message {
       text-align: center;
-      padding: 60px 30px;
+      padding: 50px;
       color: #999;
-      font-size: 15px;
       font-style: italic;
     }
 
-    .empty-message.hidden {
-      display: none;
-    }
-
-    .section:has(.table-wrapper:empty) .empty-message:not(.hidden) {
-      display: block;
-    }
-
-    @media (max-width: 768px) {
-      .header {
-        padding: 20px;
-        flex-direction: column;
-        gap: 15px;
-        text-align: center;
-      }
-
-      .header h1 {
-        font-size: 24px;
-      }
-
-      .section-header {
-        flex-direction: column;
-        gap: 12px;
-        align-items: flex-start;
-      }
-
-      th, td {
-        padding: 12px 15px;
-        font-size: 13px;
-      }
-
-      .badge-count {
-        align-self: flex-end;
-      }
-    }
+    .hidden { display: none; }
   </style>
 </head>
 
 <body>
-  <div class="header">
-    <h1>
-      <span>♻️</span>
-      <span>Shipments Management</span>
-    </h1>
-    <button class="logout-btn" onclick="logout()">Logout</button>
-  </div>
 
-  <div class="container">
-    <!-- PENDING APPROVAL SECTION -->
-    <div class="section approval">
-      <div class="section-header">
-        <h2>
-          <span>⏳</span>
-          Pending Approval/Edit
-        </h2>
-        <span id="approvalCount" class="badge-count">0</span>
-      </div>
-      <div class="table-wrapper">
-        <table>
-          <thead>
-            <tr>
-              <th style="width: 5%">#</th>
-              <th style="width: 20%">Shipment No</th>
-              <th style="width: 15%">Total (KG)</th>
-              <th style="width: 25%">Status</th>
-              <th style="width: 35%">Created At</th>
-            </tr>
-          </thead>
-          <tbody id="approvalRows"></tbody>
-        </table>
-      </div>
-      <div id="approvalEmpty" class="empty-message">
-        No pending shipments for approval
-      </div>
+<div class="header">
+  <h1>♻️ Shipments Management</h1>
+  <button class="logout-btn" onclick="logout()">Logout</button>
+</div>
+
+<div class="container">
+
+  <!-- ===== APPROVAL ===== -->
+  <div class="section approval" id="approvalSection">
+    <div class="section-header">
+      <h2>⏳ Pending Approval / Edit</h2>
+      <span id="approvalCount" class="badge-count">0</span>
     </div>
-
-    <!-- PENDING SEGMENTATION SECTION -->
-    <div class="section segmentation">
-      <div class="section-header">
-        <h2>
-          <span>🚚</span>
-          Pending Segmentation & Routing
-        </h2>
-        <span id="segmentationCount" class="badge-count">0</span>
-      </div>
-      <div class="table-wrapper">
-        <table>
-          <thead>
-            <tr>
-              <th style="width: 5%">#</th>
-              <th style="width: 20%">Shipment No</th>
-              <th style="width: 15%">Total (KG)</th>
-              <th style="width: 25%">Status</th>
-              <th style="width: 35%">Created At</th>
-            </tr>
-          </thead>
-          <tbody id="segmentationRows"></tbody>
-        </table>
-      </div>
-      <div id="segmentationEmpty" class="empty-message">
-        No pending shipments for segmentation
-      </div>
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Shipment No</th>
+          <th>Total (KG)</th>
+          <th>Status</th>
+          <th>Created At</th>
+        </tr>
+      </thead>
+      <tbody id="approvalRows"></tbody>
+    </table>
+    <div id="approvalEmpty" class="empty-message hidden">
+      No pending shipments for approval
     </div>
   </div>
 
-  <script>
-   const API_BASE =
-        "https://supercycle-api-855015056699.europe-west1.run.app";
-    const token = localStorage.getItem("token");
+  <!-- ===== SEGMENTATION ===== -->
+  <div class="section segmentation" id="segmentationSection">
+    <div class="section-header">
+      <h2>🚚 Pending Segmentation & Routing</h2>
+      <span id="segmentationCount" class="badge-count">0</span>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Shipment No</th>
+          <th>Total (KG)</th>
+          <th>Status</th>
+          <th>Created At</th>
+        </tr>
+      </thead>
+      <tbody id="segmentationRows"></tbody>
+    </table>
+    <div id="segmentationEmpty" class="empty-message hidden">
+      No pending shipments for segmentation
+    </div>
+  </div>
 
-    if (!token) {
-      window.location.href = "index.html";
+</div>
+
+<script>
+  const API_BASE = "https://supercycle-api-855015056699.europe-west1.run.app";
+  const token = localStorage.getItem("token");
+  if (!token) location.href = "index.html";
+
+  function logout() {
+    localStorage.removeItem("token");
+    location.href = "index.html";
+  }
+
+  // ✅ قراءة type من URL
+  const pageType = new URLSearchParams(window.location.search).get("type");
+  // approval | segmentation | null
+
+  function applyPageType() {
+    if (pageType === "approval") {
+      document.getElementById("segmentationSection").style.display = "none";
+    }
+    if (pageType === "segmentation") {
+      document.getElementById("approvalSection").style.display = "none";
+    }
+  }
+
+  async function loadShipments() {
+    const res = await fetch(`${API_BASE}/admin/shipments?limit=100`, {
+      headers: { Authorization: "Bearer " + token }
+    });
+    const json = await res.json();
+    const allShipments = json.data || [];
+
+    let approvals = [];
+    let segmentations = [];
+
+    if (!pageType || pageType === "approval") {
+      approvals = allShipments.filter(s => s.status === "pending");
     }
 
-    function logout() {
-      localStorage.removeItem("token");
-      window.location.href = "index.html";
+    if (!pageType || pageType === "segmentation") {
+      segmentations = allShipments.filter(
+        s => s.status === "pending_admin_review"
+      );
     }
 
-    async function loadShipments() {
-      try {
-        const res = await fetch(`${API_BASE}/admin/shipments?limit=100`, {
-          headers: {
-            Authorization: "Bearer " + token,
-          },
-        });
+    renderTable(approvals, "approvalRows", "approvalEmpty", "approval");
+    renderTable(segmentations, "segmentationRows", "segmentationEmpty", "segmentation");
 
-        const json = await res.json();
+    document.getElementById("approvalCount").innerText = approvals.length;
+    document.getElementById("segmentationCount").innerText = segmentations.length;
+  }
 
-        if (!res.ok) {
-          throw new Error(json.message || "Failed to load shipments");
-        }
+  function renderTable(list, rowsId, emptyId, type) {
+    const rows = document.getElementById(rowsId);
+    const empty = document.getElementById(emptyId);
+    rows.innerHTML = "";
 
-        const allShipments = json.data || [];
-
-        const pendingApproval = allShipments.filter(
-          (s) => s.status === "pending"
-        );
-
-        const pendingSegmentation = allShipments.filter(
-          (s) => s.status === "pending_admin_review"
-        );
-
-        pendingApproval.sort(
-          (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
-        );
-        pendingSegmentation.sort(
-          (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
-        );
-
-        renderTable(pendingApproval, "approvalRows", "approvalEmpty", "approval");
-        renderTable(
-          pendingSegmentation,
-          "segmentationRows",
-          "segmentationEmpty",
-          "segmentation"
-        );
-
-        document.getElementById("approvalCount").innerText =
-          pendingApproval.length;
-        document.getElementById("segmentationCount").innerText =
-          pendingSegmentation.length;
-      } catch (err) {
-        alert(err.message);
-      }
+    if (!list.length) {
+      empty.classList.remove("hidden");
+      return;
     }
+    empty.classList.add("hidden");
 
-    function renderTable(shipments, tableId, emptyId, type) {
-      const rows = document.getElementById(tableId);
-      const empty = document.getElementById(emptyId);
+    list.forEach((s, i) => {
+      const tr = document.createElement("tr");
+      tr.className = "clickable";
+      tr.innerHTML = `
+        <td>${i + 1}</td>
+        <td><strong>${s.shipmentNumber}</strong></td>
+        <td>${s.totalQuantityKg}</td>
+        <td><span class="status-badge status-${s.status}">${s.status}</span></td>
+        <td>${new Date(s.createdAt).toLocaleString()}</td>
+      `;
+      tr.onclick = () => {
+        location.href =
+          type === "approval"
+            ? `shipment.html?id=${s._id}`
+            : `segment.html?id=${s._id}`;
+      };
+      rows.appendChild(tr);
+    });
+  }
 
-      rows.innerHTML = "";
+  applyPageType();
+  loadShipments();
+</script>
 
-      if (shipments.length === 0) {
-        empty.classList.remove("hidden");
-        return;
-      }
-
-      empty.classList.add("hidden");
-
-      shipments.forEach((s, index) => {
-        const tr = document.createElement("tr");
-        tr.className = "clickable";
-
-        tr.innerHTML = `
-          <td>${index + 1}</td>
-          <td><strong>${s.shipmentNumber}</strong></td>
-          <td>${s.totalQuantityKg}</td>
-          <td>
-            <span class="status-badge status-${(s.status || "").toLowerCase()}">
-              ${s.statusDisplay || s.status}
-            </span>
-          </td>
-          <td>${new Date(s.createdAt).toLocaleString()}</td>
-        `;
-
-        if (type === "approval") {
-          tr.onclick = () => {
-            window.location.href = `shipment.html?id=${s._id}`;
-          };
-        } else if (type === "segmentation") {
-          tr.onclick = () => {
-            window.location.href = `segment.html?id=${s._id}`;
-          };
-        }
-
-        rows.appendChild(tr);
-      });
-    }
-
-    loadShipments();
-  </script>
 </body>
 </html>

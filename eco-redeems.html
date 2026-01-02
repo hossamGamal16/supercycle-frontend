@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>SuperCycle – Eco Redeems</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <style>
+    body {
+      font-family: "Segoe UI", Tahoma, sans-serif;
+      background: #f5f7fa;
+      margin: 0;
+      color: #1a1a1a;
+    }
+
+    .header {
+      background: linear-gradient(135deg, #1a7f4f, #2ba572);
+      color: white;
+      padding: 20px 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .header h1 {
+      font-size: 22px;
+      font-weight: 700;
+    }
+
+    .logout-btn {
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: auto;
+      padding: 30px 20px;
+    }
+
+    /* ===== Filter ===== */
+    .filter-bar {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .filter-bar label {
+      font-weight: 600;
+    }
+
+    .filter-bar select {
+      padding: 6px 10px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+
+    /* ===== Table ===== */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    }
+
+    th, td {
+      padding: 14px 16px;
+      border-bottom: 1px solid #eee;
+      font-size: 14px;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      background: #f8f9fa;
+      text-transform: uppercase;
+      font-size: 12px;
+      color: #555;
+    }
+
+    .status {
+      font-weight: 700;
+      font-size: 12px;
+      padding: 4px 10px;
+      border-radius: 6px;
+      display: inline-block;
+    }
+
+    .pending  { background: #fff3cd; color: #856404; }
+    .approved { background: #d4edda; color: #155724; }
+    .rejected { background: #f8d7da; color: #721c24; }
+    .planted  { background: #d1ecf1; color: #0c5460; }
+
+    button.action {
+      padding: 6px 12px;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 600;
+      margin-right: 6px;
+    }
+
+    .approve { background: #2ba572; color: white; }
+    .reject  { background: #e74c3c; color: white; }
+    .plant   { background: #3498db; color: white; }
+
+    .empty {
+      text-align: center;
+      color: #777;
+      padding: 30px;
+      font-style: italic;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ===== Header ===== -->
+  <div class="header">
+    <h1>🌱 Eco Redemption Requests</h1>
+    <button class="logout-btn" onclick="logout()">Logout</button>
+  </div>
+
+  <div class="container">
+
+    <!-- ===== Filter ===== -->
+    <div class="filter-bar">
+      <label for="statusFilter">Filter by status:</label>
+      <select id="statusFilter" onchange="applyFilter()">
+        <option value="all">All</option>
+        <option value="pending">Pending</option>
+        <option value="approved">Approved</option>
+        <option value="planted">Planted</option>
+        <option value="rejected">Rejected</option>
+      </select>
+    </div>
+
+    <!-- ===== Table ===== -->
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Trader</th>
+          <th>Redeem Info</th>
+          <th>Status</th>
+          <th>Created</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="rows"></tbody>
+    </table>
+
+  </div>
+
+<script>
+  /* ================= CONFIG ================= */
+  const API_BASE = "http://localhost:4000"; // no trailing slash
+  const token = localStorage.getItem("token");
+  let ALL_REDEEMS = [];
+
+  if (!token) location.href = "index.html";
+
+  function logout() {
+    localStorage.removeItem("token");
+    location.href = "index.html";
+  }
+
+  /* ================= LOAD ================= */
+  async function loadRedeems() {
+    const res = await fetch(`${API_BASE}/admin/eco/redeem`, {
+      headers: { Authorization: "Bearer " + token }
+    });
+
+    const text = await res.text();
+    if (!res.ok) {
+      console.error("LOAD ERROR:", text);
+      alert("Failed to load redemption requests");
+      return;
+    }
+
+    const json = JSON.parse(text);
+
+    // ✅ correct data level
+    ALL_REDEEMS = json.data?.data || [];
+
+    applyFilter(); // initial render
+  }
+
+  /* ================= FILTER ================= */
+  function applyFilter() {
+    const status = document.getElementById("statusFilter").value;
+
+    if (status === "all") {
+      render(ALL_REDEEMS);
+      return;
+    }
+
+    const filtered = ALL_REDEEMS.filter(r => r.status === status);
+    render(filtered);
+  }
+
+  /* ================= RENDER ================= */
+  function render(data) {
+    const rows = document.getElementById("rows");
+    rows.innerHTML = "";
+
+    if (!data.length) {
+      rows.innerHTML = `
+        <tr>
+          <td colspan="6" class="empty">No redemption requests</td>
+        </tr>
+      `;
+      return;
+    }
+
+    data.forEach((r, i) => {
+      const tr = document.createElement("tr");
+
+      tr.innerHTML = `
+        <td>${i + 1}</td>
+
+        <td>
+          <strong>${r.traderProfile?.bussinessName || "-"}</strong><br/>
+          <small>${r.traderProfile?.rawBusinessType || ""}</small>
+        </td>
+
+        <td>
+          Quantity: <b>${r.quantity}</b><br/>
+          Points Used: <b>${r.totalPointsUsed}</b>
+        </td>
+
+        <td>
+          <span class="status ${r.status}">
+            ${r.status}
+          </span>
+        </td>
+
+        <td>
+          ${new Date(r.createdAt).toLocaleString()}
+        </td>
+
+        <td>
+          ${renderActions(r)}
+        </td>
+      `;
+
+      rows.appendChild(tr);
+    });
+  }
+
+  function renderActions(r) {
+    if (r.status === "pending") {
+      return `
+        <button class="action approve" onclick="approve('${r._id}')">Approve</button>
+        <button class="action reject" onclick="rejectPrompt('${r._id}')">Reject</button>
+      `;
+    }
+
+    if (r.status === "approved") {
+      return `
+        <button class="action plant" onclick="markPlanted('${r._id}')">
+          Mark Planted
+        </button>
+      `;
+    }
+
+    return "-";
+  }
+
+  /* ================= ACTIONS ================= */
+  async function approve(id) {
+    await patch(`/admin/eco/redeem/${id}/approve`);
+  }
+
+  async function markPlanted(id) {
+    await patch(`/admin/eco/redeem/${id}/mark-planted`);
+  }
+
+  function rejectPrompt(id) {
+    const reason = prompt("Reason for rejection?");
+    if (!reason) return;
+
+    patch(`/admin/eco/redeem/${id}/reject`, { reason });
+  }
+
+  async function patch(path, body = {}) {
+    const res = await fetch(API_BASE + path, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + token
+      },
+      body: JSON.stringify(body)
+    });
+
+    const text = await res.text();
+    if (!res.ok) {
+      console.error("PATCH ERROR:", text);
+      alert("Action failed");
+      return;
+    }
+
+    loadRedeems();
+  }
+
+  /* ================= INIT ================= */
+  loadRedeems();
+</script>
+
+</body>
+</html>

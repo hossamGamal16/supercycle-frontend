@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>SuperCycle – Create Representative</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "Segoe UI", Tahoma, sans-serif;
+      background: #f5f7fa;
+      color: #1a1a1a;
+    }
+
+    /* ===== Header ===== */
+    .header {
+      background: linear-gradient(135deg, #1a7f4f, #2ba572);
+      color: white;
+      padding: 20px 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .header h1 {
+      font-size: 22px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .header button {
+      background: rgba(255,255,255,0.2);
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    /* ===== Layout ===== */
+    .container {
+      max-width: 700px;
+      margin: auto;
+      padding: 40px 20px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 12px;
+      padding: 28px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+    }
+
+    .card h2 {
+      font-size: 18px;
+      margin-bottom: 24px;
+      color: #1a7f4f;
+    }
+
+    /* ===== Form ===== */
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-group label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 6px;
+      font-size: 14px;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 6px;
+      border: 1px solid #ddd;
+      font-size: 14px;
+    }
+
+    .form-group input:focus {
+      outline: none;
+      border-color: #2ba572;
+    }
+
+    /* ===== Buttons ===== */
+    .actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    .btn {
+      padding: 10px 18px;
+      border-radius: 6px;
+      border: none;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .btn-primary {
+      background: #2ba572;
+      color: white;
+    }
+
+    .btn-secondary {
+      background: #ccc;
+      color: #333;
+    }
+
+    /* ===== Messages ===== */
+    .message {
+      margin-bottom: 16px;
+      padding: 12px;
+      border-radius: 6px;
+      display: none;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .message.success {
+      background: #d4edda;
+      color: #155724;
+      border-left: 4px solid #28a745;
+    }
+
+    .message.error {
+      background: #f8d7da;
+      color: #721c24;
+      border-left: 4px solid #dc3545;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ===== Header ===== -->
+  <div class="header">
+    <h1>👨‍💼 Create Representative</h1>
+    <button onclick="goBack()">⬅ Back</button>
+  </div>
+
+  <div class="container">
+    <div class="card">
+
+      <h2>Representative Information</h2>
+
+      <div id="msgSuccess" class="message success"></div>
+      <div id="msgError" class="message error"></div>
+
+      <div class="form-group">
+        <label>Full Name</label>
+        <input id="fullName" placeholder="Ahmed Khaled" />
+      </div>
+
+      <div class="form-group">
+        <label>Email</label>
+        <input id="email" type="email" placeholder="rep@supercycle.com" />
+      </div>
+
+      <div class="form-group">
+        <label>Phone</label>
+        <input id="phone" placeholder="010xxxxxxxx" />
+      </div>
+
+      <div class="form-group">
+        <label>Address</label>
+        <input id="address" placeholder="Nasr City, Cairo" />
+      </div>
+
+      <div class="form-group">
+        <label>National ID</label>
+        <input id="nationalId" placeholder="3020xxxxxxxxxxx" />
+      </div>
+
+      <div class="form-group">
+        <label>Password</label>
+        <input id="password" type="password" placeholder="******" />
+      </div>
+
+      <div class="actions">
+        <button class="btn btn-primary" onclick="createRepresentative()">
+          ✅ Create
+        </button>
+        <button class="btn btn-secondary" onclick="clearForm()">
+          🧹 Clear
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+<script>
+  const API_BASE =
+    "https://supercycle-api-855015056699.europe-west1.run.app";
+  const token = localStorage.getItem("token");
+
+  if (!token) location.href = "index.html";
+
+  function goBack() {
+    location.href = "dashboard.html";
+  }
+
+  function showSuccess(msg) {
+    const el = document.getElementById("msgSuccess");
+    el.innerText = msg;
+    el.style.display = "block";
+    document.getElementById("msgError").style.display = "none";
+  }
+
+  function showError(msg) {
+    const el = document.getElementById("msgError");
+    el.innerText = msg;
+    el.style.display = "block";
+    document.getElementById("msgSuccess").style.display = "none";
+  }
+
+  function clearForm() {
+    ["fullName","email","phone","address","nationalId","password"]
+      .forEach(id => document.getElementById(id).value = "");
+  }
+
+  async function createRepresentative() {
+    const body = {
+      fullName: document.getElementById("fullName").value.trim(),
+      email: document.getElementById("email").value.trim(),
+      phone: document.getElementById("phone").value.trim(),
+      address: document.getElementById("address").value.trim(),
+      nationalId: document.getElementById("nationalId").value.trim(),
+      password: document.getElementById("password").value
+    };
+
+    if (!body.fullName || !body.phone || !body.password) {
+      showError("❌ Please fill all required fields");
+      return;
+    }
+
+    try {
+      const res = await fetch(`${API_BASE}/admin/representatives`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + token
+        },
+        body: JSON.stringify(body)
+      });
+
+      const json = await res.json();
+
+      if (!res.ok) {
+        showError(json.message || "Failed to create representative");
+        return;
+      }
+
+      showSuccess("✅ Representative created successfully");
+
+      clearForm();
+
+      // optional redirect
+      // setTimeout(() => location.href = "dashboard.html", 1500);
+
+    } catch (err) {
+      showError("Network error");
+    }
+  }
+</script>
+
+</body>
+</html>
