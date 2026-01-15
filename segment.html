@@ -354,16 +354,24 @@
             shipmentData.traderId?.bussinessName || "-";
 
           itemsList.innerHTML = "";
-          if (
-            shipmentData.items &&
-            shipmentData.items.length > 0
-          ) {
-            shipmentData.items.forEach((i) => {
-              itemsList.innerHTML += `<li><b>${i.doshType.name}</b> - ${i.quantityKg} KG</li>`;
-            });
-          } else {
-            itemsList.innerHTML = "<li>No items</li>";
-          }
+         const currentItems =
+  shipmentData.inspectedItems && shipmentData.inspectedItems.length > 0
+    ? shipmentData.inspectedItems
+    : [];
+
+itemsList.innerHTML = "";
+
+if (currentItems.length > 0) {
+  currentItems.forEach((i) => {
+    itemsList.innerHTML += `
+      <li>
+        <b>${i.doshType.name}</b> - ${i.quantityKg} KG
+      </li>`;
+  });
+} else {
+  itemsList.innerHTML =
+    "<li>⚠️ لم يتم فحص الشحنة بعد</li>";
+}
         } catch (err) {
           alert("Error loading shipment: " + err.message);
         }
