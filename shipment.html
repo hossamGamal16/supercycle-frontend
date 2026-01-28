@@ -261,6 +261,26 @@
         display: block;
       }
 
+      .checkbox-group {
+        display: flex;
+        gap: 15px;
+        margin-top: 10px;
+        margin-bottom: 10px;
+      }
+
+      .checkbox-group label {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 13px;
+        font-weight: 500;
+      }
+
+      .checkbox-group input[type="checkbox"] {
+        width: auto;
+        padding: 0;
+      }
+
       @media (max-width: 900px) {
         .top-layout {
           grid-template-columns: 1fr;
@@ -309,6 +329,10 @@
                 <span id="address"></span>
               </div>
               <div class="info-item">
+                <label>Requested Pickup At</label>
+                <span id="requestedPickupAt"></span>
+              </div>
+              <div class="info-item">
                 <label>Trader</label>
                 <span id="traderName"></span>
               </div>
@@ -347,12 +371,26 @@
           <div id="vehicleSummary" class="summary-box"></div>
 
           <label style="margin-top:10px">Notes / Reason</label>
-          <textarea id="note"></textarea>
+          <textarea id="note" placeholder="Add a note for this shipment..."></textarea>
+          
+          <label style="margin-top:10px">Note Visibility</label>
+          <div class="checkbox-group">
+            <label>
+              <input type="checkbox" id="visibilityAdmin" checked /> Admin
+            </label>
+            <label>
+              <input type="checkbox" id="visibilityRepresentative" checked /> Representative
+            </label>
+            <label>
+              <input type="checkbox" id="visibilityTrader" /> Trader
+            </label>
+          </div>
 
           <div class="button-group">
             <button class="btn-approve" onclick="approve()">Approve</button>
             <button class="btn-edit" onclick="enterEditMode()">Edit & Approve</button>
             <button class="btn-reject" onclick="reject()">Reject</button>
+            <button style="background:#6c757d;color:white" onclick="addNoteOnly()">Add Note</button>
           </div>
         </div>
 
@@ -388,7 +426,7 @@
 
     <script>
       const API_BASE =
-        "https://supercycle-api-855015056699.europe-west1.run.app";
+        "https://supercycle-api-995332059142.europe-west1.run.app";
       const token = localStorage.getItem("token");
       if (!token) location.href = "index.html";
 
@@ -409,6 +447,42 @@
         const msg = document.getElementById("successMessage");
         msg.innerText = message;
         msg.classList.add("show");
+      }
+
+      async function addNote(text, visibility) {
+        if (!text.trim()) return; // Don't add empty notes
+
+        const payload = {
+          content: text,
+          visibility: visibility,
+        };
+
+        const res = await fetch(`${API_BASE}/shipments/${shipmentId}/notes`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + token,
+          },
+          body: JSON.stringify(payload),
+        });
+
+        const json = await res.json();
+        if (!res.ok) {
+          alert(json.message || "Failed to add note");
+          return false;
+        }
+        return true;
+      }
+
+      function getNoteVisibility() {
+        const visibility = [];
+        if (document.getElementById("visibilityAdmin").checked)
+          visibility.push("admin");
+        if (document.getElementById("visibilityRepresentative").checked)
+          visibility.push("representative");
+        if (document.getElementById("visibilityTrader").checked)
+          visibility.push("trader");
+        return visibility;
       }
 
       async function safePatch(path, body, successMsg) {
@@ -442,10 +516,17 @@
           shipmentData.shipmentNumber;
         document.getElementById("shipmentNumber").innerText =
           shipmentData.shipmentNumber;
-        document.getElementById("totalKg").innerText =
-          shipmentData.totalQuantityKg || "0";
+        
+        // Calculate total KG from items
+        let totalKg = 0;
+        (shipmentData.items || []).forEach((i) => {
+          totalKg += i.quantityKg || 0;
+        });
+        document.getElementById("totalKg").innerText = totalKg;
         document.getElementById("address").innerText =
           shipmentData.customPickupAddress || "-";
+        document.getElementById("requestedPickupAt").innerText =
+          shipmentData.requestedPickupAt ? new Date(shipmentData.requestedPickupAt).toLocaleString() : "-";
         document.getElementById("traderName").innerText =
           shipmentData.traderId?.bussinessName || "-";
         document.getElementById("traderPhone").innerText =
@@ -574,6 +655,8 @@
 
       function enterEditMode() {
         document.getElementById("editSection").classList.remove("hidden");
+        document.getElementById("pickupDate").value =
+          shipmentData.requestedPickupAt ? new Date(shipmentData.requestedPickupAt).toISOString().slice(0, 16) : "";
         document.getElementById("pickupAddress").value =
           shipmentData.customPickupAddress || "";
         document.getElementById("editItems").innerHTML = "";
@@ -625,6 +708,8 @@
         if (!items.length) return alert("Invalid items");
 
         updates.items = items;
+        updates.customPickupAddress = document.getElementById("pickupAddress").value;
+        updates.requestedPickupAt = new Date(document.getElementById("pickupDate").value).toISOString();
 
         safePatch(
           `/admin/shipments/${shipmentId}/edit-and-approve`,
@@ -656,6 +741,31 @@
           { reason: document.getElementById("note").value.trim() },
           "Shipment rejected"
         );
+      }
+
+      async function addNoteOnly() {
+        const noteText = document.getElementById("note").value.trim();
+        if (!noteText) {
+          alert("Please enter a note");
+          return;
+        }
+
+        const visibility = getNoteVisibility();
+        if (visibility.length === 0) {
+          alert("Please select at least one visibility option");
+          return;
+        }
+
+        const success = await addNote(noteText, visibility);
+        if (success) {
+          document.getElementById("note").value = "";
+          const msg = document.getElementById("successMessage");
+          msg.innerText = "Note added successfully";
+          msg.classList.add("show");
+          setTimeout(() => {
+            msg.classList.remove("show");
+          }, 3000);
+        }
       }
 
       loadShipment();
