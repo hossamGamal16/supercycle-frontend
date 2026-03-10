@@ -2,7 +2,7 @@
 <html lang="ar">
 <head>
   <meta charset="UTF-8" />
-  <title>SuperCycle – Create Contracted Trader</title>
+  <title>SuperCycle - Create Trader</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <style>
@@ -48,12 +48,6 @@
       padding-bottom: 8px;
     }
 
-    label {
-      font-weight: 600;
-      margin-top: 12px;
-      display: block;
-    }
-
     input, select {
       width: 100%;
       padding: 10px;
@@ -73,6 +67,16 @@
       padding: 16px;
       border-radius: 10px;
       margin-top: 16px;
+    }
+
+    .inline-note {
+      margin-top: 10px;
+      color: #5f6b7a;
+      font-size: 13px;
+    }
+
+    .hidden {
+      display: none;
     }
 
     button {
@@ -108,13 +112,21 @@
 <body>
 
 <div class="header">
-  <h1>📄 Create Contracted Trader</h1>
-  <button onclick="goBack()">⬅ Back</button>
+  <h1>Create Trader</h1>
+  <button onclick="goBack()">Back</button>
 </div>
 
 <div class="container">
+  <div class="card">
+    <h3>Trader Type</h3>
+    <div class="grid">
+      <select id="traderType" onchange="handleTraderTypeChange()">
+        <option value="contracted">Contracted Trader</option>
+        <option value="uncontracted">Uncontracted Trader</option>
+      </select>
+    </div>
+  </div>
 
-  <!-- BASIC INFO -->
   <div class="card">
     <h3>Trader Info</h3>
     <div class="grid">
@@ -129,29 +141,27 @@
     </div>
   </div>
 
-  <!-- CONTRACT -->
-  <div class="card">
+  <div class="card" id="contractCard">
     <h3>Contract</h3>
     <div class="grid">
       <input id="startDate" type="date" />
       <input id="endDate" type="date" />
 
-      <select id="paymentMethod">
+      <select id="settlementType">
+        <option value="meal">Meal</option>
         <option value="monthly">Monthly</option>
-        <option value="per_shipment">Per Shipment</option>
       </select>
 
-      <!-- ✅ FIXED DAY DROPDOWN -->
-      <select id="fixedShipmentDay">
-        <option value="">-- Fixed Shipment Day --</option>
-        <option value="0">Sunday</option>
-        <option value="1">Monday</option>
-        <option value="2">Tuesday</option>
-        <option value="3">Wednesday</option>
-        <option value="4">Thursday</option>
-        <option value="5">Friday</option>
-        <option value="6">Saturday</option>
+      <select id="paymentMethod" onchange="handlePaymentMethodChange()">
+        <option value="cash">Cash</option>
+        <option value="wallet">Wallet</option>
+        <option value="bankTransfer">Bank Transfer</option>
       </select>
+
+      <input
+        id="fixedShipmentDays"
+        placeholder="Fixed Shipment Days (comma e.g. 2,5)"
+      />
 
       <input
         id="estimatedquantityPerShipment"
@@ -159,19 +169,31 @@
         type="number"
       />
     </div>
+
+    <div id="walletFields" class="grid hidden" style="margin-top: 16px;">
+      <input id="walletNumber" placeholder="Wallet Number" />
+    </div>
+
+    <div id="bankFields" class="grid hidden" style="margin-top: 16px;">
+      <input id="bankName" placeholder="Bank Name" />
+      <input id="accountNumber" placeholder="Account Number" />
+      <input id="iban" placeholder="IBAN (optional)" />
+    </div>
+
+    <p class="inline-note">
+      If no branches are added, the API will create the default main branch from the contract data.
+    </p>
   </div>
 
-  <!-- BRANCHES -->
-  <div class="card">
-    <h3>Branches </h3>
+  <div class="card" id="branchesCard">
+    <h3>Branches</h3>
     <div id="branches"></div>
-    <button class="add" onclick="addBranch()">➕ Add Branch</button>
+    <button class="add" onclick="addBranch()" type="button">Add Branch</button>
   </div>
 
   <button class="submit" onclick="submitForm()">
-    ✅ Create Contracted Trader
+    Create Trader
   </button>
-
 </div>
 
 <script>
@@ -185,86 +207,211 @@
     location.href = "dashboard.html";
   }
 
+  function parseNumberList(value) {
+    return value
+      .split(",")
+      .map(item => item.trim())
+      .filter(Boolean)
+      .map(Number)
+      .filter(item => !Number.isNaN(item));
+  }
+
+  function parseTextList(value) {
+    return value
+      .split(",")
+      .map(item => item.trim())
+      .filter(Boolean);
+  }
+
+  function getDoshTypeOptions() {
+    return DOSH_TYPES.map(d => {
+      const id = d._id || d.id;
+      return `<option value="${id}">${d.name || id}</option>`;
+    }).join("");
+  }
+
+  function handlePaymentMethodChange() {
+    const method = document.getElementById("paymentMethod").value;
+    document.getElementById("walletFields").classList.toggle("hidden", method !== "wallet");
+    document.getElementById("bankFields").classList.toggle("hidden", method !== "bankTransfer");
+  }
+
+  function handleTraderTypeChange() {
+    const traderType = document.getElementById("traderType").value;
+    const isContracted = traderType === "contracted";
+    document.getElementById("contractCard").classList.toggle("hidden", !isContracted);
+    document.getElementById("branchesCard").classList.toggle("hidden", !isContracted);
+  }
+
   async function loadDoshTypes() {
-    const res = await fetch(`${API_BASE}/dosh/types`);
-    const json = await res.json();
-    DOSH_TYPES = json.data || [];
+    try {
+      const res = await fetch(`${API_BASE}/dosh/types`, {
+        headers: { Authorization: "Bearer " + token }
+      });
+      const json = await res.json();
+      DOSH_TYPES = json.data || [];
+    } catch (error) {
+      DOSH_TYPES = [];
+    }
   }
 
   function addBranch() {
     const div = document.createElement("div");
     div.className = "branch";
-
     div.innerHTML = `
-      <input placeholder="Branch Name" class="branchName"/>
-      <input placeholder="Address" class="address"/>
-      <input placeholder="Contact Name" class="contactName"/>
-      <input placeholder="Contact Phone" class="contactPhone"/>
-      <input type="number" placeholder="Estimated Qty / Shipment" class="estimatedQuantityPerShipment"/>
-      <input placeholder="Shipment Days (comma e.g. 2,5)" class="shipmentDays"/>
-
-      <select class="scheduleType">
-        <option value="weekly">Weekly</option>
-        <option value="biweekly">Biweekly</option>
-      </select>
-
-      <select class="doshTypeId">
-        <option value="">-- Select Dosh Type --</option>
-        ${DOSH_TYPES.map(d => `<option value="${d.id}">${d.name}</option>`).join("")}
-      </select>
-
-      <input placeholder="Custom Dates (YYYY-MM-DD, comma)" class="customDates"/>
-      <button class="remove" onclick="this.parentElement.remove()">❌ Remove</button>
+      <div class="grid">
+        <input placeholder="Branch Name" class="branchName"/>
+        <input placeholder="Address" class="address"/>
+        <input placeholder="Contact Name" class="contactName"/>
+        <input placeholder="Contact Phone" class="contactPhone"/>
+        <input type="number" placeholder="Estimated Qty / Shipment" class="estimatedQuantityPerShipment"/>
+        <input placeholder="Shipment Days (comma e.g. 2,5)" class="shipmentDays"/>
+        <select class="scheduleType">
+          <option value="weekly">Weekly</option>
+          <option value="biweekly">Biweekly</option>
+        </select>
+        <select class="doshTypeId">
+          <option value="">-- Select Dosh Type --</option>
+          ${getDoshTypeOptions()}
+        </select>
+        <input placeholder="Custom Dates (YYYY-MM-DD, comma)" class="customDates"/>
+      </div>
+      <button class="remove" onclick="this.parentElement.remove()" type="button">Remove</button>
     `;
 
     document.getElementById("branches").appendChild(div);
   }
 
-  async function submitForm() {
-    const fixedDayValue =
-      document.getElementById("fixedShipmentDay").value;
+  function buildReceivingMethods() {
+    const method = document.getElementById("paymentMethod").value;
+    const receivingMethods = {};
 
-    const branches = [...document.querySelectorAll(".branch")].map(b => ({
-      branchName: b.querySelector(".branchName").value,
-      address: b.querySelector(".address").value,
-      contactName: b.querySelector(".contactName").value,
-      contactPhone: b.querySelector(".contactPhone").value,
-      estimatedQuantityPerShipment: Number(
-        b.querySelector(".estimatedQuantityPerShipment").value
-      ),
-      shipmentDays: b.querySelector(".shipmentDays").value
-        ? b.querySelector(".shipmentDays").value.split(",").map(Number)
-        : [],
-      scheduleType: b.querySelector(".scheduleType").value,
-      doshTypeId: b.querySelector(".doshTypeId").value,
-      customDates: b.querySelector(".customDates").value
-        ? b.querySelector(".customDates").value.split(",")
-        : []
-    }));
-
-    const body = {
-      email: email.value,
-      phone: phone.value,
-      password: password.value,
-      bussinessName: bussinessName.value,
-      rawBusinessType: rawBusinessType.value,
-      bussinessAdress: bussinessAdress.value,
-      doshMangerName: doshMangerName.value,
-      doshMangerPhone: doshMangerPhone.value,
-      contract: {
-        startDate: startDate.value,
-        endDate: endDate.value,
-        paymentMethod: paymentMethod.value,
-        fixedShipmentDays:
-          fixedDayValue !== "" ? [Number(fixedDayValue)] : [],
-        estimatedquantityPerShipment: Number(
-          estimatedquantityPerShipment.value
-        ),
-        branches: branches.length ? branches : undefined
+    if (method === "wallet") {
+      const walletNumber = document.getElementById("walletNumber").value.trim();
+      if (walletNumber) {
+        receivingMethods.wallet = { walletNumber };
       }
-    };
+    }
 
-    const res = await fetch(`${API_BASE}/admin/traders/contracted`, {
+    if (method === "bankTransfer") {
+      const bankName = document.getElementById("bankName").value.trim();
+      const accountNumber = document.getElementById("accountNumber").value.trim();
+      const iban = document.getElementById("iban").value.trim();
+
+      receivingMethods.bankTransfer = {
+        bankName,
+        accountNumber
+      };
+
+      if (iban) {
+        receivingMethods.bankTransfer.iban = iban;
+      }
+    }
+
+    return Object.keys(receivingMethods).length ? receivingMethods : undefined;
+  }
+
+  function buildBranches() {
+    return [...document.querySelectorAll(".branch")].map(branch => {
+      const payload = {
+        branchName: branch.querySelector(".branchName").value.trim(),
+        address: branch.querySelector(".address").value.trim(),
+        contactName: branch.querySelector(".contactName").value.trim(),
+        contactPhone: branch.querySelector(".contactPhone").value.trim(),
+        estimatedQuantityPerShipment: Number(
+          branch.querySelector(".estimatedQuantityPerShipment").value
+        ),
+        shipmentDays: parseNumberList(
+          branch.querySelector(".shipmentDays").value
+        ),
+        scheduleType: branch.querySelector(".scheduleType").value,
+        doshTypeId: branch.querySelector(".doshTypeId").value,
+        customDates: parseTextList(branch.querySelector(".customDates").value)
+      };
+
+      if (!payload.customDates.length) delete payload.customDates;
+      if (!payload.shipmentDays.length) delete payload.shipmentDays;
+      if (!payload.doshTypeId) delete payload.doshTypeId;
+      if (Number.isNaN(payload.estimatedQuantityPerShipment)) {
+        delete payload.estimatedQuantityPerShipment;
+      }
+
+      return payload;
+    }).filter(branch => Object.keys(branch).length > 1 || branch.branchName || branch.address);
+  }
+
+  function validateContractInputs() {
+    const method = document.getElementById("paymentMethod").value;
+
+    if (method === "wallet" && !document.getElementById("walletNumber").value.trim()) {
+      alert("Wallet number is required for wallet payment method");
+      return false;
+    }
+
+    if (method === "bankTransfer") {
+      const bankName = document.getElementById("bankName").value.trim();
+      const accountNumber = document.getElementById("accountNumber").value.trim();
+      if (!bankName || !accountNumber) {
+        alert("Bank name and account number are required for bank transfer");
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  function buildBasePayload() {
+    return {
+      email: document.getElementById("email").value.trim(),
+      phone: document.getElementById("phone").value.trim(),
+      password: document.getElementById("password").value,
+      bussinessName: document.getElementById("bussinessName").value.trim(),
+      rawBusinessType: document.getElementById("rawBusinessType").value.trim(),
+      bussinessAdress: document.getElementById("bussinessAdress").value.trim(),
+      doshMangerName: document.getElementById("doshMangerName").value.trim(),
+      doshMangerPhone: document.getElementById("doshMangerPhone").value.trim()
+    };
+  }
+
+  async function submitForm() {
+    const traderType = document.getElementById("traderType").value;
+    const isContracted = traderType === "contracted";
+    const basePayload = buildBasePayload();
+    let endpoint = `${API_BASE}/admin/traders/uncontracted`;
+    let body = basePayload;
+
+    if (isContracted) {
+      if (!validateContractInputs()) return;
+
+      const branches = buildBranches();
+      endpoint = `${API_BASE}/admin/traders/contracted`;
+      body = {
+        ...basePayload,
+        contract: {
+          startDate: document.getElementById("startDate").value,
+          endDate: document.getElementById("endDate").value,
+          settlementType: document.getElementById("settlementType").value,
+          paymentMethod: document.getElementById("paymentMethod").value,
+          receivingMethods: buildReceivingMethods(),
+          fixedShipmentDays: parseNumberList(
+            document.getElementById("fixedShipmentDays").value
+          ),
+          estimatedquantityPerShipment: Number(
+            document.getElementById("estimatedquantityPerShipment").value
+          ),
+          branches: branches.length ? branches : undefined
+        }
+      };
+
+      if (!body.contract.receivingMethods) delete body.contract.receivingMethods;
+      if (!body.contract.fixedShipmentDays.length) delete body.contract.fixedShipmentDays;
+      if (Number.isNaN(body.contract.estimatedquantityPerShipment)) {
+        delete body.contract.estimatedquantityPerShipment;
+      }
+      if (!body.contract.branches) delete body.contract.branches;
+    }
+
+    const res = await fetch(endpoint, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -274,13 +421,22 @@
     });
 
     const json = await res.json();
-    if (!res.ok) return alert(json.message || "Failed");
+    if (!res.ok) {
+      alert(json.message || "Failed");
+      return;
+    }
 
-    alert("✅ Contracted Trader Created Successfully");
+    alert(isContracted ? "Contracted trader created successfully" : "Uncontracted trader created successfully");
     location.href = "dashboard.html";
   }
 
-  loadDoshTypes();
+  async function init() {
+    await loadDoshTypes();
+    handleTraderTypeChange();
+    handlePaymentMethodChange();
+  }
+
+  init();
 </script>
 
 </body>
