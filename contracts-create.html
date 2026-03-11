@@ -1,264 +1,278 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ar">
-<head>
-  <meta charset="UTF-8" />
-  <title>SuperCycle - Create Trader</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <head>
+    <meta charset="UTF-8" />
+    <title>SuperCycle - Create Trader</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
 
-    body {
-      font-family: "Segoe UI", Tahoma, sans-serif;
-      background: #f5f7fa;
-      color: #1a1a1a;
-    }
+      body {
+        font-family: "Segoe UI", Tahoma, sans-serif;
+        background: #f5f7fa;
+        color: #1a1a1a;
+      }
 
-    .header {
-      background: linear-gradient(135deg, #1a7f4f, #2ba572);
-      color: white;
-      padding: 20px 32px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
+      .header {
+        background: linear-gradient(135deg, #1a7f4f, #2ba572);
+        color: white;
+        padding: 20px 32px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
 
-    .header h1 {
-      font-size: 22px;
-      font-weight: 700;
-    }
+      .header h1 {
+        font-size: 22px;
+        font-weight: 700;
+      }
 
-    .container {
-      max-width: 1100px;
-      margin: auto;
-      padding: 30px 20px;
-    }
+      .container {
+        max-width: 1100px;
+        margin: auto;
+        padding: 30px 20px;
+      }
 
-    .card {
-      background: white;
-      border-radius: 12px;
-      padding: 24px;
-      margin-bottom: 24px;
-      box-shadow: 0 2px 8px rgba(0,0,0,.06);
-    }
+      .card {
+        background: white;
+        border-radius: 12px;
+        padding: 24px;
+        margin-bottom: 24px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+      }
 
-    h3 {
-      margin-bottom: 16px;
-      border-bottom: 2px solid #2ba572;
-      padding-bottom: 8px;
-    }
+      h3 {
+        margin-bottom: 16px;
+        border-bottom: 2px solid #2ba572;
+        padding-bottom: 8px;
+      }
 
-    input, select {
-      width: 100%;
-      padding: 10px;
-      margin-top: 6px;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-    }
+      input,
+      select {
+        width: 100%;
+        padding: 10px;
+        margin-top: 6px;
+        border-radius: 6px;
+        border: 1px solid #ccc;
+      }
 
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 16px;
-    }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 16px;
+      }
 
-    .branch {
-      border: 1px dashed #ccc;
-      padding: 16px;
-      border-radius: 10px;
-      margin-top: 16px;
-    }
+      .branch {
+        border: 1px dashed #ccc;
+        padding: 16px;
+        border-radius: 10px;
+        margin-top: 16px;
+      }
 
-    .inline-note {
-      margin-top: 10px;
-      color: #5f6b7a;
-      font-size: 13px;
-    }
+      .inline-note {
+        margin-top: 10px;
+        color: #5f6b7a;
+        font-size: 13px;
+      }
 
-    .hidden {
-      display: none;
-    }
+      .hidden {
+        display: none;
+      }
 
-    button {
-      padding: 10px 18px;
-      border-radius: 8px;
-      border: none;
-      cursor: pointer;
-      font-weight: 600;
-    }
+      button {
+        padding: 10px 18px;
+        border-radius: 8px;
+        border: none;
+        cursor: pointer;
+        font-weight: 600;
+      }
 
-    .add {
-      background: #3498db;
-      color: white;
-      margin-top: 10px;
-    }
+      .add {
+        background: #3498db;
+        color: white;
+        margin-top: 10px;
+      }
 
-    .remove {
-      background: #e74c3c;
-      color: white;
-      margin-top: 10px;
-    }
+      .remove {
+        background: #e74c3c;
+        color: white;
+        margin-top: 10px;
+      }
 
-    .submit {
-      background: #2ba572;
-      color: white;
-      font-size: 16px;
-      margin-top: 20px;
-      width: 100%;
-    }
-  </style>
-</head>
+      .submit {
+        background: #2ba572;
+        color: white;
+        font-size: 16px;
+        margin-top: 20px;
+        width: 100%;
+      }
+    </style>
+  </head>
 
-<body>
-
-<div class="header">
-  <h1>Create Trader</h1>
-  <button onclick="goBack()">Back</button>
-</div>
-
-<div class="container">
-  <div class="card">
-    <h3>Trader Type</h3>
-    <div class="grid">
-      <select id="traderType" onchange="handleTraderTypeChange()">
-        <option value="contracted">Contracted Trader</option>
-        <option value="uncontracted">Uncontracted Trader</option>
-      </select>
-    </div>
-  </div>
-
-  <div class="card">
-    <h3>Trader Info</h3>
-    <div class="grid">
-      <input id="email" placeholder="Email" />
-      <input id="phone" placeholder="Phone" />
-      <input id="password" placeholder="Password" type="password" />
-      <input id="bussinessName" placeholder="Business Name" />
-      <input id="rawBusinessType" placeholder="Business Type" />
-      <input id="bussinessAdress" placeholder="Business Address" />
-      <input id="doshMangerName" placeholder="Dosh Manager Name" />
-      <input id="doshMangerPhone" placeholder="Dosh Manager Phone" />
-    </div>
-  </div>
-
-  <div class="card" id="contractCard">
-    <h3>Contract</h3>
-    <div class="grid">
-      <input id="startDate" type="date" />
-      <input id="endDate" type="date" />
-
-      <select id="settlementType">
-        <option value="meal">Meal</option>
-        <option value="monthly">Monthly</option>
-      </select>
-
-      <select id="paymentMethod" onchange="handlePaymentMethodChange()">
-        <option value="cash">Cash</option>
-        <option value="wallet">Wallet</option>
-        <option value="bankTransfer">Bank Transfer</option>
-      </select>
-
-      <input
-        id="fixedShipmentDays"
-        placeholder="Fixed Shipment Days (comma e.g. 2,5)"
-      />
-
-      <input
-        id="estimatedquantityPerShipment"
-        placeholder="Estimated Qty / Shipment"
-        type="number"
-      />
+  <body>
+    <div class="header">
+      <h1>Create Trader</h1>
+      <button onclick="goBack()">Back</button>
     </div>
 
-    <div id="walletFields" class="grid hidden" style="margin-top: 16px;">
-      <input id="walletNumber" placeholder="Wallet Number" />
+    <div class="container">
+      <div class="card">
+        <h3>Trader Type</h3>
+        <div class="grid">
+          <select id="traderType" onchange="handleTraderTypeChange()">
+            <option value="contracted">Contracted Trader</option>
+            <option value="uncontracted">Uncontracted Trader</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Trader Info</h3>
+        <div class="grid">
+          <input id="email" placeholder="Email" />
+          <input id="phone" placeholder="Phone" />
+          <input id="password" placeholder="Password" type="password" />
+          <input id="bussinessName" placeholder="Business Name" />
+          <input id="rawBusinessType" placeholder="Business Type" />
+          <input id="bussinessAdress" placeholder="Business Address" />
+          <input id="doshMangerName" placeholder="Dosh Manager Name" />
+          <input id="doshMangerPhone" placeholder="Dosh Manager Phone" />
+        </div>
+      </div>
+
+      <div class="card" id="contractCard">
+        <h3>Contract</h3>
+        <div class="grid">
+          <input id="startDate" type="date" />
+          <input id="endDate" type="date" />
+
+          <select id="settlementType">
+            <option value="meal">Meal</option>
+            <option value="monthly">Monthly</option>
+          </select>
+
+          <select id="paymentMethod" onchange="handlePaymentMethodChange()">
+            <option value="cash">Cash</option>
+            <option value="wallet">Wallet</option>
+            <option value="bankTransfer">Bank Transfer</option>
+          </select>
+
+          <input
+            id="fixedShipmentDays"
+            placeholder="Fixed Shipment Days (comma e.g. 2,5)"
+          />
+
+          <input
+            id="estimatedquantityPerShipment"
+            placeholder="Estimated Qty / Shipment"
+            type="number"
+          />
+        </div>
+
+        <div id="walletFields" class="grid hidden" style="margin-top: 16px">
+          <input id="walletNumber" placeholder="Wallet Number" />
+        </div>
+
+        <div id="bankFields" class="grid hidden" style="margin-top: 16px">
+          <input id="bankName" placeholder="Bank Name" />
+          <input id="accountNumber" placeholder="Account Number" />
+          <input id="iban" placeholder="IBAN (optional)" />
+        </div>
+
+        <p class="inline-note">
+          If no branches are added, the API will create the default main branch
+          from the contract data.
+        </p>
+      </div>
+
+      <div class="card" id="branchesCard">
+        <h3>Branches</h3>
+        <div id="branches"></div>
+        <button class="add" onclick="addBranch()" type="button">
+          Add Branch
+        </button>
+      </div>
+
+      <button class="submit" onclick="submitForm()">Create Trader</button>
     </div>
 
-    <div id="bankFields" class="grid hidden" style="margin-top: 16px;">
-      <input id="bankName" placeholder="Bank Name" />
-      <input id="accountNumber" placeholder="Account Number" />
-      <input id="iban" placeholder="IBAN (optional)" />
-    </div>
+    <script>
+      const API_BASE =
+        "https://supercycle-api-855015056699.europe-west1.run.app";
+      const token = localStorage.getItem("token");
+      let DOSH_TYPES = [];
 
-    <p class="inline-note">
-      If no branches are added, the API will create the default main branch from the contract data.
-    </p>
-  </div>
+      if (!token) location.href = "index.html";
 
-  <div class="card" id="branchesCard">
-    <h3>Branches</h3>
-    <div id="branches"></div>
-    <button class="add" onclick="addBranch()" type="button">Add Branch</button>
-  </div>
+      function goBack() {
+        location.href = "dashboard.html";
+      }
 
-  <button class="submit" onclick="submitForm()">
-    Create Trader
-  </button>
-</div>
+      function parseNumberList(value) {
+        return value
+          .split(",")
+          .map((item) => item.trim())
+          .filter(Boolean)
+          .map(Number)
+          .filter((item) => !Number.isNaN(item));
+      }
 
-<script>
-  const API_BASE = "https://supercycle-api-995332059142.europe-west1.run.app";
-  const token = localStorage.getItem("token");
-  let DOSH_TYPES = [];
+      function parseTextList(value) {
+        return value
+          .split(",")
+          .map((item) => item.trim())
+          .filter(Boolean);
+      }
 
-  if (!token) location.href = "index.html";
+      function getDoshTypeOptions() {
+        return DOSH_TYPES.map((d) => {
+          const id = d._id || d.id;
+          return `<option value="${id}">${d.name || id}</option>`;
+        }).join("");
+      }
 
-  function goBack() {
-    location.href = "dashboard.html";
-  }
+      function handlePaymentMethodChange() {
+        const method = document.getElementById("paymentMethod").value;
+        document
+          .getElementById("walletFields")
+          .classList.toggle("hidden", method !== "wallet");
+        document
+          .getElementById("bankFields")
+          .classList.toggle("hidden", method !== "bankTransfer");
+      }
 
-  function parseNumberList(value) {
-    return value
-      .split(",")
-      .map(item => item.trim())
-      .filter(Boolean)
-      .map(Number)
-      .filter(item => !Number.isNaN(item));
-  }
+      function handleTraderTypeChange() {
+        const traderType = document.getElementById("traderType").value;
+        const isContracted = traderType === "contracted";
+        document
+          .getElementById("contractCard")
+          .classList.toggle("hidden", !isContracted);
+        document
+          .getElementById("branchesCard")
+          .classList.toggle("hidden", !isContracted);
+      }
 
-  function parseTextList(value) {
-    return value
-      .split(",")
-      .map(item => item.trim())
-      .filter(Boolean);
-  }
+      async function loadDoshTypes() {
+        try {
+          const res = await fetch(`${API_BASE}/dosh/types`, {
+            headers: { Authorization: "Bearer " + token },
+          });
+          const json = await res.json();
+          DOSH_TYPES = json.data || [];
+        } catch (error) {
+          DOSH_TYPES = [];
+        }
+      }
 
-  function getDoshTypeOptions() {
-    return DOSH_TYPES.map(d => {
-      const id = d._id || d.id;
-      return `<option value="${id}">${d.name || id}</option>`;
-    }).join("");
-  }
-
-  function handlePaymentMethodChange() {
-    const method = document.getElementById("paymentMethod").value;
-    document.getElementById("walletFields").classList.toggle("hidden", method !== "wallet");
-    document.getElementById("bankFields").classList.toggle("hidden", method !== "bankTransfer");
-  }
-
-  function handleTraderTypeChange() {
-    const traderType = document.getElementById("traderType").value;
-    const isContracted = traderType === "contracted";
-    document.getElementById("contractCard").classList.toggle("hidden", !isContracted);
-    document.getElementById("branchesCard").classList.toggle("hidden", !isContracted);
-  }
-
-  async function loadDoshTypes() {
-    try {
-      const res = await fetch(`${API_BASE}/dosh/types`, {
-        headers: { Authorization: "Bearer " + token }
-      });
-      const json = await res.json();
-      DOSH_TYPES = json.data || [];
-    } catch (error) {
-      DOSH_TYPES = [];
-    }
-  }
-
-  function addBranch() {
-    const div = document.createElement("div");
-    div.className = "branch";
-    div.innerHTML = `
+      function addBranch() {
+        const div = document.createElement("div");
+        div.className = "branch";
+        div.innerHTML = `
       <div class="grid">
         <input placeholder="Branch Name" class="branchName"/>
         <input placeholder="Address" class="address"/>
@@ -279,165 +293,200 @@
       <button class="remove" onclick="this.parentElement.remove()" type="button">Remove</button>
     `;
 
-    document.getElementById("branches").appendChild(div);
-  }
-
-  function buildReceivingMethods() {
-    const method = document.getElementById("paymentMethod").value;
-    const receivingMethods = {};
-
-    if (method === "wallet") {
-      const walletNumber = document.getElementById("walletNumber").value.trim();
-      if (walletNumber) {
-        receivingMethods.wallet = { walletNumber };
-      }
-    }
-
-    if (method === "bankTransfer") {
-      const bankName = document.getElementById("bankName").value.trim();
-      const accountNumber = document.getElementById("accountNumber").value.trim();
-      const iban = document.getElementById("iban").value.trim();
-
-      receivingMethods.bankTransfer = {
-        bankName,
-        accountNumber
-      };
-
-      if (iban) {
-        receivingMethods.bankTransfer.iban = iban;
-      }
-    }
-
-    return Object.keys(receivingMethods).length ? receivingMethods : undefined;
-  }
-
-  function buildBranches() {
-    return [...document.querySelectorAll(".branch")].map(branch => {
-      const payload = {
-        branchName: branch.querySelector(".branchName").value.trim(),
-        address: branch.querySelector(".address").value.trim(),
-        contactName: branch.querySelector(".contactName").value.trim(),
-        contactPhone: branch.querySelector(".contactPhone").value.trim(),
-        estimatedQuantityPerShipment: Number(
-          branch.querySelector(".estimatedQuantityPerShipment").value
-        ),
-        shipmentDays: parseNumberList(
-          branch.querySelector(".shipmentDays").value
-        ),
-        scheduleType: branch.querySelector(".scheduleType").value,
-        doshTypeId: branch.querySelector(".doshTypeId").value,
-        customDates: parseTextList(branch.querySelector(".customDates").value)
-      };
-
-      if (!payload.customDates.length) delete payload.customDates;
-      if (!payload.shipmentDays.length) delete payload.shipmentDays;
-      if (!payload.doshTypeId) delete payload.doshTypeId;
-      if (Number.isNaN(payload.estimatedQuantityPerShipment)) {
-        delete payload.estimatedQuantityPerShipment;
+        document.getElementById("branches").appendChild(div);
       }
 
-      return payload;
-    }).filter(branch => Object.keys(branch).length > 1 || branch.branchName || branch.address);
-  }
+      function buildReceivingMethods() {
+        const method = document.getElementById("paymentMethod").value;
+        const receivingMethods = {};
 
-  function validateContractInputs() {
-    const method = document.getElementById("paymentMethod").value;
-
-    if (method === "wallet" && !document.getElementById("walletNumber").value.trim()) {
-      alert("Wallet number is required for wallet payment method");
-      return false;
-    }
-
-    if (method === "bankTransfer") {
-      const bankName = document.getElementById("bankName").value.trim();
-      const accountNumber = document.getElementById("accountNumber").value.trim();
-      if (!bankName || !accountNumber) {
-        alert("Bank name and account number are required for bank transfer");
-        return false;
-      }
-    }
-
-    return true;
-  }
-
-  function buildBasePayload() {
-    return {
-      email: document.getElementById("email").value.trim(),
-      phone: document.getElementById("phone").value.trim(),
-      password: document.getElementById("password").value,
-      bussinessName: document.getElementById("bussinessName").value.trim(),
-      rawBusinessType: document.getElementById("rawBusinessType").value.trim(),
-      bussinessAdress: document.getElementById("bussinessAdress").value.trim(),
-      doshMangerName: document.getElementById("doshMangerName").value.trim(),
-      doshMangerPhone: document.getElementById("doshMangerPhone").value.trim()
-    };
-  }
-
-  async function submitForm() {
-    const traderType = document.getElementById("traderType").value;
-    const isContracted = traderType === "contracted";
-    const basePayload = buildBasePayload();
-    let endpoint = `${API_BASE}/admin/traders/uncontracted`;
-    let body = basePayload;
-
-    if (isContracted) {
-      if (!validateContractInputs()) return;
-
-      const branches = buildBranches();
-      endpoint = `${API_BASE}/admin/traders/contracted`;
-      body = {
-        ...basePayload,
-        contract: {
-          startDate: document.getElementById("startDate").value,
-          endDate: document.getElementById("endDate").value,
-          settlementType: document.getElementById("settlementType").value,
-          paymentMethod: document.getElementById("paymentMethod").value,
-          receivingMethods: buildReceivingMethods(),
-          fixedShipmentDays: parseNumberList(
-            document.getElementById("fixedShipmentDays").value
-          ),
-          estimatedquantityPerShipment: Number(
-            document.getElementById("estimatedquantityPerShipment").value
-          ),
-          branches: branches.length ? branches : undefined
+        if (method === "wallet") {
+          const walletNumber = document
+            .getElementById("walletNumber")
+            .value.trim();
+          if (walletNumber) {
+            receivingMethods.wallet = { walletNumber };
+          }
         }
-      };
 
-      if (!body.contract.receivingMethods) delete body.contract.receivingMethods;
-      if (!body.contract.fixedShipmentDays.length) delete body.contract.fixedShipmentDays;
-      if (Number.isNaN(body.contract.estimatedquantityPerShipment)) {
-        delete body.contract.estimatedquantityPerShipment;
+        if (method === "bankTransfer") {
+          const bankName = document.getElementById("bankName").value.trim();
+          const accountNumber = document
+            .getElementById("accountNumber")
+            .value.trim();
+          const iban = document.getElementById("iban").value.trim();
+
+          receivingMethods.bankTransfer = {
+            bankName,
+            accountNumber,
+          };
+
+          if (iban) {
+            receivingMethods.bankTransfer.iban = iban;
+          }
+        }
+
+        return Object.keys(receivingMethods).length
+          ? receivingMethods
+          : undefined;
       }
-      if (!body.contract.branches) delete body.contract.branches;
-    }
 
-    const res = await fetch(endpoint, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + token
-      },
-      body: JSON.stringify(body)
-    });
+      function buildBranches() {
+        return [...document.querySelectorAll(".branch")]
+          .map((branch) => {
+            const payload = {
+              branchName: branch.querySelector(".branchName").value.trim(),
+              address: branch.querySelector(".address").value.trim(),
+              contactName: branch.querySelector(".contactName").value.trim(),
+              contactPhone: branch.querySelector(".contactPhone").value.trim(),
+              estimatedQuantityPerShipment: Number(
+                branch.querySelector(".estimatedQuantityPerShipment").value,
+              ),
+              shipmentDays: parseNumberList(
+                branch.querySelector(".shipmentDays").value,
+              ),
+              scheduleType: branch.querySelector(".scheduleType").value,
+              doshTypeId: branch.querySelector(".doshTypeId").value,
+              customDates: parseTextList(
+                branch.querySelector(".customDates").value,
+              ),
+            };
 
-    const json = await res.json();
-    if (!res.ok) {
-      alert(json.message || "Failed");
-      return;
-    }
+            if (!payload.customDates.length) delete payload.customDates;
+            if (!payload.shipmentDays.length) delete payload.shipmentDays;
+            if (!payload.doshTypeId) delete payload.doshTypeId;
+            if (Number.isNaN(payload.estimatedQuantityPerShipment)) {
+              delete payload.estimatedQuantityPerShipment;
+            }
 
-    alert(isContracted ? "Contracted trader created successfully" : "Uncontracted trader created successfully");
-    location.href = "dashboard.html";
-  }
+            return payload;
+          })
+          .filter(
+            (branch) =>
+              Object.keys(branch).length > 1 ||
+              branch.branchName ||
+              branch.address,
+          );
+      }
 
-  async function init() {
-    await loadDoshTypes();
-    handleTraderTypeChange();
-    handlePaymentMethodChange();
-  }
+      function validateContractInputs() {
+        const method = document.getElementById("paymentMethod").value;
 
-  init();
-</script>
+        if (
+          method === "wallet" &&
+          !document.getElementById("walletNumber").value.trim()
+        ) {
+          alert("Wallet number is required for wallet payment method");
+          return false;
+        }
 
-</body>
+        if (method === "bankTransfer") {
+          const bankName = document.getElementById("bankName").value.trim();
+          const accountNumber = document
+            .getElementById("accountNumber")
+            .value.trim();
+          if (!bankName || !accountNumber) {
+            alert(
+              "Bank name and account number are required for bank transfer",
+            );
+            return false;
+          }
+        }
+
+        return true;
+      }
+
+      function buildBasePayload() {
+        return {
+          email: document.getElementById("email").value.trim(),
+          phone: document.getElementById("phone").value.trim(),
+          password: document.getElementById("password").value,
+          bussinessName: document.getElementById("bussinessName").value.trim(),
+          rawBusinessType: document
+            .getElementById("rawBusinessType")
+            .value.trim(),
+          bussinessAdress: document
+            .getElementById("bussinessAdress")
+            .value.trim(),
+          doshMangerName: document
+            .getElementById("doshMangerName")
+            .value.trim(),
+          doshMangerPhone: document
+            .getElementById("doshMangerPhone")
+            .value.trim(),
+        };
+      }
+
+      async function submitForm() {
+        const traderType = document.getElementById("traderType").value;
+        const isContracted = traderType === "contracted";
+        const basePayload = buildBasePayload();
+        let endpoint = `${API_BASE}/admin/traders/uncontracted`;
+        let body = basePayload;
+
+        if (isContracted) {
+          if (!validateContractInputs()) return;
+
+          const branches = buildBranches();
+          endpoint = `${API_BASE}/admin/traders/contracted`;
+          body = {
+            ...basePayload,
+            contract: {
+              startDate: document.getElementById("startDate").value,
+              endDate: document.getElementById("endDate").value,
+              settlementType: document.getElementById("settlementType").value,
+              paymentMethod: document.getElementById("paymentMethod").value,
+              receivingMethods: buildReceivingMethods(),
+              fixedShipmentDays: parseNumberList(
+                document.getElementById("fixedShipmentDays").value,
+              ),
+              estimatedquantityPerShipment: Number(
+                document.getElementById("estimatedquantityPerShipment").value,
+              ),
+              branches: branches.length ? branches : undefined,
+            },
+          };
+
+          if (!body.contract.receivingMethods)
+            delete body.contract.receivingMethods;
+          if (!body.contract.fixedShipmentDays.length)
+            delete body.contract.fixedShipmentDays;
+          if (Number.isNaN(body.contract.estimatedquantityPerShipment)) {
+            delete body.contract.estimatedquantityPerShipment;
+          }
+          if (!body.contract.branches) delete body.contract.branches;
+        }
+
+        const res = await fetch(endpoint, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + token,
+          },
+          body: JSON.stringify(body),
+        });
+
+        const json = await res.json();
+        if (!res.ok) {
+          alert(json.message || "Failed");
+          return;
+        }
+
+        alert(
+          isContracted
+            ? "Contracted trader created successfully"
+            : "Uncontracted trader created successfully",
+        );
+        location.href = "dashboard.html";
+      }
+
+      async function init() {
+        await loadDoshTypes();
+        handleTraderTypeChange();
+        handlePaymentMethodChange();
+      }
+
+      init();
+    </script>
+  </body>
 </html>

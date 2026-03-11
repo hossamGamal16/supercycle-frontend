@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -278,7 +278,7 @@
             </div>
           </div>
 
-          <div class="items-list" style="margin-top:16px">
+          <div class="items-list" style="margin-top: 16px">
             <h4>Current Items</h4>
             <ul id="itemsList"></ul>
           </div>
@@ -307,10 +307,9 @@
       </div>
     </div>
 
- 
     <script>
       const API_BASE =
-        "https://supercycle-api-995332059142.europe-west1.run.app";
+        "https://supercycle-api-855015056699.europe-west1.run.app";
       const token = localStorage.getItem("token");
       if (!token) location.href = "index.html";
 
@@ -346,32 +345,30 @@
           const statusEl = document.getElementById("status");
           statusEl.innerText = shipmentData.status || "Unknown";
           statusEl.className =
-            "status-badge status-" +
-            (shipmentData.status || "").toLowerCase();
+            "status-badge status-" + (shipmentData.status || "").toLowerCase();
 
           totalKg.innerText = shipmentData.totalQuantityKg || "0";
-          traderName.innerText =
-            shipmentData.traderId?.bussinessName || "-";
+          traderName.innerText = shipmentData.traderId?.bussinessName || "-";
 
           itemsList.innerHTML = "";
-         const currentItems =
-  shipmentData.inspectedItems && shipmentData.inspectedItems.length > 0
-    ? shipmentData.inspectedItems
-    : [];
+          const currentItems =
+            shipmentData.inspectedItems &&
+            shipmentData.inspectedItems.length > 0
+              ? shipmentData.inspectedItems
+              : [];
 
-itemsList.innerHTML = "";
+          itemsList.innerHTML = "";
 
-if (currentItems.length > 0) {
-  currentItems.forEach((i) => {
-    itemsList.innerHTML += `
+          if (currentItems.length > 0) {
+            currentItems.forEach((i) => {
+              itemsList.innerHTML += `
       <li>
         <b>${i.doshType.name}</b> - ${i.quantityKg} KG
       </li>`;
-  });
-} else {
-  itemsList.innerHTML =
-    "<li>⚠️ لم يتم فحص الشحنة بعد</li>";
-}
+            });
+          } else {
+            itemsList.innerHTML = "<li>⚠️ لم يتم فحص الشحنة بعد</li>";
+          }
         } catch (err) {
           alert("Error loading shipment: " + err.message);
         }
@@ -393,7 +390,7 @@ if (currentItems.length > 0) {
             `${API_BASE}/admin/vehicles?page=1&limit=100`,
             {
               headers: { Authorization: "Bearer " + token },
-            }
+            },
           );
           const json = await res.json();
           VEHICLES = json.data?.data || [];
@@ -416,12 +413,9 @@ if (currentItems.length > 0) {
 
       async function loadWarehouses() {
         try {
-          const res = await fetch(
-            `${API_BASE}/admin/warehouses`,
-            {
-              headers: { Authorization: "Bearer " + token },
-            }
-          );
+          const res = await fetch(`${API_BASE}/admin/warehouses`, {
+            headers: { Authorization: "Bearer " + token },
+          });
           const json = await res.json();
           WAREHOUSES = json.data || [];
         } catch (err) {
@@ -497,7 +491,7 @@ if (currentItems.length > 0) {
                     (d) =>
                       `<option value="${d.id}" ${
                         item.doshType === d.id ? "selected" : ""
-                      }>${d.name}</option>`
+                      }>${d.name}</option>`,
                   ).join("")}
                 </select>
                 <input
@@ -535,7 +529,7 @@ if (currentItems.length > 0) {
                   (v) =>
                     `<option value="${v.id}" ${
                       seg.vehicleId === v.id ? "selected" : ""
-                    }>${v.vehicleType} - ${v.licensePlate} | ${v.driver.name} | ${v.maxLoadKg} KG</option>`
+                    }>${v.vehicleType} - ${v.licensePlate} | ${v.driver.name} | ${v.maxLoadKg} KG</option>`,
                 ).join("")}
               </select>
             </div>
@@ -557,7 +551,7 @@ if (currentItems.length > 0) {
                     (d) =>
                       `<option value="${d._id}" ${
                         seg.destinationId === d._id ? "selected" : ""
-                      }>${d.name || d.warehouseName}</option>`
+                      }>${d.name || d.warehouseName}</option>`,
                   )
                   .join("")}
               </select>
@@ -600,15 +594,11 @@ if (currentItems.length > 0) {
           for (let j = 0; j < seg.items.length; j++) {
             const item = seg.items[j];
             if (!item.doshType) {
-              alert(
-                `❌ القطاع ${i + 1} العنصر ${j + 1}: اختر نوع الدوش`
-              );
+              alert(`❌ القطاع ${i + 1} العنصر ${j + 1}: اختر نوع الدوش`);
               return;
             }
             if (!item.quantityKg || item.quantityKg <= 0) {
-              alert(
-                `❌ القطاع ${i + 1} العنصر ${j + 1}: أدخل وزن صحيح`
-              );
+              alert(`❌ القطاع ${i + 1} العنصر ${j + 1}: أدخل وزن صحيح`);
               return;
             }
           }
@@ -650,7 +640,7 @@ if (currentItems.length > 0) {
                 Authorization: "Bearer " + token,
               },
               body: JSON.stringify(payload),
-            }
+            },
           );
 
           const json = await res.json();
@@ -660,8 +650,7 @@ if (currentItems.length > 0) {
           }
 
           segmentSection.classList.add("hidden");
-          successMessage.innerText =
-            "✅ تم تقسيم الشحنة والتوجيه بنجاح";
+          successMessage.innerText = "✅ تم تقسيم الشحنة والتوجيه بنجاح";
           successMessage.classList.remove("hidden");
 
           setTimeout(() => {

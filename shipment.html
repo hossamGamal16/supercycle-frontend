@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -364,22 +364,29 @@
           <select id="representativeId" onchange="onRepresentativeChange()">
             <option value="">-- Select Representative --</option>
           </select>
-          <div id="repInfo" style="font-size:12px;color:#666;margin-top:6px"></div>
+          <div
+            id="repInfo"
+            style="font-size: 12px; color: #666; margin-top: 6px"
+          ></div>
 
-          <label style="margin-top:10px">Assign Vehicles</label>
+          <label style="margin-top: 10px">Assign Vehicles</label>
           <div id="vehiclesList"></div>
           <div id="vehicleSummary" class="summary-box"></div>
 
-          <label style="margin-top:10px">Notes / Reason</label>
-          <textarea id="note" placeholder="Add a note for this shipment..."></textarea>
-          
-          <label style="margin-top:10px">Note Visibility</label>
+          <label style="margin-top: 10px">Notes / Reason</label>
+          <textarea
+            id="note"
+            placeholder="Add a note for this shipment..."
+          ></textarea>
+
+          <label style="margin-top: 10px">Note Visibility</label>
           <div class="checkbox-group">
             <label>
               <input type="checkbox" id="visibilityAdmin" checked /> Admin
             </label>
             <label>
-              <input type="checkbox" id="visibilityRepresentative" checked /> Representative
+              <input type="checkbox" id="visibilityRepresentative" checked />
+              Representative
             </label>
             <label>
               <input type="checkbox" id="visibilityTrader" /> Trader
@@ -388,9 +395,16 @@
 
           <div class="button-group">
             <button class="btn-approve" onclick="approve()">Approve</button>
-            <button class="btn-edit" onclick="enterEditMode()">Edit & Approve</button>
+            <button class="btn-edit" onclick="enterEditMode()">
+              Edit & Approve
+            </button>
             <button class="btn-reject" onclick="reject()">Reject</button>
-            <button style="background:#6c757d;color:white" onclick="addNoteOnly()">Add Note</button>
+            <button
+              style="background: #6c757d; color: white"
+              onclick="addNoteOnly()"
+            >
+              Add Note
+            </button>
           </div>
         </div>
 
@@ -401,15 +415,15 @@
           <label>Pickup Date</label>
           <input id="pickupDate" type="datetime-local" />
 
-          <label style="margin-top:8px">Pickup Address</label>
+          <label style="margin-top: 8px">Pickup Address</label>
           <input id="pickupAddress" />
 
-          <label style="margin-top:8px">Items</label>
+          <label style="margin-top: 8px">Items</label>
           <div id="editItems"></div>
 
           <button
             onclick="addItem()"
-            style="background:#2ba572;color:white;margin-top:10px"
+            style="background: #2ba572; color: white; margin-top: 10px"
           >
             ➕ Add Item
           </button>
@@ -426,7 +440,7 @@
 
     <script>
       const API_BASE =
-        "https://supercycle-api-995332059142.europe-west1.run.app";
+        "https://supercycle-api-855015056699.europe-west1.run.app";
       const token = localStorage.getItem("token");
       if (!token) location.href = "index.html";
 
@@ -516,7 +530,7 @@
           shipmentData.shipmentNumber;
         document.getElementById("shipmentNumber").innerText =
           shipmentData.shipmentNumber;
-        
+
         // Calculate total KG from items
         let totalKg = 0;
         (shipmentData.items || []).forEach((i) => {
@@ -526,7 +540,9 @@
         document.getElementById("address").innerText =
           shipmentData.customPickupAddress || "-";
         document.getElementById("requestedPickupAt").innerText =
-          shipmentData.requestedPickupAt ? new Date(shipmentData.requestedPickupAt).toLocaleString() : "-";
+          shipmentData.requestedPickupAt
+            ? new Date(shipmentData.requestedPickupAt).toLocaleString()
+            : "-";
         document.getElementById("traderName").innerText =
           shipmentData.traderId?.bussinessName || "-";
         document.getElementById("traderPhone").innerText =
@@ -579,7 +595,7 @@
       async function loadRepresentatives() {
         const res = await fetch(
           `${API_BASE}/admin/representatives?page=1&limit=50`,
-          { headers: { Authorization: "Bearer " + token } }
+          { headers: { Authorization: "Bearer " + token } },
         );
         const json = await res.json();
         REPRESENTATIVES = json.data.data || [];
@@ -593,7 +609,7 @@
 
       function onRepresentativeChange() {
         const rep = REPRESENTATIVES.find(
-          (r) => r.id === document.getElementById("representativeId").value
+          (r) => r.id === document.getElementById("representativeId").value,
         );
         document.getElementById("repInfo").innerHTML = rep
           ? `📍 ${rep.address}<br/>📞 ${rep.user.phone}`
@@ -601,10 +617,9 @@
       }
 
       async function loadVehicles() {
-        const res = await fetch(
-          `${API_BASE}/admin/vehicles?page=1&limit=50`,
-          { headers: { Authorization: "Bearer " + token } }
-        );
+        const res = await fetch(`${API_BASE}/admin/vehicles?page=1&limit=50`, {
+          headers: { Authorization: "Bearer " + token },
+        });
         const json = await res.json();
         VEHICLES = json.data.data || [];
         renderVehicles();
@@ -628,9 +643,9 @@
       }
 
       function getSelectedVehicleIds() {
-        return [...document.querySelectorAll("#vehiclesList input:checked")].map(
-          (i) => i.value
-        );
+        return [
+          ...document.querySelectorAll("#vehiclesList input:checked"),
+        ].map((i) => i.value);
       }
 
       function updateVehicleSummary() {
@@ -656,12 +671,16 @@
       function enterEditMode() {
         document.getElementById("editSection").classList.remove("hidden");
         document.getElementById("pickupDate").value =
-          shipmentData.requestedPickupAt ? new Date(shipmentData.requestedPickupAt).toISOString().slice(0, 16) : "";
+          shipmentData.requestedPickupAt
+            ? new Date(shipmentData.requestedPickupAt)
+                .toISOString()
+                .slice(0, 16)
+            : "";
         document.getElementById("pickupAddress").value =
           shipmentData.customPickupAddress || "";
         document.getElementById("editItems").innerHTML = "";
         shipmentData.items.forEach((i) =>
-          addItem(i.doshType._id, i.quantityKg)
+          addItem(i.doshType._id, i.quantityKg),
         );
       }
 
@@ -708,18 +727,20 @@
         if (!items.length) return alert("Invalid items");
 
         updates.items = items;
-        updates.customPickupAddress = document.getElementById("pickupAddress").value;
-        updates.requestedPickupAt = new Date(document.getElementById("pickupDate").value).toISOString();
+        updates.customPickupAddress =
+          document.getElementById("pickupAddress").value;
+        updates.requestedPickupAt = new Date(
+          document.getElementById("pickupDate").value,
+        ).toISOString();
 
         safePatch(
           `/admin/shipments/${shipmentId}/edit-and-approve`,
           {
             updates,
-            representativeId:
-              document.getElementById("representativeId").value,
+            representativeId: document.getElementById("representativeId").value,
             vehicleIds: getSelectedVehicleIds(),
           },
-          "Shipment edited & approved"
+          "Shipment edited & approved",
         );
       }
 
@@ -727,11 +748,10 @@
         safePatch(
           `/admin/shipments/${shipmentId}/approve`,
           {
-            representativeId:
-              document.getElementById("representativeId").value,
+            representativeId: document.getElementById("representativeId").value,
             vehicleIds: getSelectedVehicleIds(),
           },
-          "Shipment approved"
+          "Shipment approved",
         );
       }
 
@@ -739,7 +759,7 @@
         safePatch(
           `/admin/shipments/${shipmentId}/reject`,
           { reason: document.getElementById("note").value.trim() },
-          "Shipment rejected"
+          "Shipment rejected",
         );
       }
 
