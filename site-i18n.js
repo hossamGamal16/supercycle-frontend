@@ -428,35 +428,24 @@
     const observer = new MutationObserver((mutations) => {
       if (state.isApplying) return;
 
+      let hasNewNodes = false;
       mutations.forEach((mutation) => {
         if (mutation.type === "childList") {
-          mutation.addedNodes.forEach((node) => scanNode(node));
-        }
-
-        if (mutation.type === "characterData" && mutation.target) {
-          mutation.target.__i18nOriginal = mutation.target.nodeValue;
-          rememberTextNode(mutation.target);
-        }
-
-        if (
-          mutation.type === "attributes" &&
-          mutation.attributeName === "placeholder"
-        ) {
-          rememberPlaceholder(mutation.target);
-          mutation.target.__i18nPlaceholderOriginal =
-            mutation.target.getAttribute("placeholder");
+          mutation.addedNodes.forEach((node) => {
+            scanNode(node);
+            hasNewNodes = true;
+          });
         }
       });
 
-      applyCurrentLanguage();
+      if (hasNewNodes) {
+        applyCurrentLanguage();
+      }
     });
 
     observer.observe(document.body, {
       subtree: true,
       childList: true,
-      characterData: true,
-      attributes: true,
-      attributeFilter: ["placeholder"],
     });
   }
 
