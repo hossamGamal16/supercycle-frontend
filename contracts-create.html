@@ -229,6 +229,15 @@
           .filter(Boolean);
       }
 
+      function extractCollection(json) {
+        if (Array.isArray(json)) return json;
+        if (Array.isArray(json?.data)) return json.data;
+        if (Array.isArray(json?.data?.data)) return json.data.data;
+        if (Array.isArray(json?.items)) return json.items;
+        if (Array.isArray(json?.results)) return json.results;
+        return [];
+      }
+
       function getDoshTypeOptions() {
         return DOSH_TYPES.map((d) => {
           const id = d._id || d.id;
@@ -263,7 +272,7 @@
             headers: { Authorization: "Bearer " + token },
           });
           const json = await res.json();
-          DOSH_TYPES = json.data || [];
+          DOSH_TYPES = extractCollection(json);
         } catch (error) {
           DOSH_TYPES = [];
         }
@@ -376,7 +385,7 @@
           method === "wallet" &&
           !document.getElementById("walletNumber").value.trim()
         ) {
-          alert("Wallet number is required for wallet payment method");
+          alert(__t("Wallet number is required for wallet payment method"));
           return false;
         }
 
@@ -387,7 +396,7 @@
             .value.trim();
           if (!bankName || !accountNumber) {
             alert(
-              "Bank name and account number are required for bank transfer",
+              __t("Bank name and account number are required for bank transfer"),
             );
             return false;
           }
@@ -468,14 +477,14 @@
 
         const json = await res.json();
         if (!res.ok) {
-          alert(json.message || "Failed");
+          alert(json.message || __t("Failed"));
           return;
         }
 
         alert(
           isContracted
-            ? "Contracted trader created successfully"
-            : "Uncontracted trader created successfully",
+            ? __t("Contracted trader created successfully")
+            : __t("Uncontracted trader created successfully"),
         );
         location.href = "dashboard.html";
       }
@@ -488,5 +497,6 @@
 
       init();
     </script>
+    <script src="./site-i18n.js"></script>
   </body>
 </html>

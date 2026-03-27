@@ -240,7 +240,7 @@
         const password = document.getElementById("password").value;
 
         if (!email || !password) {
-          showError("Please enter both email and password");
+          showError(__t("Please enter both email and password"));
           return;
         }
 
@@ -256,7 +256,7 @@
           const data = await res.json();
 
           if (!res.ok) {
-            throw new Error(data.message || "Login failed");
+            throw new Error(data.message || __t("Login failed"));
           }
 
           localStorage.setItem("token", data.token);
@@ -270,5 +270,6 @@
         if (e.key === "Enter") login();
       });
     </script>
+    <script src="./site-i18n.js"></script>
   </body>
 </html>

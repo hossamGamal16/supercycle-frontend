@@ -203,7 +203,7 @@
         const text = await res.text();
         if (!res.ok) {
           console.error("LOAD ERROR:", text);
-          alert("Failed to load redemption requests");
+          alert(__t("Failed to load redemption requests"));
           return;
         }
 
@@ -236,7 +236,7 @@
         if (!data.length) {
           rows.innerHTML = `
         <tr>
-          <td colspan="6" class="empty">No redemption requests</td>
+          <td colspan="6" class="empty">${__t("No redemption requests")}</td>
         </tr>
       `;
           return;
@@ -254,18 +254,18 @@
         </td>
 
         <td>
-          Quantity: <b>${r.quantity}</b><br/>
-          Points Used: <b>${r.totalPointsUsed}</b>
+          ${__t("Quantity:")} <b>${r.quantity}</b><br/>
+          ${__t("Points Used:")} <b>${r.totalPointsUsed}</b>
         </td>
 
         <td>
           <span class="status ${r.status}">
-            ${r.status}
+            ${__status(r.status)}
           </span>
         </td>
 
         <td>
-          ${new Date(r.createdAt).toLocaleString()}
+          ${__formatDateTime(r.createdAt)}
         </td>
 
         <td>
@@ -280,15 +280,15 @@
       function renderActions(r) {
         if (r.status === "pending") {
           return `
-        <button class="action approve" onclick="approve('${r._id}')">Approve</button>
-        <button class="action reject" onclick="rejectPrompt('${r._id}')">Reject</button>
+        <button class="action approve" onclick="approve('${r._id}')">${__t("Approve")}</button>
+        <button class="action reject" onclick="rejectPrompt('${r._id}')">${__t("Reject")}</button>
       `;
         }
 
         if (r.status === "approved") {
           return `
         <button class="action plant" onclick="markPlanted('${r._id}')">
-          Mark Planted
+          ${__t("Mark Planted")}
         </button>
       `;
         }
@@ -306,7 +306,7 @@
       }
 
       function rejectPrompt(id) {
-        const reason = prompt("Reason for rejection?");
+        const reason = prompt(__t("Reason for rejection?"));
         if (!reason) return;
 
         patch(`/admin/eco/redeem/${id}/reject`, { reason });
@@ -325,7 +325,7 @@
         const text = await res.text();
         if (!res.ok) {
           console.error("PATCH ERROR:", text);
-          alert("Action failed");
+          alert(__t("Action failed"));
           return;
         }
 
@@ -334,6 +334,8 @@
 
       /* ================= INIT ================= */
       loadRedeems();
+      window.onLanguageChange = () => applyFilter();
     </script>
+    <script src="./site-i18n.js"></script>
   </body>
 </html>

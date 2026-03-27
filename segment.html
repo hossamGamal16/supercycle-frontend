@@ -327,6 +327,27 @@
         location.href = "shipments.html";
       }
 
+      function extractEntity(json) {
+        return json?.data?.data || json?.data || json;
+      }
+
+      function extractCollection(json) {
+        if (Array.isArray(json)) return json;
+        if (Array.isArray(json?.data)) return json.data;
+        if (Array.isArray(json?.data?.data)) return json.data.data;
+        if (Array.isArray(json?.items)) return json.items;
+        if (Array.isArray(json?.results)) return json.results;
+        return [];
+      }
+
+      function getDoshTypeName(item) {
+        return item?.doshType?.name || item?.doshTypeName || item?.doshType || "-";
+      }
+
+      function getDoshTypeId(item) {
+        return item?.doshType?._id || item?.doshType?.id || item?.doshType || "";
+      }
+
       /* ================= LOAD DATA ================= */
       async function loadShipment() {
         try {
@@ -334,13 +355,15 @@
             headers: { Authorization: "Bearer " + token },
           });
           const json = await res.json();
-          shipmentData = json.data;
+          shipmentData = extractEntity(json);
 
           loading.style.display = "none";
           content.classList.remove("hidden");
 
-          title.innerText = `${shipmentData.shipmentNumber} - Segment & Route`;
-          shipmentNumber.innerText = shipmentData.shipmentNumber;
+          const shipmentLabel =
+            shipmentData?.shipmentNumber || shipmentData?._id || shipmentId;
+          title.innerText = `${shipmentLabel} - Segment & Route`;
+          shipmentNumber.innerText = shipmentLabel;
 
           const statusEl = document.getElementById("status");
           statusEl.innerText = shipmentData.status || "Unknown";
@@ -355,7 +378,7 @@
             shipmentData.inspectedItems &&
             shipmentData.inspectedItems.length > 0
               ? shipmentData.inspectedItems
-              : [];
+              : shipmentData.items || [];
 
           itemsList.innerHTML = "";
 
@@ -363,14 +386,14 @@
             currentItems.forEach((i) => {
               itemsList.innerHTML += `
       <li>
-        <b>${i.doshType.name}</b> - ${i.quantityKg} KG
+        <b>${getDoshTypeName(i)}</b> - ${i.quantityKg} KG
       </li>`;
             });
           } else {
             itemsList.innerHTML = "<li>⚠️ لم يتم فحص الشحنة بعد</li>";
           }
         } catch (err) {
-          alert("Error loading shipment: " + err.message);
+          alert(__t("Error loading shipment: ") + err.message);
         }
       }
 
@@ -378,7 +401,7 @@
         try {
           const res = await fetch(`${API_BASE}/dosh/types`);
           const json = await res.json();
-          DOSH_TYPES = json.data || [];
+          DOSH_TYPES = extractCollection(json);
         } catch (err) {
           console.error("Error loading dosh types:", err);
         }
@@ -393,7 +416,7 @@
             },
           );
           const json = await res.json();
-          VEHICLES = json.data?.data || [];
+          VEHICLES = extractCollection(json);
         } catch (err) {
           console.error("Error loading vehicles:", err);
         }
@@ -405,7 +428,7 @@
             headers: { Authorization: "Bearer " + token },
           });
           const json = await res.json();
-          FACTORIES = json.data || [];
+          FACTORIES = extractCollection(json);
         } catch (err) {
           console.error("Error loading factories:", err);
         }
@@ -417,7 +440,7 @@
             headers: { Authorization: "Bearer " + token },
           });
           const json = await res.json();
-          WAREHOUSES = json.data || [];
+          WAREHOUSES = extractCollection(json);
         } catch (err) {
           console.error("Error loading warehouses:", err);
         }
@@ -489,8 +512,8 @@
                   <option value="">-- Select Dosh Type --</option>
                   ${DOSH_TYPES.map(
                     (d) =>
-                      `<option value="${d.id}" ${
-                        item.doshType === d.id ? "selected" : ""
+                      `<option value="${d._id || d.id}" ${
+                        item.doshType === (d._id || d.id) ? "selected" : ""
                       }>${d.name}</option>`,
                   ).join("")}
                 </select>
@@ -527,8 +550,8 @@
                 <option value="">-- Select Vehicle --</option>
                 ${VEHICLES.map(
                   (v) =>
-                    `<option value="${v.id}" ${
-                      seg.vehicleId === v.id ? "selected" : ""
+                    `<option value="${v._id || v.id}" ${
+                      seg.vehicleId === (v._id || v.id) ? "selected" : ""
                     }>${v.vehicleType} - ${v.licensePlate} | ${v.driver.name} | ${v.maxLoadKg} KG</option>`,
                 ).join("")}
               </select>
@@ -645,7 +668,7 @@
 
           const json = await res.json();
           if (!res.ok) {
-            alert(json.message || "Failed to segment shipment");
+            alert(json.message || __t("Failed to segment shipment"));
             return;
           }
 
@@ -657,7 +680,7 @@
             goBack();
           }, 2000);
         } catch (err) {
-          alert("Error: " + err.message);
+          alert(__t("Error: ") + err.message);
         }
       }
 
@@ -668,5 +691,6 @@
       loadFactories();
       loadWarehouses();
     </script>
+    <script src="./site-i18n.js"></script>
   </body>
 </html>

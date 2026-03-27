@@ -224,12 +224,21 @@
         }
       }
 
+      function extractCollection(json) {
+        if (Array.isArray(json)) return json;
+        if (Array.isArray(json?.data)) return json.data;
+        if (Array.isArray(json?.data?.data)) return json.data.data;
+        if (Array.isArray(json?.items)) return json.items;
+        if (Array.isArray(json?.results)) return json.results;
+        return [];
+      }
+
       async function loadShipments() {
         const res = await fetch(`${API_BASE}/admin/shipments?limit=100`, {
           headers: { Authorization: "Bearer " + token },
         });
         const json = await res.json();
-        const allShipments = json.data || [];
+        const allShipments = extractCollection(json);
 
         let approvals = [];
         let segmentations = [];
@@ -275,14 +284,15 @@
         <td>${i + 1}</td>
         <td><strong>${s.shipmentNumber}</strong></td>
         <td>${s.totalQuantityKg}</td>
-        <td><span class="status-badge status-${s.status}">${s.status}</span></td>
-        <td>${new Date(s.createdAt).toLocaleString()}</td>
+        <td><span class="status-badge status-${s.status}">${__status(s.status)}</span></td>
+        <td>${__formatDateTime(s.createdAt)}</td>
       `;
           tr.onclick = () => {
+            const shipmentKey = s._id || s.id || s.shipmentId;
             location.href =
               type === "approval"
-                ? `shipment.html?id=${s._id}`
-                : `segment.html?id=${s._id}`;
+                ? `shipment.html?id=${shipmentKey}`
+                : `segment.html?id=${shipmentKey}`;
           };
           rows.appendChild(tr);
         });
@@ -290,6 +300,8 @@
 
       applyPageType();
       loadShipments();
+      window.onLanguageChange = () => loadShipments();
     </script>
+    <script src="./site-i18n.js"></script>
   </body>
 </html>

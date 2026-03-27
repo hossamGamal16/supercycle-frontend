@@ -186,7 +186,7 @@
           <td>
             <button class="eco-btn"
               onclick="openModal('${d.userId}', '${d.bussinessName || ""}')">
-              Convert
+              ${__t("Convert")}
             </button>
           </td>
         </tr>
@@ -197,7 +197,7 @@
       function openModal(userId, name) {
         selectedUserId = userId;
         document.getElementById("modalText").innerText =
-          `Convert "${name}" to Eco participant?`;
+          `${__t("Convert")} "${name}" ${__t("to Eco participant?")}`;
         document.getElementById("confirmModal").style.display = "flex";
       }
 
@@ -227,7 +227,7 @@
 
         if (!res.ok) {
           const err = await res.json();
-          alert(err.message || "Failed to convert trader");
+          alert(err.message || __t("Failed to convert trader"));
           return;
         }
 
@@ -236,6 +236,8 @@
       }
 
       loadData();
+      window.onLanguageChange = () => render();
     </script>
+    <script src="./site-i18n.js"></script>
   </body>
 </html>

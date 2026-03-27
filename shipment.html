@@ -482,7 +482,7 @@
 
         const json = await res.json();
         if (!res.ok) {
-          alert(json.message || "Failed to add note");
+          alert(json.message || __t("Failed to add note"));
           return false;
         }
         return true;
@@ -499,6 +499,27 @@
         return visibility;
       }
 
+      function extractEntity(json) {
+        return json?.data?.data || json?.data || json;
+      }
+
+      function extractCollection(json) {
+        if (Array.isArray(json)) return json;
+        if (Array.isArray(json?.data)) return json.data;
+        if (Array.isArray(json?.data?.data)) return json.data.data;
+        if (Array.isArray(json?.items)) return json.items;
+        if (Array.isArray(json?.results)) return json.results;
+        return [];
+      }
+
+      function getDoshTypeId(item) {
+        return item?.doshType?._id || item?.doshType?.id || item?.doshType;
+      }
+
+      function getDoshTypeName(item) {
+        return item?.doshType?.name || item?.doshTypeName || item?.doshType || "-";
+      }
+
       async function safePatch(path, body, successMsg) {
         const res = await fetch(API_BASE + path, {
           method: "PATCH",
@@ -510,7 +531,7 @@
         });
 
         const json = await res.json();
-        if (!res.ok) return alert(json.message || "Action failed");
+        if (!res.ok) return alert(json.message || __t("Action failed"));
 
         hideAdminActions(successMsg);
         setTimeout(loadShipment, 1500);
@@ -521,19 +542,21 @@
           headers: { Authorization: "Bearer " + token },
         });
         const json = await res.json();
-        shipmentData = json.data;
+        shipmentData = extractEntity(json);
 
         document.getElementById("loading").style.display = "none";
         document.getElementById("content").classList.remove("hidden");
 
         document.getElementById("title").innerText =
-          shipmentData.shipmentNumber;
+          shipmentData?.shipmentNumber || shipmentData?._id || shipmentId;
         document.getElementById("shipmentNumber").innerText =
-          shipmentData.shipmentNumber;
+          shipmentData?.shipmentNumber || shipmentData?._id || shipmentId;
 
         // Calculate total KG from items
         let totalKg = 0;
-        (shipmentData.items || []).forEach((i) => {
+        ((shipmentData.inspectedItems && shipmentData.inspectedItems.length
+          ? shipmentData.inspectedItems
+          : shipmentData.items) || []).forEach((i) => {
           totalKg += i.quantityKg || 0;
         });
         document.getElementById("totalKg").innerText = totalKg;
@@ -554,8 +577,10 @@
         /* items */
         const items = document.getElementById("items");
         items.innerHTML = "";
-        (shipmentData.items || []).forEach((i) => {
-          items.innerHTML += `<li>${i.doshType.name} - ${i.quantityKg} KG</li>`;
+        ((shipmentData.inspectedItems && shipmentData.inspectedItems.length
+          ? shipmentData.inspectedItems
+          : shipmentData.items) || []).forEach((i) => {
+          items.innerHTML += `<li>${getDoshTypeName(i)} - ${i.quantityKg} KG</li>`;
         });
 
         /* timeline */
@@ -598,7 +623,7 @@
           { headers: { Authorization: "Bearer " + token } },
         );
         const json = await res.json();
-        REPRESENTATIVES = json.data.data || [];
+        REPRESENTATIVES = extractCollection(json);
 
         const select = document.getElementById("representativeId");
         select.innerHTML = `<option value="">-- Select Representative --</option>`;
@@ -621,7 +646,7 @@
           headers: { Authorization: "Bearer " + token },
         });
         const json = await res.json();
-        VEHICLES = json.data.data || [];
+        VEHICLES = extractCollection(json);
         renderVehicles();
       }
 
@@ -665,7 +690,7 @@
       async function loadDoshTypes() {
         const res = await fetch(`${API_BASE}/dosh/types`);
         const json = await res.json();
-        DOSH_TYPES = json.data || [];
+        DOSH_TYPES = extractCollection(json);
       }
 
       function enterEditMode() {
@@ -679,8 +704,10 @@
         document.getElementById("pickupAddress").value =
           shipmentData.customPickupAddress || "";
         document.getElementById("editItems").innerHTML = "";
-        shipmentData.items.forEach((i) =>
-          addItem(i.doshType._id, i.quantityKg),
+        ((shipmentData.inspectedItems && shipmentData.inspectedItems.length
+          ? shipmentData.inspectedItems
+          : shipmentData.items) || []).forEach((i) =>
+          addItem(getDoshTypeId(i), i.quantityKg),
         );
       }
 
@@ -695,8 +722,9 @@
         const select = document.createElement("select");
         select.innerHTML = `<option value="">-- Select Dosh Type --</option>`;
         DOSH_TYPES.forEach((d) => {
-          select.innerHTML += `<option value="${d.id}" ${
-            d.id === doshType ? "selected" : ""
+          const doshId = d._id || d.id;
+          select.innerHTML += `<option value="${doshId}" ${
+            doshId === doshType ? "selected" : ""
           }>${d.name}</option>`;
         });
 
@@ -724,7 +752,7 @@
           items.push({ doshType, quantityKg });
         });
 
-        if (!items.length) return alert("Invalid items");
+        if (!items.length) return alert(__t("Invalid items"));
 
         updates.items = items;
         updates.customPickupAddress =
@@ -766,13 +794,13 @@
       async function addNoteOnly() {
         const noteText = document.getElementById("note").value.trim();
         if (!noteText) {
-          alert("Please enter a note");
+          alert(__t("Please enter a note"));
           return;
         }
 
         const visibility = getNoteVisibility();
         if (visibility.length === 0) {
-          alert("Please select at least one visibility option");
+          alert(__t("Please select at least one visibility option"));
           return;
         }
 
@@ -793,5 +821,6 @@
       loadVehicles();
       loadDoshTypes();
     </script>
+    <script src="./site-i18n.js"></script>
   </body>
 </html>
