@@ -1,0 +1,1571 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>SuperCycle - Dosh Management</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      :root {
+        --primary: #1a7f4f;
+        --primary-light: #2ba572;
+        --primary-dark: #155d3b;
+        --gray-50: #f8fafc;
+        --gray-100: #f1f5f9;
+        --gray-200: #e2e8f0;
+        --gray-300: #cbd5e1;
+        --gray-500: #64748b;
+        --gray-700: #334155;
+        --gray-900: #0f172a;
+        --danger: #c0392b;
+        --danger-bg: #fdecea;
+        --warning: #b45309;
+        --warning-bg: #fef3c7;
+        --success: #166534;
+        --success-bg: #dcfce7;
+        --info: #1d4ed8;
+        --info-bg: #dbeafe;
+        --white: #ffffff;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, sans-serif;
+        background: #f5f7fa;
+        color: var(--gray-900);
+      }
+
+      .header {
+        background: linear-gradient(135deg, var(--primary), var(--primary-light));
+        color: var(--white);
+        padding: 20px 32px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 16px;
+      }
+
+      .header h1 {
+        font-size: 24px;
+        font-weight: 700;
+      }
+
+      .header-actions {
+        display: flex;
+        gap: 10px;
+      }
+
+      .header-btn {
+        background: rgba(255, 255, 255, 0.16);
+        color: var(--white);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        padding: 9px 16px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 600;
+      }
+
+      .container {
+        max-width: 1440px;
+        margin: 0 auto;
+        padding: 28px 20px 40px;
+      }
+
+      .page-intro {
+        margin-bottom: 20px;
+        color: var(--gray-700);
+      }
+
+      .banner {
+        padding: 14px 16px;
+        border-radius: 10px;
+        margin-bottom: 18px;
+        display: none;
+        font-weight: 600;
+      }
+
+      .banner.error {
+        display: block;
+        background: var(--danger-bg);
+        color: var(--danger);
+        border: 1px solid #f7c9c3;
+      }
+
+      .banner.success {
+        display: block;
+        background: var(--success-bg);
+        color: var(--success);
+        border: 1px solid #b4e1c2;
+      }
+
+      .tabs {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        margin-bottom: 22px;
+      }
+
+      .tab-btn {
+        border: 1px solid var(--gray-200);
+        background: var(--white);
+        color: var(--gray-700);
+        padding: 12px 16px;
+        border-radius: 10px;
+        cursor: pointer;
+        font-weight: 700;
+      }
+
+      .tab-btn.active {
+        background: var(--primary);
+        border-color: var(--primary);
+        color: var(--white);
+      }
+
+      .tab-panel {
+        display: none;
+      }
+
+      .tab-panel.active {
+        display: block;
+      }
+
+      .layout {
+        display: grid;
+        grid-template-columns: minmax(320px, 420px) minmax(0, 1fr);
+        gap: 20px;
+        align-items: start;
+      }
+
+      .card {
+        background: var(--white);
+        border-radius: 14px;
+        box-shadow: 0 4px 18px rgba(15, 23, 42, 0.06);
+        overflow: hidden;
+      }
+
+      .card-header {
+        padding: 18px 20px;
+        border-bottom: 1px solid var(--gray-200);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .card-header h2,
+      .card-header h3 {
+        font-size: 18px;
+      }
+
+      .card-body {
+        padding: 20px;
+      }
+
+      .card-hint {
+        color: var(--gray-500);
+        font-size: 13px;
+        margin-top: 6px;
+      }
+
+      .stats {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+
+      .stat {
+        background: var(--gray-50);
+        border: 1px solid var(--gray-200);
+        border-radius: 12px;
+        padding: 12px 14px;
+        min-width: 110px;
+      }
+
+      .stat strong {
+        display: block;
+        font-size: 22px;
+        color: var(--primary-dark);
+      }
+
+      .stat span {
+        font-size: 12px;
+        color: var(--gray-500);
+      }
+
+      .form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+      }
+
+      .field {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+
+      .field.full {
+        grid-column: 1 / -1;
+      }
+
+      .field label {
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--gray-700);
+      }
+
+      .field input,
+      .field textarea,
+      .field select {
+        width: 100%;
+        border: 1px solid var(--gray-300);
+        border-radius: 10px;
+        padding: 11px 12px;
+        font-size: 14px;
+        background: var(--white);
+      }
+
+      .field textarea {
+        min-height: 100px;
+        resize: vertical;
+      }
+
+      .field input:focus,
+      .field textarea:focus,
+      .field select:focus {
+        outline: none;
+        border-color: var(--primary-light);
+        box-shadow: 0 0 0 3px rgba(43, 165, 114, 0.15);
+      }
+
+      .field.checkbox {
+        flex-direction: row;
+        align-items: center;
+        gap: 10px;
+        padding-top: 28px;
+      }
+
+      .field.checkbox input {
+        width: 18px;
+        height: 18px;
+      }
+
+      .field-error {
+        color: var(--danger);
+        font-size: 12px;
+        min-height: 16px;
+      }
+
+      .helper-text {
+        color: var(--gray-500);
+        font-size: 12px;
+      }
+
+      .actions {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-top: 18px;
+      }
+
+      button {
+        border: none;
+        border-radius: 10px;
+        padding: 10px 14px;
+        cursor: pointer;
+        font-weight: 700;
+      }
+
+      .btn-primary {
+        background: var(--primary-light);
+        color: var(--white);
+      }
+
+      .btn-secondary {
+        background: var(--gray-100);
+        color: var(--gray-700);
+      }
+
+      .btn-link {
+        padding: 0;
+        background: transparent;
+        color: var(--info);
+      }
+
+      .filters {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 12px;
+        margin-bottom: 16px;
+      }
+
+      .filters .checkbox-inline {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background: var(--gray-50);
+        border: 1px solid var(--gray-200);
+        border-radius: 10px;
+        padding: 11px 12px;
+        font-size: 14px;
+        font-weight: 600;
+        min-height: 44px;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      th,
+      td {
+        padding: 14px 12px;
+        text-align: left;
+        border-bottom: 1px solid var(--gray-200);
+        vertical-align: top;
+        font-size: 14px;
+      }
+
+      th {
+        background: var(--gray-50);
+        text-transform: uppercase;
+        font-size: 12px;
+        color: var(--gray-500);
+        letter-spacing: 0.04em;
+      }
+
+      .status-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 5px 10px;
+        border-radius: 999px;
+        font-size: 12px;
+        font-weight: 700;
+      }
+
+      .status-pill.active {
+        color: var(--success);
+        background: var(--success-bg);
+      }
+
+      .status-pill.inactive {
+        color: var(--warning);
+        background: var(--warning-bg);
+      }
+
+      .subtle {
+        color: var(--gray-500);
+        font-size: 13px;
+      }
+
+      .inline-stack {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+
+      .row-actions {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+
+      .empty-state,
+      .loading-state {
+        padding: 30px 18px;
+        text-align: center;
+        color: var(--gray-500);
+      }
+
+      .loading-state {
+        font-weight: 600;
+      }
+
+      .section-note {
+        margin-bottom: 14px;
+        padding: 12px 14px;
+        border-radius: 10px;
+        background: var(--info-bg);
+        color: var(--info);
+        font-size: 13px;
+      }
+
+      @media (max-width: 1080px) {
+        .layout {
+          grid-template-columns: 1fr;
+        }
+
+        .filters {
+          grid-template-columns: 1fr 1fr;
+        }
+      }
+
+      @media (max-width: 720px) {
+        .header {
+          flex-direction: column;
+          align-items: stretch;
+        }
+
+        .header-actions {
+          justify-content: stretch;
+        }
+
+        .header-btn {
+          width: 100%;
+        }
+
+        .form-grid,
+        .filters {
+          grid-template-columns: 1fr;
+        }
+
+        th,
+        td {
+          font-size: 13px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <h1>Dosh Management</h1>
+      <div class="header-actions">
+        <button class="header-btn" onclick="goBack()">Back to Dashboard</button>
+        <button class="header-btn" onclick="logout()">Logout</button>
+      </div>
+    </div>
+
+    <div class="container">
+      <p class="page-intro">
+        Manage reusable dosh configuration for admin pricing workflows.
+      </p>
+
+      <div id="pageBanner" class="banner"></div>
+
+      <div class="tabs">
+        <button class="tab-btn active" data-tab="types" onclick="setTab('types')">
+          Dosh Types
+        </button>
+        <button class="tab-btn" data-tab="tiers" onclick="setTab('tiers')">
+          Quantity Tiers
+        </button>
+        <button class="tab-btn" data-tab="prices" onclick="setTab('prices')">
+          Dosh Prices
+        </button>
+      </div>
+
+      <section id="panel-types" class="tab-panel active">
+        <div class="layout">
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <h2 id="typeFormTitle">Create Dosh Type</h2>
+                <p class="card-hint">
+                  Names must stay unique across all dosh types.
+                </p>
+              </div>
+            </div>
+            <div class="card-body">
+              <form id="typeForm" onsubmit="submitTypeForm(event)">
+                <div class="form-grid">
+                  <div class="field">
+                    <label for="typeName">Name</label>
+                    <input id="typeName" name="name" />
+                    <div class="field-error" data-error-for="type.name"></div>
+                  </div>
+
+                  <div class="field">
+                    <label for="typeUnit">Unit</label>
+                    <input id="typeUnit" name="unit" placeholder="kg" />
+                    <div class="field-error" data-error-for="type.unit"></div>
+                  </div>
+
+                  <div class="field full">
+                    <label for="typeDescription">Description</label>
+                    <textarea id="typeDescription" name="description"></textarea>
+                    <div class="field-error" data-error-for="type.description"></div>
+                  </div>
+
+                  <div class="field full">
+                    <label for="typeImageUrl">Image URL</label>
+                    <input id="typeImageUrl" name="imageUrl" placeholder="https://..." />
+                    <div class="field-error" data-error-for="type.imageUrl"></div>
+                  </div>
+
+                  <label class="field checkbox">
+                    <input id="typeIsActive" name="isActive" type="checkbox" checked />
+                    <span>Active and selectable</span>
+                  </label>
+                </div>
+
+                <div class="actions">
+                  <button id="typeSubmitBtn" class="btn-primary" type="submit">
+                    Create Type
+                  </button>
+                  <button class="btn-secondary" type="button" onclick="resetTypeForm()">
+                    Clear
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <h3>Types List</h3>
+                <p class="card-hint">Edit active status, copy, and descriptive details.</p>
+              </div>
+              <div class="stats">
+                <div class="stat">
+                  <strong id="typesTotal">0</strong>
+                  <span>Total</span>
+                </div>
+                <div class="stat">
+                  <strong id="typesActive">0</strong>
+                  <span>Active</span>
+                </div>
+              </div>
+            </div>
+            <div class="card-body">
+              <div id="typesState" class="loading-state">Loading dosh types...</div>
+              <table id="typesTable" hidden>
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Unit</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="typesRows"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="panel-tiers" class="tab-panel">
+        <div class="layout">
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <h2 id="tierFormTitle">Create Quantity Tier</h2>
+                <p class="card-hint">
+                  Tier order must be unique and quantity range must be valid.
+                </p>
+              </div>
+            </div>
+            <div class="card-body">
+              <form id="tierForm" onsubmit="submitTierForm(event)">
+                <div class="form-grid">
+                  <div class="field">
+                    <label for="tierName">Name</label>
+                    <input id="tierName" name="name" />
+                    <div class="field-error" data-error-for="tier.name"></div>
+                  </div>
+
+                  <div class="field">
+                    <label for="tierOrder">Display Order</label>
+                    <input id="tierOrder" name="order" type="number" min="1" step="1" />
+                    <div class="field-error" data-error-for="tier.order"></div>
+                  </div>
+
+                  <div class="field">
+                    <label for="tierMinQuantity">Min Quantity</label>
+                    <input
+                      id="tierMinQuantity"
+                      name="minQuantity"
+                      type="number"
+                      min="0"
+                      step="0.01"
+                    />
+                    <div class="field-error" data-error-for="tier.minQuantity"></div>
+                  </div>
+
+                  <div class="field">
+                    <label for="tierMaxQuantity">Max Quantity</label>
+                    <input
+                      id="tierMaxQuantity"
+                      name="maxQuantity"
+                      type="number"
+                      min="0"
+                      step="0.01"
+                    />
+                    <div class="field-error" data-error-for="tier.maxQuantity"></div>
+                    <div class="helper-text">Leave empty for an open-ended tier.</div>
+                  </div>
+
+                  <label class="field checkbox">
+                    <input id="tierIsActive" name="isActive" type="checkbox" checked />
+                    <span>Active and selectable</span>
+                  </label>
+                </div>
+
+                <div class="actions">
+                  <button id="tierSubmitBtn" class="btn-primary" type="submit">
+                    Create Tier
+                  </button>
+                  <button class="btn-secondary" type="button" onclick="resetTierForm()">
+                    Clear
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <h3>Tiers List</h3>
+                <p class="card-hint">
+                  Quantity tiers are used to scope price records by range.
+                </p>
+              </div>
+              <div class="stats">
+                <div class="stat">
+                  <strong id="tiersTotal">0</strong>
+                  <span>Total</span>
+                </div>
+                <div class="stat">
+                  <strong id="tiersActive">0</strong>
+                  <span>Active</span>
+                </div>
+              </div>
+            </div>
+            <div class="card-body">
+              <div id="tiersState" class="loading-state">Loading quantity tiers...</div>
+              <table id="tiersTable" hidden>
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Range</th>
+                    <th>Order</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="tiersRows"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="panel-prices" class="tab-panel">
+        <div class="layout">
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <h2 id="priceFormTitle">Create Price Record</h2>
+                <p class="card-hint">
+                  A type + tier cannot have overlapping effective periods.
+                </p>
+              </div>
+            </div>
+            <div class="card-body">
+              <div id="priceSetupNote" class="section-note" hidden>
+                Create at least one active type and one active tier before adding prices.
+              </div>
+
+              <form id="priceForm" onsubmit="submitPriceForm(event)">
+                <div class="form-grid">
+                  <div class="field">
+                    <label for="priceTypeId">Dosh Type</label>
+                    <select id="priceTypeId" name="doshTypeId"></select>
+                    <div class="field-error" data-error-for="price.doshTypeId"></div>
+                  </div>
+
+                  <div class="field">
+                    <label for="priceTierId">Quantity Tier</label>
+                    <select id="priceTierId" name="quantityTierId"></select>
+                    <div class="field-error" data-error-for="price.quantityTierId"></div>
+                  </div>
+
+                  <div class="field">
+                    <label for="pricePerKg">Price Per KG</label>
+                    <input id="pricePerKg" name="pricePerKg" type="number" min="0" step="0.01" />
+                    <div class="field-error" data-error-for="price.pricePerKg"></div>
+                  </div>
+
+                  <div class="field">
+                    <label for="priceEffectiveFrom">Effective From</label>
+                    <input id="priceEffectiveFrom" name="effectiveFrom" type="datetime-local" />
+                    <div class="field-error" data-error-for="price.effectiveFrom"></div>
+                  </div>
+
+                  <div class="field">
+                    <label for="priceEffectiveTo">Effective To</label>
+                    <input id="priceEffectiveTo" name="effectiveTo" type="datetime-local" />
+                    <div class="field-error" data-error-for="price.effectiveTo"></div>
+                    <div class="helper-text">Leave empty to keep the price open-ended.</div>
+                  </div>
+                </div>
+
+                <div class="actions">
+                  <button id="priceSubmitBtn" class="btn-primary" type="submit">
+                    Create Price
+                  </button>
+                  <button class="btn-secondary" type="button" onclick="resetPriceForm()">
+                    Clear
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <h3>Price Records</h3>
+                <p class="card-hint">Filter by type, tier, or active period window.</p>
+              </div>
+              <button class="btn-secondary" type="button" onclick="loadPrices(true)">
+                Refresh
+              </button>
+            </div>
+            <div class="card-body">
+              <div class="filters">
+                <div class="field">
+                  <label for="priceFilterType">Type</label>
+                  <select id="priceFilterType"></select>
+                </div>
+
+                <div class="field">
+                  <label for="priceFilterTier">Tier</label>
+                  <select id="priceFilterTier"></select>
+                </div>
+
+                <label class="checkbox-inline">
+                  <input id="priceFilterCurrentOnly" type="checkbox" />
+                  <span>Current prices only</span>
+                </label>
+
+                <div class="actions" style="margin-top: 24px">
+                  <button class="btn-primary" type="button" onclick="loadPrices(true)">
+                    Apply Filters
+                  </button>
+                  <button class="btn-secondary" type="button" onclick="resetPriceFilters()">
+                    Reset
+                  </button>
+                </div>
+              </div>
+
+              <div id="pricesState" class="loading-state">Loading prices...</div>
+              <table id="pricesTable" hidden>
+                <thead>
+                  <tr>
+                    <th>Type</th>
+                    <th>Tier</th>
+                    <th>Price</th>
+                    <th>Effective Window</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="pricesRows"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <script src="./site-i18n.js"></script>
+    <script>
+      const API_BASE =
+        "https://supercycle-api-855015056699.europe-west1.run.app";
+      const token = localStorage.getItem("token");
+
+      if (!token) location.href = "index.html";
+
+      const state = {
+        activeTab: "types",
+        types: [],
+        tiers: [],
+        allPrices: [],
+        filteredPrices: [],
+        editingTypeId: null,
+        editingTierId: null,
+        editingPriceId: null,
+      };
+
+      function goBack() {
+        location.href = "dashboard.html";
+      }
+
+      function logout() {
+        localStorage.removeItem("token");
+        location.href = "index.html";
+      }
+
+      function extractCollection(json) {
+        if (Array.isArray(json)) return json;
+        if (Array.isArray(json?.data)) return json.data;
+        if (Array.isArray(json?.data?.data)) return json.data.data;
+        if (Array.isArray(json?.items)) return json.items;
+        if (Array.isArray(json?.results)) return json.results;
+        return [];
+      }
+
+      function getId(item) {
+        return item?._id || item?.id || item?.priceId || item?.tierId || item?.typeId;
+      }
+
+      function getMessage(json, fallback) {
+        return (
+          json?.message ||
+          json?.error ||
+          json?.data?.message ||
+          json?.errors?.[0]?.message ||
+          fallback
+        );
+      }
+
+      function showBanner(type, message) {
+        const el = document.getElementById("pageBanner");
+        if (!message) {
+          el.className = "banner";
+          el.textContent = "";
+          return;
+        }
+
+        el.className = `banner ${type}`;
+        el.textContent = message;
+      }
+
+      function setTab(tab) {
+        state.activeTab = tab;
+        document.querySelectorAll(".tab-btn").forEach((button) => {
+          button.classList.toggle("active", button.dataset.tab === tab);
+        });
+        document.querySelectorAll(".tab-panel").forEach((panel) => {
+          panel.classList.toggle("active", panel.id === `panel-${tab}`);
+        });
+      }
+
+      function clearErrors(scope) {
+        document.querySelectorAll(`[data-error-for^="${scope}."]`).forEach((el) => {
+          el.textContent = "";
+        });
+      }
+
+      function setFieldError(key, message) {
+        const el = document.querySelector(`[data-error-for="${key}"]`);
+        if (el) el.textContent = message;
+      }
+
+      function normalizeText(value) {
+        return String(value || "").trim().toLowerCase();
+      }
+
+      function isValidUrl(value) {
+        if (!value) return true;
+        try {
+          new URL(value);
+          return true;
+        } catch (_) {
+          return false;
+        }
+      }
+
+      function toNumber(value) {
+        if (value === "" || value == null) return null;
+        const num = Number(value);
+        return Number.isFinite(num) ? num : NaN;
+      }
+
+      function toIsoDateTime(value) {
+        if (!value) return null;
+        return new Date(value).toISOString();
+      }
+
+      function toDatetimeLocalValue(value) {
+        if (!value) return "";
+        const date = new Date(value);
+        if (Number.isNaN(date.getTime())) return "";
+        const offset = date.getTimezoneOffset();
+        const local = new Date(date.getTime() - offset * 60000);
+        return local.toISOString().slice(0, 16);
+      }
+
+      function formatRange(minQuantity, maxQuantity) {
+        if (maxQuantity == null || maxQuantity === "") return `${minQuantity} +`;
+        return `${minQuantity} - ${maxQuantity}`;
+      }
+
+      function formatPrice(price) {
+        if (price == null || price === "") return "-";
+        return `${Number(price).toFixed(2)} / kg`;
+      }
+
+      function formatEffectiveWindow(from, to) {
+        return `${__formatDateTime(from)} -> ${to ? __formatDateTime(to) : __t("Open ended")}`;
+      }
+
+      function setLoading(section, message) {
+        const stateEl = document.getElementById(`${section}State`);
+        const table = document.getElementById(`${section}Table`);
+        stateEl.className = "loading-state";
+        stateEl.textContent = message;
+        stateEl.hidden = false;
+        table.hidden = true;
+      }
+
+      function setEmpty(section, message) {
+        const stateEl = document.getElementById(`${section}State`);
+        const table = document.getElementById(`${section}Table`);
+        stateEl.className = "empty-state";
+        stateEl.textContent = message;
+        stateEl.hidden = false;
+        table.hidden = true;
+      }
+
+      function showTable(section) {
+        document.getElementById(`${section}State`).hidden = true;
+        document.getElementById(`${section}Table`).hidden = false;
+      }
+
+      function findTypeName(id) {
+        const item = state.types.find((type) => getId(type) === id);
+        return item?.name || id || "-";
+      }
+
+      function findTierName(id) {
+        const item = state.tiers.find((tier) => getId(tier) === id);
+        return item?.name || id || "-";
+      }
+
+      function validateTypeForm() {
+        clearErrors("type");
+
+        const name = document.getElementById("typeName").value.trim();
+        const description = document.getElementById("typeDescription").value.trim();
+        const unit = document.getElementById("typeUnit").value.trim();
+        const imageUrl = document.getElementById("typeImageUrl").value.trim();
+        let isValid = true;
+
+        if (!name) {
+          setFieldError("type.name", __t("Name is required"));
+          isValid = false;
+        }
+
+        if (!description) {
+          setFieldError("type.description", __t("Description is required"));
+          isValid = false;
+        }
+
+        const duplicate = state.types.find((type) => {
+          return (
+            normalizeText(type.name) === normalizeText(name) &&
+            getId(type) !== state.editingTypeId
+          );
+        });
+
+        if (duplicate) {
+          setFieldError("type.name", __t("Type name must be unique"));
+          isValid = false;
+        }
+
+        if (imageUrl && !isValidUrl(imageUrl)) {
+          setFieldError("type.imageUrl", __t("Enter a valid image URL"));
+          isValid = false;
+        }
+
+        if (!isValid) return null;
+
+        return {
+          name,
+          description,
+          unit: unit || undefined,
+          imageUrl: imageUrl || undefined,
+          isActive: document.getElementById("typeIsActive").checked,
+        };
+      }
+
+      function validateTierForm() {
+        clearErrors("tier");
+
+        const name = document.getElementById("tierName").value.trim();
+        const order = toNumber(document.getElementById("tierOrder").value);
+        const minQuantity = toNumber(document.getElementById("tierMinQuantity").value);
+        const maxQuantity = toNumber(document.getElementById("tierMaxQuantity").value);
+        let isValid = true;
+
+        if (!name) {
+          setFieldError("tier.name", __t("Name is required"));
+          isValid = false;
+        }
+
+        if (order == null || Number.isNaN(order)) {
+          setFieldError("tier.order", __t("Order is required"));
+          isValid = false;
+        }
+
+        if (minQuantity == null || Number.isNaN(minQuantity)) {
+          setFieldError("tier.minQuantity", __t("Min quantity is required"));
+          isValid = false;
+        }
+
+        if (maxQuantity != null && Number.isNaN(maxQuantity)) {
+          setFieldError("tier.maxQuantity", __t("Enter a valid max quantity"));
+          isValid = false;
+        }
+
+        if (
+          minQuantity != null &&
+          maxQuantity != null &&
+          !Number.isNaN(minQuantity) &&
+          !Number.isNaN(maxQuantity) &&
+          maxQuantity <= minQuantity
+        ) {
+          setFieldError("tier.maxQuantity", __t("Max quantity must be greater than min quantity"));
+          isValid = false;
+        }
+
+        const duplicateOrder = state.tiers.find((tier) => {
+          return tier.order === order && getId(tier) !== state.editingTierId;
+        });
+
+        if (duplicateOrder) {
+          setFieldError("tier.order", __t("Tier order must be unique"));
+          isValid = false;
+        }
+
+        if (!isValid) return null;
+
+        return {
+          name,
+          minQuantity,
+          maxQuantity,
+          order,
+          isActive: document.getElementById("tierIsActive").checked,
+        };
+      }
+
+      function rangesOverlap(aStart, aEnd, bStart, bEnd) {
+        const startA = new Date(aStart).getTime();
+        const endA = aEnd ? new Date(aEnd).getTime() : Number.POSITIVE_INFINITY;
+        const startB = new Date(bStart).getTime();
+        const endB = bEnd ? new Date(bEnd).getTime() : Number.POSITIVE_INFINITY;
+        return startA <= endB && startB <= endA;
+      }
+
+      function validatePriceForm() {
+        clearErrors("price");
+
+        const doshTypeId = document.getElementById("priceTypeId").value;
+        const quantityTierId = document.getElementById("priceTierId").value;
+        const pricePerKg = toNumber(document.getElementById("pricePerKg").value);
+        const effectiveFromValue = document.getElementById("priceEffectiveFrom").value;
+        const effectiveToValue = document.getElementById("priceEffectiveTo").value;
+        let isValid = true;
+
+        if (!doshTypeId) {
+          setFieldError("price.doshTypeId", __t("Dosh type is required"));
+          isValid = false;
+        }
+
+        if (!quantityTierId) {
+          setFieldError("price.quantityTierId", __t("Quantity tier is required"));
+          isValid = false;
+        }
+
+        if (pricePerKg == null || Number.isNaN(pricePerKg)) {
+          setFieldError("price.pricePerKg", __t("Price per KG is required"));
+          isValid = false;
+        }
+
+        if (!effectiveFromValue) {
+          setFieldError("price.effectiveFrom", __t("Effective from is required"));
+          isValid = false;
+        }
+
+        if (!isValid) return null;
+
+        const effectiveFrom = toIsoDateTime(effectiveFromValue);
+        const effectiveTo = effectiveToValue ? toIsoDateTime(effectiveToValue) : null;
+
+        if (effectiveTo && new Date(effectiveTo).getTime() <= new Date(effectiveFrom).getTime()) {
+          setFieldError("price.effectiveTo", __t("Effective to must be after effective from"));
+          isValid = false;
+        }
+
+        const overlappingRecord = state.allPrices.find((price) => {
+          return (
+            price.doshTypeId === doshTypeId &&
+            price.quantityTierId === quantityTierId &&
+            getId(price) !== state.editingPriceId &&
+            rangesOverlap(effectiveFrom, effectiveTo, price.effectiveFrom, price.effectiveTo)
+          );
+        });
+
+        if (overlappingRecord) {
+          setFieldError(
+            "price.effectiveFrom",
+            __t("Price periods must not overlap for the same type and tier"),
+          );
+          isValid = false;
+        }
+
+        if (!isValid) return null;
+
+        return {
+          doshTypeId,
+          quantityTierId,
+          pricePerKg,
+          effectiveFrom,
+          effectiveTo,
+        };
+      }
+
+      function fillTypeForm(item) {
+        state.editingTypeId = getId(item);
+        document.getElementById("typeFormTitle").textContent = __t("Edit Dosh Type");
+        document.getElementById("typeSubmitBtn").textContent = __t("Save Changes");
+        document.getElementById("typeName").value = item.name || "";
+        document.getElementById("typeDescription").value = item.description || "";
+        document.getElementById("typeUnit").value = item.unit || "";
+        document.getElementById("typeImageUrl").value = item.imageUrl || "";
+        document.getElementById("typeIsActive").checked = item.isActive !== false;
+        setTab("types");
+      }
+
+      function resetTypeForm() {
+        state.editingTypeId = null;
+        clearErrors("type");
+        document.getElementById("typeFormTitle").textContent = __t("Create Dosh Type");
+        document.getElementById("typeSubmitBtn").textContent = __t("Create Type");
+        document.getElementById("typeForm").reset();
+        document.getElementById("typeIsActive").checked = true;
+      }
+
+      function fillTierForm(item) {
+        state.editingTierId = getId(item);
+        document.getElementById("tierFormTitle").textContent = __t("Edit Quantity Tier");
+        document.getElementById("tierSubmitBtn").textContent = __t("Save Changes");
+        document.getElementById("tierName").value = item.name || "";
+        document.getElementById("tierOrder").value = item.order ?? "";
+        document.getElementById("tierMinQuantity").value = item.minQuantity ?? "";
+        document.getElementById("tierMaxQuantity").value = item.maxQuantity ?? "";
+        document.getElementById("tierIsActive").checked = item.isActive !== false;
+        setTab("tiers");
+      }
+
+      function resetTierForm() {
+        state.editingTierId = null;
+        clearErrors("tier");
+        document.getElementById("tierFormTitle").textContent = __t("Create Quantity Tier");
+        document.getElementById("tierSubmitBtn").textContent = __t("Create Tier");
+        document.getElementById("tierForm").reset();
+        document.getElementById("tierIsActive").checked = true;
+      }
+
+      function fillPriceForm(item) {
+        state.editingPriceId = getId(item);
+        document.getElementById("priceFormTitle").textContent = __t("Edit Price Record");
+        document.getElementById("priceSubmitBtn").textContent = __t("Save Changes");
+        document.getElementById("priceTypeId").value = item.doshTypeId || "";
+        document.getElementById("priceTierId").value = item.quantityTierId || "";
+        document.getElementById("pricePerKg").value = item.pricePerKg ?? "";
+        document.getElementById("priceEffectiveFrom").value = toDatetimeLocalValue(item.effectiveFrom);
+        document.getElementById("priceEffectiveTo").value = toDatetimeLocalValue(item.effectiveTo);
+        setTab("prices");
+      }
+
+      function resetPriceForm() {
+        state.editingPriceId = null;
+        clearErrors("price");
+        document.getElementById("priceFormTitle").textContent = __t("Create Price Record");
+        document.getElementById("priceSubmitBtn").textContent = __t("Create Price");
+        document.getElementById("priceForm").reset();
+      }
+
+      function buildSelectOptions(collection, placeholder, formatter) {
+        const base = [`<option value="">${placeholder}</option>`];
+        return base.concat(
+          collection.map((item) => {
+            const id = getId(item);
+            const label = formatter(item);
+            return `<option value="${id}">${label}</option>`;
+          }),
+        );
+      }
+
+      function renderTypeAndTierSelects() {
+        const typeOptions = buildSelectOptions(
+          state.types,
+          __t("Select type"),
+          (item) => item.name || getId(item),
+        ).join("");
+        const tierOptions = buildSelectOptions(
+          state.tiers,
+          __t("Select tier"),
+          (item) => `${item.order}. ${item.name || getId(item)}`,
+        ).join("");
+
+        const currentTypeValue = document.getElementById("priceTypeId").value;
+        const currentTierValue = document.getElementById("priceTierId").value;
+        const currentFilterType = document.getElementById("priceFilterType").value;
+        const currentFilterTier = document.getElementById("priceFilterTier").value;
+
+        document.getElementById("priceTypeId").innerHTML = typeOptions;
+        document.getElementById("priceTierId").innerHTML = tierOptions;
+        document.getElementById("priceFilterType").innerHTML = buildSelectOptions(
+          state.types,
+          __t("All types"),
+          (item) => item.name || getId(item),
+        ).join("");
+        document.getElementById("priceFilterTier").innerHTML = buildSelectOptions(
+          state.tiers,
+          __t("All tiers"),
+          (item) => `${item.order}. ${item.name || getId(item)}`,
+        ).join("");
+
+        document.getElementById("priceTypeId").value = currentTypeValue;
+        document.getElementById("priceTierId").value = currentTierValue;
+        document.getElementById("priceFilterType").value = currentFilterType;
+        document.getElementById("priceFilterTier").value = currentFilterTier;
+
+        const hasSetup = state.types.length > 0 && state.tiers.length > 0;
+        document.getElementById("priceSetupNote").hidden = hasSetup;
+        document.querySelectorAll("#priceForm select, #priceForm input, #priceForm button").forEach((el) => {
+          el.disabled = !hasSetup;
+        });
+      }
+
+      function renderTypes() {
+        document.getElementById("typesTotal").textContent = state.types.length;
+        document.getElementById("typesActive").textContent = state.types.filter((item) => item.isActive !== false).length;
+
+        if (!state.types.length) {
+          setEmpty("types", __t("No dosh types yet"));
+          return;
+        }
+
+        const rows = document.getElementById("typesRows");
+        rows.innerHTML = state.types
+          .map((item) => {
+            return `
+              <tr>
+                <td>
+                  <div class="inline-stack">
+                    <strong>${item.name || "-"}</strong>
+                    <span class="subtle">${item.imageUrl || ""}</span>
+                  </div>
+                </td>
+                <td>${item.description || "-"}</td>
+                <td>${item.unit || "-"}</td>
+                <td>
+                  <span class="status-pill ${item.isActive !== false ? "active" : "inactive"}">
+                    ${item.isActive !== false ? __t("Active") : __t("Inactive")}
+                  </span>
+                </td>
+                <td>
+                  <div class="row-actions">
+                    <button class="btn-link" type="button" onclick="fillTypeFormById('${getId(item)}')">
+                      ${__t("Edit")}
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            `;
+          })
+          .join("");
+
+        showTable("types");
+      }
+
+      function renderTiers() {
+        document.getElementById("tiersTotal").textContent = state.tiers.length;
+        document.getElementById("tiersActive").textContent = state.tiers.filter((item) => item.isActive !== false).length;
+
+        if (!state.tiers.length) {
+          setEmpty("tiers", __t("No quantity tiers yet"));
+          return;
+        }
+
+        const rows = document.getElementById("tiersRows");
+        rows.innerHTML = state.tiers
+          .slice()
+          .sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
+          .map((item) => {
+            return `
+              <tr>
+                <td>${item.name || "-"}</td>
+                <td>${formatRange(item.minQuantity ?? "-", item.maxQuantity)}</td>
+                <td>${item.order ?? "-"}</td>
+                <td>
+                  <span class="status-pill ${item.isActive !== false ? "active" : "inactive"}">
+                    ${item.isActive !== false ? __t("Active") : __t("Inactive")}
+                  </span>
+                </td>
+                <td>
+                  <div class="row-actions">
+                    <button class="btn-link" type="button" onclick="fillTierFormById('${getId(item)}')">
+                      ${__t("Edit")}
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            `;
+          })
+          .join("");
+
+        showTable("tiers");
+      }
+
+      function renderPrices(list) {
+        if (!list.length) {
+          setEmpty("prices", __t("No price records found"));
+          return;
+        }
+
+        const rows = document.getElementById("pricesRows");
+        rows.innerHTML = list
+          .map((item) => {
+            return `
+              <tr>
+                <td>${findTypeName(item.doshTypeId)}</td>
+                <td>${findTierName(item.quantityTierId)}</td>
+                <td>${formatPrice(item.pricePerKg)}</td>
+                <td>${formatEffectiveWindow(item.effectiveFrom, item.effectiveTo)}</td>
+                <td>
+                  <div class="row-actions">
+                    <button class="btn-link" type="button" onclick="fillPriceFormById('${getId(item)}')">
+                      ${__t("Edit")}
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            `;
+          })
+          .join("");
+
+        showTable("prices");
+      }
+
+      async function fetchJson(path, options = {}) {
+        const response = await fetch(`${API_BASE}${path}`, {
+          ...options,
+          headers: {
+            Authorization: `Bearer ${token}`,
+            ...(options.body ? { "Content-Type": "application/json" } : {}),
+            ...(options.headers || {}),
+          },
+        });
+
+        const text = await response.text();
+        let json = null;
+
+        try {
+          json = text ? JSON.parse(text) : null;
+        } catch (_) {
+          json = null;
+        }
+
+        if (!response.ok) {
+          throw {
+            status: response.status,
+            json,
+            message: getMessage(json, text || __t("Request failed")),
+          };
+        }
+
+        return json;
+      }
+
+      async function loadTypes(showSuccess = false) {
+        setLoading("types", __t("Loading dosh types..."));
+        const json = await fetchJson("/admin/dosh/types");
+        state.types = extractCollection(json);
+        renderTypeAndTierSelects();
+        renderTypes();
+        if (showSuccess) showBanner("success", __t("Dosh types refreshed"));
+      }
+
+      async function loadTiers(showSuccess = false) {
+        setLoading("tiers", __t("Loading quantity tiers..."));
+        const json = await fetchJson("/admin/dosh/tiers");
+        state.tiers = extractCollection(json);
+        renderTypeAndTierSelects();
+        renderTiers();
+        if (showSuccess) showBanner("success", __t("Quantity tiers refreshed"));
+      }
+
+      function getPriceFilterQuery() {
+        const params = new URLSearchParams();
+        const typeId = document.getElementById("priceFilterType").value;
+        const tierId = document.getElementById("priceFilterTier").value;
+        const currentOnly = document.getElementById("priceFilterCurrentOnly").checked;
+
+        if (typeId) params.set("typeId", typeId);
+        if (tierId) params.set("tierId", tierId);
+        if (currentOnly) params.set("currentOnly", "true");
+
+        const query = params.toString();
+        return query ? `?${query}` : "";
+      }
+
+      async function loadPrices(showSuccess = false) {
+        setLoading("prices", __t("Loading prices..."));
+        const [allJson, filteredJson] = await Promise.all([
+          fetchJson("/admin/dosh/prices"),
+          fetchJson(`/admin/dosh/prices${getPriceFilterQuery()}`),
+        ]);
+        state.allPrices = extractCollection(allJson);
+        state.filteredPrices = extractCollection(filteredJson);
+        renderPrices(state.filteredPrices);
+        if (showSuccess) showBanner("success", __t("Price records refreshed"));
+      }
+
+      function resetPriceFilters() {
+        document.getElementById("priceFilterType").value = "";
+        document.getElementById("priceFilterTier").value = "";
+        document.getElementById("priceFilterCurrentOnly").checked = false;
+        loadPrices();
+      }
+
+      function fillTypeFormById(id) {
+        const item = state.types.find((type) => getId(type) === id);
+        if (item) fillTypeForm(item);
+      }
+
+      function fillTierFormById(id) {
+        const item = state.tiers.find((tier) => getId(tier) === id);
+        if (item) fillTierForm(item);
+      }
+
+      function fillPriceFormById(id) {
+        const item =
+          state.filteredPrices.find((price) => getId(price) === id) ||
+          state.allPrices.find((price) => getId(price) === id);
+        if (item) fillPriceForm(item);
+      }
+
+      async function submitTypeForm(event) {
+        event.preventDefault();
+        const payload = validateTypeForm();
+        if (!payload) return;
+
+        const isEditing = Boolean(state.editingTypeId);
+        try {
+          const json = await fetchJson(
+            isEditing ? `/admin/dosh/types/${state.editingTypeId}` : "/admin/dosh/types",
+            {
+              method: isEditing ? "PATCH" : "POST",
+              body: JSON.stringify(payload),
+            },
+          );
+
+          resetTypeForm();
+          await loadTypes();
+          showBanner(
+            "success",
+            getMessage(
+              json,
+              isEditing ? __t("Dosh type updated successfully") : __t("Dosh type created successfully"),
+            ),
+          );
+        } catch (error) {
+          if (error.status === 409) {
+            setFieldError("type.name", __t("Type name must be unique"));
+          }
+          showBanner("error", error.message || __t("Failed to save dosh type"));
+        }
+      }
+
+      async function submitTierForm(event) {
+        event.preventDefault();
+        const payload = validateTierForm();
+        if (!payload) return;
+
+        const isEditing = Boolean(state.editingTierId);
+        try {
+          const json = await fetchJson(
+            isEditing ? `/admin/dosh/tiers/${state.editingTierId}` : "/admin/dosh/tiers",
+            {
+              method: isEditing ? "PATCH" : "POST",
+              body: JSON.stringify(payload),
+            },
+          );
+
+          resetTierForm();
+          await loadTiers();
+          showBanner(
+            "success",
+            getMessage(
+              json,
+              isEditing ? __t("Quantity tier updated successfully") : __t("Quantity tier created successfully"),
+            ),
+          );
+        } catch (error) {
+          if (error.status === 409) {
+            setFieldError("tier.order", __t("Tier order must be unique"));
+          }
+          showBanner("error", error.message || __t("Failed to save quantity tier"));
+        }
+      }
+
+      async function submitPriceForm(event) {
+        event.preventDefault();
+        const payload = validatePriceForm();
+        if (!payload) return;
+
+        const isEditing = Boolean(state.editingPriceId);
+        try {
+          const json = await fetchJson(
+            isEditing ? `/admin/dosh/prices/${state.editingPriceId}` : "/admin/dosh/prices",
+            {
+              method: isEditing ? "PATCH" : "POST",
+              body: JSON.stringify(payload),
+            },
+          );
+
+          resetPriceForm();
+          await loadPrices();
+          showBanner(
+            "success",
+            getMessage(
+              json,
+              isEditing ? __t("Price record updated successfully") : __t("Price record created successfully"),
+            ),
+          );
+        } catch (error) {
+          if (error.status === 409) {
+            setFieldError(
+              "price.effectiveFrom",
+              __t("Price periods must not overlap for the same type and tier"),
+            );
+          }
+          showBanner("error", error.message || __t("Failed to save price record"));
+        }
+      }
+
+      async function init() {
+        try {
+          await Promise.all([loadTypes(), loadTiers()]);
+          await loadPrices();
+        } catch (error) {
+          showBanner("error", error.message || __t("Failed to load dosh management data"));
+          if (!state.types.length) setEmpty("types", __t("Failed to load dosh types"));
+          if (!state.tiers.length) setEmpty("tiers", __t("Failed to load quantity tiers"));
+          if (!state.filteredPrices.length) setEmpty("prices", __t("Failed to load price records"));
+        }
+      }
+
+      window.onLanguageChange = () => {
+        renderTypes();
+        renderTiers();
+        renderPrices(state.filteredPrices);
+      };
+
+      init();
+    </script>
+  </body>
+</html>
