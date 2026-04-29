@@ -858,7 +858,7 @@
         }
 
         el.className = `banner ${type}`;
-        el.textContent = message;
+        el.textContent = __t(message);
       }
 
       function setTab(tab) {
@@ -874,7 +874,7 @@
       function setStateMessage(id, className, message, hideTableId) {
         const el = document.getElementById(id);
         el.className = className;
-        el.textContent = message;
+        el.textContent = __t(message);
         el.hidden = false;
         if (hideTableId) document.getElementById(hideTableId).hidden = true;
       }
@@ -892,10 +892,23 @@
 
       function formatMoney(value) {
         const amount = Number(value || 0);
-        return `EGP ${amount.toLocaleString("en-US", {
+        return new Intl.NumberFormat(__lang() === "ar" ? "ar-EG" : "en-US", {
+          style: "currency",
+          currency: "EGP",
           minimumFractionDigits: 2,
           maximumFractionDigits: 2,
-        })}`;
+        }).format(amount);
+      }
+
+      function applySmartDefaults() {
+        if (!document.getElementById("mealTraderSelect").value && state.meal.traders.length) {
+          document.getElementById("mealTraderSelect").value = state.meal.traders[0].traderId;
+        }
+
+        if (!document.getElementById("monthlyTraderSelect").value && state.monthly.traders.length) {
+          document.getElementById("monthlyTraderSelect").value =
+            state.monthly.traders[0].traderId;
+        }
       }
 
       function escapeHtml(value) {
@@ -953,7 +966,7 @@
         state.external.traders = unique;
         const currentValue = document.getElementById("externalTrader").value;
         document.getElementById("externalTrader").innerHTML = [
-          `<option value="">All traders</option>`,
+          `<option value="">${__t("All traders")}</option>`,
           ...unique.map(
             (item) =>
               `<option value="${item.traderId}">${escapeHtml(item.traderName)}</option>`,
@@ -1023,12 +1036,12 @@
                   <td>${escapeHtml(item.traderName || "-")}</td>
                   <td>${formatMoney(item.amount)}</td>
                   <td>${escapeHtml(item.paymentMethod || "-")}</td>
-                  <td><span class="status-pill info">${escapeHtml(item.financialStatus || "-")}</span></td>
+                  <td><span class="status-pill info">${escapeHtml(__status(item.financialStatus || "-"))}</span></td>
                   <td>${__formatDateTime(item.requestedPickupAt)}</td>
                   <td>${__formatDateTime(item.weightedAt)}</td>
                   <td>
                     <button class="btn-link" type="button" onclick="openExternalModal('${item.shipmentId}')">
-                      Confirm Transfer
+                      ${__t("Confirm Transfer")}
                     </button>
                   </td>
                 </tr>
@@ -1040,7 +1053,10 @@
 
         const meta = state.external.meta || { page: 1, totalPages: 1 };
         document.getElementById("externalPaginationLabel").textContent =
-          `Page ${meta.page || 1} of ${meta.totalPages || 1}`;
+          __t("Page {page} of {total}", {
+            page: meta.page || 1,
+            total: meta.totalPages || 1,
+          });
         document.getElementById("externalPrevBtn").disabled = (meta.page || 1) <= 1;
         document.getElementById("externalNextBtn").disabled =
           (meta.page || 1) >= (meta.totalPages || 1);
@@ -1101,13 +1117,14 @@
           state.meal.eligible?.trader?.traderId ||
           "";
         document.getElementById("mealTraderSelect").innerHTML = [
-          `<option value="">Select trader</option>`,
+          `<option value="">${__t("Select trader")}</option>`,
           ...traders.map(
             (item) =>
               `<option value="${item.traderId}">${escapeHtml(item.traderName)}</option>`,
           ),
         ].join("");
         document.getElementById("mealTraderSelect").value = currentValue;
+        applySmartDefaults();
 
         const list = document.getElementById("mealSourceList");
         if (!state.meal.sourceItems.length) {
@@ -1127,14 +1144,14 @@
           .map((item) => {
             const key = `shipment:${item.shipmentId}`;
             return `
-              <div class="source-item ${state.meal.activeContextKey === key ? "active" : ""}">
+              <div class="source-item ${state.meal.activeContextKey === key ? "active" : ""}" onclick="loadMealEligibleByShipment('${item.shipmentId}', '${key}')">
                 <div class="inline-stack">
                   <strong>${escapeHtml(item.shipmentNumber || "-")}</strong>
                   <span class="subtle">${escapeHtml(item.traderName || "-")} • ${formatMoney(item.amount)}</span>
                 </div>
                 <div class="actions">
-                  <button class="btn-link" type="button" onclick="loadMealEligibleByShipment('${item.shipmentId}', '${key}')">
-                    Load From Shipment Context
+                  <button class="btn-link" type="button" onclick="event.stopPropagation(); loadMealEligibleByShipment('${item.shipmentId}', '${key}')">
+                    ${__t("Load From Shipment Context")}
                   </button>
                 </div>
               </div>
@@ -1238,7 +1255,7 @@
                 </td>
                 <td><strong>${escapeHtml(item.shipmentNumber || "-")}</strong></td>
                 <td>${formatMoney(item.amount)}</td>
-                <td><span class="status-pill pending">${escapeHtml(item.financialStatus || "-")}</span></td>
+                <td><span class="status-pill pending">${escapeHtml(__status(item.financialStatus || "-"))}</span></td>
                 <td>${__formatDateTime(item.requestedPickupAt)}</td>
                 <td>${__formatDateTime(item.weightedAt)}</td>
                 <td>${Number(item.totalWeightedKg || 0).toLocaleString("en-US")}</td>
@@ -1327,13 +1344,14 @@
           state.monthly.currentTrader?.traderId ||
           "";
         document.getElementById("monthlyTraderSelect").innerHTML = [
-          `<option value="">Select trader</option>`,
+          `<option value="">${__t("Select trader")}</option>`,
           ...state.monthly.traders.map(
             (item) =>
               `<option value="${item.traderId}">${escapeHtml(item.traderName)}</option>`,
           ),
         ].join("");
         document.getElementById("monthlyTraderSelect").value = currentValue;
+        applySmartDefaults();
 
         const summaryEl = document.getElementById("monthlyTraderSummary");
         if (!state.monthly.traders.length) {
@@ -1351,7 +1369,7 @@
         summaryEl.innerHTML = state.monthly.traders
           .map(
             (item) => `
-              <div class="source-item">
+              <div class="source-item" onclick="selectMonthlyTrader('${item.traderId}')">
                 <div class="inline-stack">
                   <strong>${escapeHtml(item.traderName)}</strong>
                   <span class="subtle">${escapeHtml(item.traderId)}</span>
@@ -1368,6 +1386,11 @@
         state.monthly.currentTrader = null;
         document.getElementById("monthlyTraderSelect").value = "";
         renderMonthlyPeriods();
+      }
+
+      function selectMonthlyTrader(traderId) {
+        document.getElementById("monthlyTraderSelect").value = traderId;
+        loadMonthlyPeriods();
       }
 
       async function loadMonthlyPeriods() {
@@ -1431,7 +1454,7 @@
               <tr>
                 <td>
                   <div class="inline-stack">
-                    <strong>${escapeHtml(period.periodLabel || period.periodKey || `Period ${index + 1}`)}</strong>
+                    <strong>${escapeHtml(period.periodLabel || period.periodKey || __t("Period {index}", { index: index + 1 }))}</strong>
                     <span class="subtle">${escapeHtml(period.periodKey || "-")}</span>
                   </div>
                 </td>
@@ -1442,7 +1465,7 @@
                 <td>${__formatDateTime(period.to)}</td>
                 <td>
                   <button class="btn-link" type="button" onclick="openMonthlyModal('${period.periodKey}')">
-                    Settle This Period
+                    ${__t("Settle This Period")}
                   </button>
                 </td>
               </tr>
@@ -1471,11 +1494,11 @@
       function openModalShell({ title, subtitle, bodyHtml, submitLabel, onSubmit }) {
         state.modal.submitting = false;
         clearModalErrors();
-        document.getElementById("modalTitle").textContent = title;
-        document.getElementById("modalSubtitle").textContent = subtitle || "";
+        document.getElementById("modalTitle").textContent = __t(title);
+        document.getElementById("modalSubtitle").textContent = subtitle ? __t(subtitle) : "";
         document.getElementById("modalBody").innerHTML = bodyHtml;
         const submitBtn = document.getElementById("modalSubmitBtn");
-        submitBtn.textContent = submitLabel || "Submit";
+        submitBtn.textContent = __t(submitLabel || "Submit");
         submitBtn.disabled = false;
         submitBtn.onclick = onSubmit;
         document.getElementById("actionModal").classList.add("open");
@@ -1506,7 +1529,7 @@
         state.modal.submitting = isSubmitting;
         const btn = document.getElementById("modalSubmitBtn");
         btn.disabled = isSubmitting;
-        if (label) btn.textContent = label;
+        if (label) btn.textContent = __t(label);
       }
 
       function openExternalModal(shipmentId) {
@@ -1744,7 +1767,7 @@
                               <tr>
                                 <td>${escapeHtml(item.shipmentNumber || item.shipmentId || "-")}</td>
                                 <td>${formatMoney(item.amount)}</td>
-                                <td>${escapeHtml(item.financialStatus || "-")}</td>
+                                <td>${escapeHtml(__status(item.financialStatus || "-"))}</td>
                                 <td>${Number(item.totalWeightedKg || 0).toLocaleString("en-US")}</td>
                               </tr>
                             `,
@@ -1826,13 +1849,31 @@
       async function init() {
         try {
           await Promise.all([loadExternalTraders(), loadMealSources(), loadMonthlySources()]);
+          applySmartDefaults();
           await loadExternalEligible(1);
+          if (document.getElementById("mealTraderSelect").value) {
+            await loadMealEligibleByTrader();
+          }
+          if (document.getElementById("monthlyTraderSelect").value) {
+            await loadMonthlyPeriods();
+          }
           renderMealEligibility();
           renderMonthlyPeriods();
         } catch (error) {
           showBanner("error", error.message || "Failed to load finance management data");
         }
       }
+
+      document.getElementById("externalMethod").addEventListener("change", () => loadExternalEligible(1));
+      document.getElementById("externalTrader").addEventListener("change", () => loadExternalEligible(1));
+      document.getElementById("externalFrom").addEventListener("change", () => loadExternalEligible(1));
+      document.getElementById("externalTo").addEventListener("change", () => loadExternalEligible(1));
+      document.getElementById("mealTraderSelect").addEventListener("change", () => {
+        if (document.getElementById("mealTraderSelect").value) loadMealEligibleByTrader();
+      });
+      document.getElementById("monthlyTraderSelect").addEventListener("change", () => {
+        if (document.getElementById("monthlyTraderSelect").value) loadMonthlyPeriods();
+      });
 
       init();
     </script>
