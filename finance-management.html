@@ -1,0 +1,1841 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>SuperCycle - Finance Management</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      :root {
+        --primary: #1a7f4f;
+        --primary-light: #2ba572;
+        --primary-dark: #155d3b;
+        --gray-50: #f8fafc;
+        --gray-100: #f1f5f9;
+        --gray-200: #e2e8f0;
+        --gray-300: #cbd5e1;
+        --gray-500: #64748b;
+        --gray-700: #334155;
+        --gray-900: #0f172a;
+        --danger: #c0392b;
+        --danger-bg: #fdecea;
+        --warning: #b45309;
+        --warning-bg: #fef3c7;
+        --success: #166534;
+        --success-bg: #dcfce7;
+        --info: #1d4ed8;
+        --info-bg: #dbeafe;
+        --white: #ffffff;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, sans-serif;
+        background: #f5f7fa;
+        color: var(--gray-900);
+      }
+
+      .header {
+        background: linear-gradient(135deg, var(--primary), var(--primary-light));
+        color: var(--white);
+        padding: 20px 32px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 16px;
+      }
+
+      .header h1 {
+        font-size: 24px;
+        font-weight: 700;
+      }
+
+      .header-actions {
+        display: flex;
+        gap: 10px;
+      }
+
+      .header-btn {
+        background: rgba(255, 255, 255, 0.16);
+        color: var(--white);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        padding: 9px 16px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 600;
+      }
+
+      .container {
+        max-width: 1440px;
+        margin: 0 auto;
+        padding: 28px 20px 40px;
+      }
+
+      .page-intro {
+        margin-bottom: 20px;
+        color: var(--gray-700);
+      }
+
+      .banner {
+        padding: 14px 16px;
+        border-radius: 10px;
+        margin-bottom: 18px;
+        display: none;
+        font-weight: 600;
+      }
+
+      .banner.error {
+        display: block;
+        background: var(--danger-bg);
+        color: var(--danger);
+        border: 1px solid #f7c9c3;
+      }
+
+      .banner.success {
+        display: block;
+        background: var(--success-bg);
+        color: var(--success);
+        border: 1px solid #b4e1c2;
+      }
+
+      .tabs {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        margin-bottom: 22px;
+      }
+
+      .tab-btn {
+        border: 1px solid var(--gray-200);
+        background: var(--white);
+        color: var(--gray-700);
+        padding: 12px 16px;
+        border-radius: 10px;
+        cursor: pointer;
+        font-weight: 700;
+      }
+
+      .tab-btn.active {
+        background: var(--primary);
+        border-color: var(--primary);
+        color: var(--white);
+      }
+
+      .tab-panel {
+        display: none;
+      }
+
+      .tab-panel.active {
+        display: block;
+      }
+
+      .card {
+        background: var(--white);
+        border-radius: 14px;
+        box-shadow: 0 4px 18px rgba(15, 23, 42, 0.06);
+        overflow: hidden;
+        margin-bottom: 20px;
+      }
+
+      .card-header {
+        padding: 18px 20px;
+        border-bottom: 1px solid var(--gray-200);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .card-header h2,
+      .card-header h3 {
+        font-size: 18px;
+      }
+
+      .card-body {
+        padding: 20px;
+      }
+
+      .card-hint {
+        color: var(--gray-500);
+        font-size: 13px;
+        margin-top: 6px;
+      }
+
+      .layout {
+        display: grid;
+        grid-template-columns: minmax(280px, 340px) minmax(0, 1fr);
+        gap: 20px;
+        align-items: start;
+      }
+
+      .filters {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 12px;
+        margin-bottom: 16px;
+      }
+
+      .filters.compact {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .field {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+
+      .field label {
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--gray-700);
+      }
+
+      .field input,
+      .field select,
+      .field textarea {
+        width: 100%;
+        border: 1px solid var(--gray-300);
+        border-radius: 10px;
+        padding: 11px 12px;
+        font-size: 14px;
+        background: var(--white);
+      }
+
+      .field input:focus,
+      .field select:focus,
+      .field textarea:focus {
+        outline: none;
+        border-color: var(--primary-light);
+        box-shadow: 0 0 0 3px rgba(43, 165, 114, 0.15);
+      }
+
+      .field-error {
+        color: var(--danger);
+        font-size: 12px;
+        min-height: 16px;
+      }
+
+      .actions {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-top: 18px;
+      }
+
+      .inline-actions {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+
+      button {
+        border: none;
+        border-radius: 10px;
+        padding: 10px 14px;
+        cursor: pointer;
+        font-weight: 700;
+      }
+
+      .btn-primary {
+        background: var(--primary-light);
+        color: var(--white);
+      }
+
+      .btn-secondary {
+        background: var(--gray-100);
+        color: var(--gray-700);
+      }
+
+      .btn-link {
+        padding: 0;
+        background: transparent;
+        color: var(--info);
+      }
+
+      .btn-danger {
+        background: #b91c1c;
+        color: var(--white);
+      }
+
+      button:disabled {
+        opacity: 0.55;
+        cursor: not-allowed;
+      }
+
+      .stats {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+
+      .stat {
+        background: var(--gray-50);
+        border: 1px solid var(--gray-200);
+        border-radius: 12px;
+        padding: 12px 14px;
+        min-width: 120px;
+      }
+
+      .stat strong {
+        display: block;
+        font-size: 22px;
+        color: var(--primary-dark);
+      }
+
+      .stat span {
+        font-size: 12px;
+        color: var(--gray-500);
+      }
+
+      .status-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        border-radius: 999px;
+        padding: 6px 10px;
+        font-size: 12px;
+        font-weight: 700;
+      }
+
+      .status-pill.pending {
+        background: var(--warning-bg);
+        color: var(--warning);
+      }
+
+      .status-pill.info {
+        background: var(--info-bg);
+        color: var(--info);
+      }
+
+      .subtle {
+        color: var(--gray-500);
+        font-size: 12px;
+      }
+
+      .inline-stack {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      th,
+      td {
+        padding: 14px 12px;
+        border-bottom: 1px solid var(--gray-200);
+        font-size: 13px;
+        vertical-align: top;
+      }
+
+      th {
+        background: var(--gray-50);
+        font-weight: 700;
+        text-transform: uppercase;
+        color: var(--gray-700);
+      }
+
+      tbody tr:hover {
+        background: #fbfdfc;
+      }
+
+      .table-wrap {
+        overflow-x: auto;
+      }
+
+      .loading-state,
+      .empty-state {
+        padding: 32px 16px;
+        text-align: center;
+        color: var(--gray-500);
+        font-weight: 600;
+      }
+
+      .summary-box {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        flex-wrap: wrap;
+        background: var(--gray-50);
+        border: 1px solid var(--gray-200);
+        border-radius: 12px;
+        padding: 14px 16px;
+        margin-top: 16px;
+      }
+
+      .pagination {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        gap: 10px;
+        margin-top: 16px;
+      }
+
+      .source-list {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .source-item {
+        border: 1px solid var(--gray-200);
+        border-radius: 12px;
+        padding: 12px;
+        background: var(--gray-50);
+      }
+
+      .source-item.active {
+        border-color: rgba(43, 165, 114, 0.45);
+        background: #effcf5;
+      }
+
+      .modal {
+        position: fixed;
+        inset: 0;
+        background: rgba(15, 23, 42, 0.48);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: 24px;
+        z-index: 999;
+      }
+
+      .modal.open {
+        display: flex;
+      }
+
+      .modal-content {
+        width: min(760px, 100%);
+        max-height: calc(100vh - 48px);
+        overflow-y: auto;
+        background: var(--white);
+        border-radius: 16px;
+        box-shadow: 0 18px 40px rgba(15, 23, 42, 0.18);
+      }
+
+      .modal-header {
+        padding: 18px 20px;
+        border-bottom: 1px solid var(--gray-200);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .modal-body {
+        padding: 20px;
+      }
+
+      .modal-footer {
+        padding: 18px 20px;
+        border-top: 1px solid var(--gray-200);
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+
+      .preview-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+        margin-bottom: 16px;
+      }
+
+      .preview-item {
+        background: var(--gray-50);
+        border: 1px solid var(--gray-200);
+        border-radius: 12px;
+        padding: 12px;
+      }
+
+      .preview-item strong {
+        display: block;
+        margin-bottom: 6px;
+        font-size: 12px;
+        color: var(--gray-500);
+        text-transform: uppercase;
+      }
+
+      .checkbox-cell {
+        width: 42px;
+      }
+
+      .hidden {
+        display: none !important;
+      }
+
+      @media (max-width: 1100px) {
+        .layout {
+          grid-template-columns: 1fr;
+        }
+
+        .filters {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+
+      @media (max-width: 720px) {
+        .header {
+          padding: 18px 20px;
+          flex-direction: column;
+          align-items: stretch;
+        }
+
+        .header-actions {
+          width: 100%;
+          justify-content: space-between;
+        }
+
+        .filters,
+        .filters.compact,
+        .preview-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .container {
+          padding: 20px 14px 32px;
+        }
+
+        .card-header,
+        .card-body,
+        .modal-header,
+        .modal-body,
+        .modal-footer {
+          padding-left: 14px;
+          padding-right: 14px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <h1>Finance Management</h1>
+      <div class="header-actions">
+        <button class="header-btn" onclick="goBack()">Back to Dashboard</button>
+        <button class="header-btn" onclick="logout()">Logout</button>
+      </div>
+    </div>
+
+    <div class="container">
+      <p class="page-intro">
+        Manage external transfer confirmations, meal settlements, and monthly settlement periods using eligible finance APIs only.
+      </p>
+
+      <div id="pageBanner" class="banner"></div>
+
+      <div class="tabs">
+        <button class="tab-btn active" data-tab="external" onclick="setTab('external')">
+          External Transfer Payments
+        </button>
+        <button class="tab-btn" data-tab="meal" onclick="setTab('meal')">
+          Meal Settlement
+        </button>
+        <button class="tab-btn" data-tab="monthly" onclick="setTab('monthly')">
+          Monthly Settlement
+        </button>
+      </div>
+
+      <section class="tab-panel active" id="panel-external">
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h2>External Transfer Queue</h2>
+              <p class="card-hint">
+                Review shipment-level transfer payments that are ready for confirmation.
+              </p>
+            </div>
+            <div class="inline-actions">
+              <button class="btn-secondary" type="button" onclick="resetExternalFilters()">Reset Filters</button>
+              <button class="btn-primary" type="button" onclick="loadExternalEligible(1)">Refresh</button>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="filters">
+              <div class="field">
+                <label for="externalMethod">Method</label>
+                <select id="externalMethod">
+                  <option value="">All methods</option>
+                  <option value="wallet">Wallet</option>
+                  <option value="bankTransfer">Bank Transfer</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="externalTrader">Trader</label>
+                <select id="externalTrader">
+                  <option value="">All traders</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="externalFrom">From Date</label>
+                <input id="externalFrom" type="date" />
+              </div>
+              <div class="field">
+                <label for="externalTo">To Date</label>
+                <input id="externalTo" type="date" />
+              </div>
+            </div>
+
+            <div id="externalState" class="loading-state">Loading external transfer shipments...</div>
+            <div class="table-wrap">
+              <table id="externalTable" hidden>
+                <thead>
+                  <tr>
+                    <th>Shipment No</th>
+                    <th>Trader</th>
+                    <th>Amount</th>
+                    <th>Method</th>
+                    <th>Status</th>
+                    <th>Requested Pickup</th>
+                    <th>Weighted At</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody id="externalRows"></tbody>
+              </table>
+            </div>
+
+            <div class="pagination">
+              <button class="btn-secondary" type="button" id="externalPrevBtn" onclick="changeExternalPage(-1)">
+                Previous
+              </button>
+              <span id="externalPaginationLabel" class="subtle">Page 1 of 1</span>
+              <button class="btn-secondary" type="button" id="externalNextBtn" onclick="changeExternalPage(1)">
+                Next
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="tab-panel" id="panel-meal">
+        <div class="layout">
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <h2>Settlement Context</h2>
+                <p class="card-hint">Start from a trader or a pending shipment context without entering IDs manually.</p>
+              </div>
+              <button class="btn-primary" type="button" onclick="loadMealSources()">Refresh</button>
+            </div>
+            <div class="card-body">
+              <div class="field">
+                <label for="mealTraderSelect">Trader</label>
+                <select id="mealTraderSelect"></select>
+              </div>
+              <div class="actions">
+                <button class="btn-primary" type="button" onclick="loadMealEligibleByTrader()">Load Eligible Shipments</button>
+                <button class="btn-secondary" type="button" onclick="resetMealSelection()">Clear Selection</button>
+              </div>
+
+              <div class="card-hint" style="margin: 18px 0 12px">Or start from a pending shipment context.</div>
+              <div id="mealSourceState" class="loading-state">Loading pending meal finance items...</div>
+              <div id="mealSourceList" class="source-list hidden"></div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <h2>Eligible Meal Shipments</h2>
+                <p class="card-hint">The table below always reflects the exact eligible set returned by the API.</p>
+              </div>
+            </div>
+            <div class="card-body">
+              <div id="mealEligibilityState" class="empty-state">Choose a trader or shipment context to load eligible meal settlements.</div>
+              <div class="table-wrap">
+                <table id="mealTable" hidden>
+                  <thead>
+                    <tr>
+                      <th class="checkbox-cell">
+                        <input id="mealSelectAll" type="checkbox" onchange="toggleAllMealSelections()" />
+                      </th>
+                      <th>Shipment No</th>
+                      <th>Amount</th>
+                      <th>Status</th>
+                      <th>Requested Pickup</th>
+                      <th>Weighted At</th>
+                      <th>Total Weighted KG</th>
+                    </tr>
+                  </thead>
+                  <tbody id="mealRows"></tbody>
+                </table>
+              </div>
+
+              <div class="summary-box">
+                <div class="stats">
+                  <div class="stat">
+                    <strong id="mealSummaryCount">0</strong>
+                    <span>Selected Shipments</span>
+                  </div>
+                  <div class="stat">
+                    <strong id="mealSummaryAmount">EGP 0.00</strong>
+                    <span>Total Amount</span>
+                  </div>
+                  <div class="stat">
+                    <strong id="mealEligibleCount">0</strong>
+                    <span>Eligible Shipments</span>
+                  </div>
+                </div>
+                <button class="btn-primary" type="button" id="mealSettleBtn" onclick="openMealModal()" disabled>
+                  Settle Meal Payments
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="tab-panel" id="panel-monthly">
+        <div class="layout">
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <h2>Trader Selection</h2>
+                <p class="card-hint">Pending monthly finance items are used to discover traders with settlement periods.</p>
+              </div>
+              <button class="btn-primary" type="button" onclick="loadMonthlySources()">Refresh</button>
+            </div>
+            <div class="card-body">
+              <div class="field">
+                <label for="monthlyTraderSelect">Trader</label>
+                <select id="monthlyTraderSelect"></select>
+              </div>
+              <div class="actions">
+                <button class="btn-primary" type="button" onclick="loadMonthlyPeriods()">Load Eligible Periods</button>
+                <button class="btn-secondary" type="button" onclick="resetMonthlySelection()">Clear Selection</button>
+              </div>
+
+              <div class="card-hint" style="margin-top: 18px">
+                When you settle a period, the preview is refreshed from the exact period endpoint before submit.
+              </div>
+
+              <div id="monthlySourceState" class="loading-state">Loading pending monthly finance items...</div>
+              <div id="monthlyTraderSummary" class="source-list hidden"></div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <h2>Eligible Monthly Periods</h2>
+                <p class="card-hint">Review pending monthly periods and settle one period at a time.</p>
+              </div>
+            </div>
+            <div class="card-body">
+              <div id="monthlyState" class="empty-state">Choose a trader to load eligible monthly periods.</div>
+              <div class="table-wrap">
+                <table id="monthlyTable" hidden>
+                  <thead>
+                    <tr>
+                      <th>Period</th>
+                      <th>Shipments</th>
+                      <th>Total Amount</th>
+                      <th>Method</th>
+                      <th>From</th>
+                      <th>To</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody id="monthlyRows"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <div class="modal" id="actionModal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <div>
+            <h3 id="modalTitle">Finance Action</h3>
+            <p id="modalSubtitle" class="card-hint"></p>
+          </div>
+          <button class="btn-secondary" type="button" onclick="closeModal()">Close</button>
+        </div>
+        <div class="modal-body" id="modalBody"></div>
+        <div class="modal-footer">
+          <button class="btn-secondary" type="button" onclick="closeModal()">Cancel</button>
+          <button class="btn-primary" type="button" id="modalSubmitBtn">Submit</button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const API_BASE =
+        "https://supercycle-api-855015056699.europe-west1.run.app";
+      const token = localStorage.getItem("token");
+
+      if (!token) location.href = "index.html";
+
+      const state = {
+        activeTab: "external",
+        external: {
+          traders: [],
+          items: [],
+          meta: { page: 1, totalPages: 1, total: 0, limit: 10 },
+          filters: { method: "", traderId: "", from: "", to: "" },
+        },
+        meal: {
+          sourceItems: [],
+          traders: [],
+          eligible: null,
+          selectedIds: new Set(),
+          activeContextKey: "",
+        },
+        monthly: {
+          sourceItems: [],
+          traders: [],
+          periods: [],
+          summary: null,
+          currentTrader: null,
+        },
+        modal: {
+          type: null,
+          payload: null,
+          submitting: false,
+        },
+      };
+
+      function goBack() {
+        location.href = "dashboard.html";
+      }
+
+      function logout() {
+        localStorage.removeItem("token");
+        location.href = "index.html";
+      }
+
+      function extractCollection(json) {
+        if (Array.isArray(json)) return json;
+        if (Array.isArray(json?.data)) return json.data;
+        if (Array.isArray(json?.data?.data)) return json.data.data;
+        if (Array.isArray(json?.items)) return json.items;
+        if (Array.isArray(json?.results)) return json.results;
+        return [];
+      }
+
+      function extractMeta(json) {
+        return (
+          json?.meta ||
+          json?.data?.meta || {
+            page: 1,
+            totalPages: 1,
+            total: extractCollection(json).length,
+            limit: 10,
+          }
+        );
+      }
+
+      function getMessage(json, fallback) {
+        return (
+          json?.message ||
+          json?.error ||
+          json?.data?.message ||
+          json?.errors?.[0]?.message ||
+          fallback
+        );
+      }
+
+      function showBanner(type, message) {
+        const el = document.getElementById("pageBanner");
+        if (!message) {
+          el.className = "banner";
+          el.textContent = "";
+          return;
+        }
+
+        el.className = `banner ${type}`;
+        el.textContent = message;
+      }
+
+      function setTab(tab) {
+        state.activeTab = tab;
+        document.querySelectorAll(".tab-btn").forEach((button) => {
+          button.classList.toggle("active", button.dataset.tab === tab);
+        });
+        document.querySelectorAll(".tab-panel").forEach((panel) => {
+          panel.classList.toggle("active", panel.id === `panel-${tab}`);
+        });
+      }
+
+      function setStateMessage(id, className, message, hideTableId) {
+        const el = document.getElementById(id);
+        el.className = className;
+        el.textContent = message;
+        el.hidden = false;
+        if (hideTableId) document.getElementById(hideTableId).hidden = true;
+      }
+
+      function showTable(tableId, stateId) {
+        document.getElementById(stateId).hidden = true;
+        document.getElementById(tableId).hidden = false;
+      }
+
+      function toIsoBoundary(value, endOfDay = false) {
+        if (!value) return "";
+        const suffix = endOfDay ? "T23:59:59.999Z" : "T00:00:00.000Z";
+        return `${value}${suffix}`;
+      }
+
+      function formatMoney(value) {
+        const amount = Number(value || 0);
+        return `EGP ${amount.toLocaleString("en-US", {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        })}`;
+      }
+
+      function escapeHtml(value) {
+        return String(value ?? "")
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/\"/g, "&quot;")
+          .replace(/'/g, "&#39;");
+      }
+
+      async function fetchJson(path, options = {}) {
+        const isFormData = options.body instanceof FormData;
+        const response = await fetch(`${API_BASE}${path}`, {
+          ...options,
+          headers: {
+            Authorization: `Bearer ${token}`,
+            ...(options.body && !isFormData ? { "Content-Type": "application/json" } : {}),
+            ...(options.headers || {}),
+          },
+        });
+
+        const text = await response.text();
+        let json = null;
+
+        try {
+          json = text ? JSON.parse(text) : null;
+        } catch (_) {
+          json = null;
+        }
+
+        if (!response.ok) {
+          throw {
+            status: response.status,
+            json,
+            message: getMessage(json, text || "Request failed"),
+          };
+        }
+
+        return json;
+      }
+
+      async function loadExternalTraders() {
+        const json = await fetchJson("/admin/finance/items?status=pending&type=external&limit=100");
+        const items = extractCollection(json);
+        const unique = [];
+        const seen = new Set();
+
+        items.forEach((item) => {
+          if (!item.traderId || seen.has(item.traderId)) return;
+          seen.add(item.traderId);
+          unique.push({ traderId: item.traderId, traderName: item.traderName || item.traderId });
+        });
+
+        state.external.traders = unique;
+        const currentValue = document.getElementById("externalTrader").value;
+        document.getElementById("externalTrader").innerHTML = [
+          `<option value="">All traders</option>`,
+          ...unique.map(
+            (item) =>
+              `<option value="${item.traderId}">${escapeHtml(item.traderName)}</option>`,
+          ),
+        ].join("");
+        document.getElementById("externalTrader").value = currentValue;
+      }
+
+      function getExternalQuery(page = 1) {
+        const params = new URLSearchParams();
+        const method = document.getElementById("externalMethod").value;
+        const traderId = document.getElementById("externalTrader").value;
+        const from = document.getElementById("externalFrom").value;
+        const to = document.getElementById("externalTo").value;
+
+        state.external.filters = { method, traderId, from, to };
+
+        if (method) params.set("method", method);
+        if (traderId) params.set("traderId", traderId);
+        if (from) params.set("from", toIsoBoundary(from));
+        if (to) params.set("to", toIsoBoundary(to, true));
+        params.set("page", String(page));
+        params.set("limit", "10");
+
+        return `?${params.toString()}`;
+      }
+
+      async function loadExternalEligible(page = 1) {
+        setStateMessage(
+          "externalState",
+          "loading-state",
+          "Loading external transfer shipments...",
+          "externalTable",
+        );
+
+        try {
+          const json = await fetchJson(`/admin/finance/transfer/eligible-shipments${getExternalQuery(page)}`);
+          state.external.items = extractCollection(json);
+          state.external.meta = extractMeta(json);
+          renderExternalTable();
+        } catch (error) {
+          setStateMessage(
+            "externalState",
+            "empty-state",
+            error.message || "Failed to load external transfer shipments",
+            "externalTable",
+          );
+        }
+      }
+
+      function renderExternalTable() {
+        const items = state.external.items;
+
+        if (!items.length) {
+          setStateMessage(
+            "externalState",
+            "empty-state",
+            "No eligible external transfer shipments found",
+            "externalTable",
+          );
+        } else {
+          document.getElementById("externalRows").innerHTML = items
+            .map(
+              (item) => `
+                <tr>
+                  <td><strong>${escapeHtml(item.shipmentNumber || "-")}</strong></td>
+                  <td>${escapeHtml(item.traderName || "-")}</td>
+                  <td>${formatMoney(item.amount)}</td>
+                  <td>${escapeHtml(item.paymentMethod || "-")}</td>
+                  <td><span class="status-pill info">${escapeHtml(item.financialStatus || "-")}</span></td>
+                  <td>${__formatDateTime(item.requestedPickupAt)}</td>
+                  <td>${__formatDateTime(item.weightedAt)}</td>
+                  <td>
+                    <button class="btn-link" type="button" onclick="openExternalModal('${item.shipmentId}')">
+                      Confirm Transfer
+                    </button>
+                  </td>
+                </tr>
+              `,
+            )
+            .join("");
+          showTable("externalTable", "externalState");
+        }
+
+        const meta = state.external.meta || { page: 1, totalPages: 1 };
+        document.getElementById("externalPaginationLabel").textContent =
+          `Page ${meta.page || 1} of ${meta.totalPages || 1}`;
+        document.getElementById("externalPrevBtn").disabled = (meta.page || 1) <= 1;
+        document.getElementById("externalNextBtn").disabled =
+          (meta.page || 1) >= (meta.totalPages || 1);
+      }
+
+      function changeExternalPage(direction) {
+        const nextPage = (state.external.meta.page || 1) + direction;
+        if (nextPage < 1 || nextPage > (state.external.meta.totalPages || 1)) return;
+        loadExternalEligible(nextPage);
+      }
+
+      function resetExternalFilters() {
+        document.getElementById("externalMethod").value = "";
+        document.getElementById("externalTrader").value = "";
+        document.getElementById("externalFrom").value = "";
+        document.getElementById("externalTo").value = "";
+        loadExternalEligible(1);
+      }
+
+      async function loadMealSources() {
+        setStateMessage(
+          "mealSourceState",
+          "loading-state",
+          "Loading pending meal finance items...",
+        );
+
+        try {
+          const json = await fetchJson("/admin/finance/items?status=pending&type=meal&limit=100");
+          const items = extractCollection(json);
+          state.meal.sourceItems = items;
+
+          const traders = [];
+          const seen = new Set();
+          items.forEach((item) => {
+            if (!item.traderId || seen.has(item.traderId)) return;
+            seen.add(item.traderId);
+            traders.push({
+              traderId: item.traderId,
+              traderName: item.traderName || item.traderId,
+            });
+          });
+
+          state.meal.traders = traders;
+          renderMealSources();
+        } catch (error) {
+          setStateMessage(
+            "mealSourceState",
+            "empty-state",
+            error.message || "Failed to load meal settlement sources",
+          );
+        }
+      }
+
+      function renderMealSources() {
+        const traders = state.meal.traders;
+        const currentValue =
+          document.getElementById("mealTraderSelect").value ||
+          state.meal.eligible?.trader?.traderId ||
+          "";
+        document.getElementById("mealTraderSelect").innerHTML = [
+          `<option value="">Select trader</option>`,
+          ...traders.map(
+            (item) =>
+              `<option value="${item.traderId}">${escapeHtml(item.traderName)}</option>`,
+          ),
+        ].join("");
+        document.getElementById("mealTraderSelect").value = currentValue;
+
+        const list = document.getElementById("mealSourceList");
+        if (!state.meal.sourceItems.length) {
+          list.classList.add("hidden");
+          setStateMessage(
+            "mealSourceState",
+            "empty-state",
+            "No pending meal finance items found",
+          );
+          return;
+        }
+
+        list.classList.remove("hidden");
+        document.getElementById("mealSourceState").hidden = true;
+        list.innerHTML = state.meal.sourceItems
+          .slice(0, 8)
+          .map((item) => {
+            const key = `shipment:${item.shipmentId}`;
+            return `
+              <div class="source-item ${state.meal.activeContextKey === key ? "active" : ""}">
+                <div class="inline-stack">
+                  <strong>${escapeHtml(item.shipmentNumber || "-")}</strong>
+                  <span class="subtle">${escapeHtml(item.traderName || "-")} • ${formatMoney(item.amount)}</span>
+                </div>
+                <div class="actions">
+                  <button class="btn-link" type="button" onclick="loadMealEligibleByShipment('${item.shipmentId}', '${key}')">
+                    Load From Shipment Context
+                  </button>
+                </div>
+              </div>
+            `;
+          })
+          .join("");
+      }
+
+      function resetMealSelection() {
+        state.meal.eligible = null;
+        state.meal.selectedIds = new Set();
+        state.meal.activeContextKey = "";
+        document.getElementById("mealTraderSelect").value = "";
+        renderMealSources();
+        renderMealEligibility();
+      }
+
+      async function loadMealEligibleByTrader() {
+        const traderId = document.getElementById("mealTraderSelect").value;
+        if (!traderId) {
+          showBanner("error", "Choose a trader first");
+          return;
+        }
+
+        state.meal.activeContextKey = `trader:${traderId}`;
+        renderMealSources();
+        await loadMealEligible(`/finance/meal/eligible-shipments?traderId=${encodeURIComponent(traderId)}`);
+      }
+
+      async function loadMealEligibleByShipment(shipmentId, contextKey) {
+        state.meal.activeContextKey = contextKey || `shipment:${shipmentId}`;
+        renderMealSources();
+        await loadMealEligible(`/finance/meal/eligible-shipments?shipmentId=${encodeURIComponent(shipmentId)}`);
+      }
+
+      async function loadMealEligible(path) {
+        setStateMessage(
+          "mealEligibilityState",
+          "loading-state",
+          "Loading eligible meal shipments...",
+          "mealTable",
+        );
+
+        try {
+          const json = await fetchJson(path);
+          state.meal.eligible = json?.data || null;
+          if (state.meal.eligible?.trader?.traderId) {
+            document.getElementById("mealTraderSelect").value =
+              state.meal.eligible.trader.traderId;
+          }
+          state.meal.selectedIds = new Set(
+            (state.meal.eligible?.eligibleShipments || []).map((item) => item.shipmentId),
+          );
+          renderMealEligibility();
+        } catch (error) {
+          state.meal.eligible = null;
+          state.meal.selectedIds = new Set();
+          setStateMessage(
+            "mealEligibilityState",
+            "empty-state",
+            error.message || "Failed to load eligible meal shipments",
+            "mealTable",
+          );
+          updateMealSummary();
+        }
+      }
+
+      function renderMealEligibility() {
+        const eligibleData = state.meal.eligible;
+        const list = eligibleData?.eligibleShipments || [];
+
+        if (!eligibleData) {
+          setStateMessage(
+            "mealEligibilityState",
+            "empty-state",
+            "Choose a trader or shipment context to load eligible meal settlements.",
+            "mealTable",
+          );
+          updateMealSummary();
+          return;
+        }
+
+        if (!list.length) {
+          setStateMessage(
+            "mealEligibilityState",
+            "empty-state",
+            "No eligible meal shipments found for this trader context",
+            "mealTable",
+          );
+          updateMealSummary();
+          return;
+        }
+
+        document.getElementById("mealRows").innerHTML = list
+          .map((item) => {
+            const checked = state.meal.selectedIds.has(item.shipmentId) ? "checked" : "";
+            return `
+              <tr>
+                <td class="checkbox-cell">
+                  <input type="checkbox" ${checked} onchange="toggleMealSelection('${item.shipmentId}')" />
+                </td>
+                <td><strong>${escapeHtml(item.shipmentNumber || "-")}</strong></td>
+                <td>${formatMoney(item.amount)}</td>
+                <td><span class="status-pill pending">${escapeHtml(item.financialStatus || "-")}</span></td>
+                <td>${__formatDateTime(item.requestedPickupAt)}</td>
+                <td>${__formatDateTime(item.weightedAt)}</td>
+                <td>${Number(item.totalWeightedKg || 0).toLocaleString("en-US")}</td>
+              </tr>
+            `;
+          })
+          .join("");
+
+        showTable("mealTable", "mealEligibilityState");
+        document.getElementById("mealSelectAll").checked =
+          list.length > 0 && state.meal.selectedIds.size === list.length;
+        updateMealSummary();
+      }
+
+      function toggleMealSelection(shipmentId) {
+        if (state.meal.selectedIds.has(shipmentId)) {
+          state.meal.selectedIds.delete(shipmentId);
+        } else {
+          state.meal.selectedIds.add(shipmentId);
+        }
+        renderMealEligibility();
+      }
+
+      function toggleAllMealSelections() {
+        const list = state.meal.eligible?.eligibleShipments || [];
+        const shouldSelectAll = document.getElementById("mealSelectAll").checked;
+        state.meal.selectedIds = shouldSelectAll
+          ? new Set(list.map((item) => item.shipmentId))
+          : new Set();
+        renderMealEligibility();
+      }
+
+      function getSelectedMealShipments() {
+        const list = state.meal.eligible?.eligibleShipments || [];
+        return list.filter((item) => state.meal.selectedIds.has(item.shipmentId));
+      }
+
+      function updateMealSummary() {
+        const selected = getSelectedMealShipments();
+        const totalAmount = selected.reduce((sum, item) => sum + Number(item.amount || 0), 0);
+        const eligibleCount = state.meal.eligible?.eligibleShipments?.length || 0;
+
+        document.getElementById("mealSummaryCount").textContent = String(selected.length);
+        document.getElementById("mealSummaryAmount").textContent = formatMoney(totalAmount);
+        document.getElementById("mealEligibleCount").textContent = String(eligibleCount);
+        document.getElementById("mealSettleBtn").disabled = selected.length === 0;
+      }
+
+      async function loadMonthlySources() {
+        setStateMessage(
+          "monthlySourceState",
+          "loading-state",
+          "Loading pending monthly finance items...",
+        );
+
+        try {
+          const json = await fetchJson("/admin/finance/items?status=pending&type=monthly&limit=100");
+          const items = extractCollection(json);
+          state.monthly.sourceItems = items;
+
+          const traders = [];
+          const seen = new Set();
+          items.forEach((item) => {
+            if (!item.traderId || seen.has(item.traderId)) return;
+            seen.add(item.traderId);
+            traders.push({
+              traderId: item.traderId,
+              traderName: item.traderName || item.traderId,
+            });
+          });
+
+          state.monthly.traders = traders;
+          renderMonthlySources();
+        } catch (error) {
+          setStateMessage(
+            "monthlySourceState",
+            "empty-state",
+            error.message || "Failed to load monthly settlement sources",
+          );
+        }
+      }
+
+      function renderMonthlySources() {
+        const currentValue =
+          document.getElementById("monthlyTraderSelect").value ||
+          state.monthly.currentTrader?.traderId ||
+          "";
+        document.getElementById("monthlyTraderSelect").innerHTML = [
+          `<option value="">Select trader</option>`,
+          ...state.monthly.traders.map(
+            (item) =>
+              `<option value="${item.traderId}">${escapeHtml(item.traderName)}</option>`,
+          ),
+        ].join("");
+        document.getElementById("monthlyTraderSelect").value = currentValue;
+
+        const summaryEl = document.getElementById("monthlyTraderSummary");
+        if (!state.monthly.traders.length) {
+          summaryEl.classList.add("hidden");
+          setStateMessage(
+            "monthlySourceState",
+            "empty-state",
+            "No pending monthly finance items found",
+          );
+          return;
+        }
+
+        document.getElementById("monthlySourceState").hidden = true;
+        summaryEl.classList.remove("hidden");
+        summaryEl.innerHTML = state.monthly.traders
+          .map(
+            (item) => `
+              <div class="source-item">
+                <div class="inline-stack">
+                  <strong>${escapeHtml(item.traderName)}</strong>
+                  <span class="subtle">${escapeHtml(item.traderId)}</span>
+                </div>
+              </div>
+            `,
+          )
+          .join("");
+      }
+
+      function resetMonthlySelection() {
+        state.monthly.periods = [];
+        state.monthly.summary = null;
+        state.monthly.currentTrader = null;
+        document.getElementById("monthlyTraderSelect").value = "";
+        renderMonthlyPeriods();
+      }
+
+      async function loadMonthlyPeriods() {
+        const traderId = document.getElementById("monthlyTraderSelect").value;
+        if (!traderId) {
+          showBanner("error", "Choose a trader first");
+          return;
+        }
+
+        setStateMessage(
+          "monthlyState",
+          "loading-state",
+          "Loading eligible monthly periods...",
+          "monthlyTable",
+        );
+
+        try {
+          const json = await fetchJson(`/finance/monthly/eligible-periods?traderId=${encodeURIComponent(traderId)}`);
+          state.monthly.currentTrader = json?.data?.trader || null;
+          state.monthly.periods = json?.data?.periods || [];
+          state.monthly.summary = json?.data?.summary || null;
+          renderMonthlyPeriods();
+        } catch (error) {
+          state.monthly.periods = [];
+          state.monthly.summary = null;
+          setStateMessage(
+            "monthlyState",
+            "empty-state",
+            error.message || "Failed to load eligible monthly periods",
+            "monthlyTable",
+          );
+        }
+      }
+
+      function renderMonthlyPeriods() {
+        const periods = state.monthly.periods;
+
+        if (!state.monthly.currentTrader && !periods.length) {
+          setStateMessage(
+            "monthlyState",
+            "empty-state",
+            "Choose a trader to load eligible monthly periods.",
+            "monthlyTable",
+          );
+          return;
+        }
+
+        if (!periods.length) {
+          setStateMessage(
+            "monthlyState",
+            "empty-state",
+            "No eligible monthly periods found for this trader",
+            "monthlyTable",
+          );
+          return;
+        }
+
+        document.getElementById("monthlyRows").innerHTML = periods
+          .map(
+            (period, index) => `
+              <tr>
+                <td>
+                  <div class="inline-stack">
+                    <strong>${escapeHtml(period.periodLabel || period.periodKey || `Period ${index + 1}`)}</strong>
+                    <span class="subtle">${escapeHtml(period.periodKey || "-")}</span>
+                  </div>
+                </td>
+                <td>${Number(period.shipmentCount || 0).toLocaleString("en-US")}</td>
+                <td>${formatMoney(period.totalAmount)}</td>
+                <td>${escapeHtml(period.paymentMethod || "-")}</td>
+                <td>${__formatDateTime(period.from)}</td>
+                <td>${__formatDateTime(period.to)}</td>
+                <td>
+                  <button class="btn-link" type="button" onclick="openMonthlyModal('${period.periodKey}')">
+                    Settle This Period
+                  </button>
+                </td>
+              </tr>
+            `,
+          )
+          .join("");
+
+        showTable("monthlyTable", "monthlyState");
+      }
+
+      function getMonthlyPeriod(periodKey) {
+        return state.monthly.periods.find((period) => period.periodKey === periodKey);
+      }
+
+      function clearModalErrors() {
+        document.querySelectorAll("[data-modal-error]").forEach((el) => {
+          el.textContent = "";
+        });
+      }
+
+      function setModalError(key, message) {
+        const el = document.querySelector(`[data-modal-error="${key}"]`);
+        if (el) el.textContent = message;
+      }
+
+      function openModalShell({ title, subtitle, bodyHtml, submitLabel, onSubmit }) {
+        state.modal.submitting = false;
+        clearModalErrors();
+        document.getElementById("modalTitle").textContent = title;
+        document.getElementById("modalSubtitle").textContent = subtitle || "";
+        document.getElementById("modalBody").innerHTML = bodyHtml;
+        const submitBtn = document.getElementById("modalSubmitBtn");
+        submitBtn.textContent = submitLabel || "Submit";
+        submitBtn.disabled = false;
+        submitBtn.onclick = onSubmit;
+        document.getElementById("actionModal").classList.add("open");
+      }
+
+      function closeModal() {
+        state.modal.type = null;
+        state.modal.payload = null;
+        state.modal.submitting = false;
+        document.getElementById("actionModal").classList.remove("open");
+      }
+
+      function validateRequiredFile(inputId, errorKey, message) {
+        const input = document.getElementById(inputId);
+        if (!input || !input.files || !input.files[0]) {
+          setModalError(errorKey, message);
+          return null;
+        }
+        return input.files[0];
+      }
+
+      function validateOptionalFile(inputId) {
+        const input = document.getElementById(inputId);
+        return input && input.files && input.files[0] ? input.files[0] : null;
+      }
+
+      function setModalSubmitting(isSubmitting, label) {
+        state.modal.submitting = isSubmitting;
+        const btn = document.getElementById("modalSubmitBtn");
+        btn.disabled = isSubmitting;
+        if (label) btn.textContent = label;
+      }
+
+      function openExternalModal(shipmentId) {
+        const shipment = state.external.items.find((item) => item.shipmentId === shipmentId);
+        if (!shipment) return;
+
+        state.modal.type = "external";
+        state.modal.payload = shipment;
+
+        openModalShell({
+          title: "Confirm External Transfer",
+          subtitle: "Upload the transfer proof before confirming this shipment payment.",
+          submitLabel: "Confirm Transfer",
+          bodyHtml: `
+            <div class="preview-grid">
+              <div class="preview-item">
+                <strong>Shipment</strong>
+                ${escapeHtml(shipment.shipmentNumber || "-")}
+              </div>
+              <div class="preview-item">
+                <strong>Trader</strong>
+                ${escapeHtml(shipment.traderName || "-")}
+              </div>
+              <div class="preview-item">
+                <strong>Amount</strong>
+                ${formatMoney(shipment.amount)}
+              </div>
+              <div class="preview-item">
+                <strong>Payment Method</strong>
+                ${escapeHtml(shipment.paymentMethod || "-")}
+              </div>
+            </div>
+            <div class="field">
+              <label for="externalReferenceNumber">Reference Number</label>
+              <input id="externalReferenceNumber" placeholder="Transfer reference" />
+              <div class="field-error" data-modal-error="external.referenceNumber"></div>
+            </div>
+            <div class="field">
+              <label for="externalTransferProof">Transfer Proof</label>
+              <input id="externalTransferProof" type="file" accept="image/*,.pdf" />
+              <div class="field-error" data-modal-error="external.transferProof"></div>
+            </div>
+          `,
+          onSubmit: submitExternalTransfer,
+        });
+      }
+
+      async function submitExternalTransfer() {
+        if (state.modal.submitting || !state.modal.payload) return;
+        clearModalErrors();
+
+        const proof = validateRequiredFile(
+          "externalTransferProof",
+          "external.transferProof",
+          "Transfer proof is required",
+        );
+        if (!proof) return;
+
+        const formData = new FormData();
+        formData.append("shipmentId", state.modal.payload.shipmentId);
+
+        const referenceNumber = document.getElementById("externalReferenceNumber").value.trim();
+        if (referenceNumber) formData.append("referenceNumber", referenceNumber);
+        formData.append("transferProof", proof);
+
+        try {
+          setModalSubmitting(true, "Confirming...");
+          const json = await fetchJson("/admin/finance/transfer/confirm", {
+            method: "POST",
+            body: formData,
+          });
+          closeModal();
+          showBanner("success", getMessage(json, "Transfer confirmed successfully"));
+          await Promise.all([loadExternalEligible(state.external.meta.page || 1), loadExternalTraders()]);
+        } catch (error) {
+          showBanner("error", error.message || "Failed to confirm transfer");
+          setModalSubmitting(false, "Confirm Transfer");
+        }
+      }
+
+      function openMealModal() {
+        const selectedShipments = getSelectedMealShipments();
+        if (!selectedShipments.length) return;
+
+        const totalAmount = selectedShipments.reduce((sum, item) => sum + Number(item.amount || 0), 0);
+        const traderName = state.meal.eligible?.trader?.traderName || "-";
+
+        state.modal.type = "meal";
+        state.modal.payload = selectedShipments;
+
+        openModalShell({
+          title: "Settle Meal Payments",
+          subtitle: "Review the selected shipment group before creating the settlement.",
+          submitLabel: "Confirm Meal Settlement",
+          bodyHtml: `
+            <div class="preview-grid">
+              <div class="preview-item">
+                <strong>Trader</strong>
+                ${escapeHtml(traderName)}
+              </div>
+              <div class="preview-item">
+                <strong>Payment Method</strong>
+                ${escapeHtml(state.meal.eligible?.paymentMethod || "cash")}
+              </div>
+              <div class="preview-item">
+                <strong>Selected Shipments</strong>
+                ${selectedShipments.length}
+              </div>
+              <div class="preview-item">
+                <strong>Total Amount</strong>
+                ${formatMoney(totalAmount)}
+              </div>
+            </div>
+            <div class="field">
+              <label for="mealReferenceNumber">Reference Number</label>
+              <input id="mealReferenceNumber" placeholder="Receipt or payment reference" />
+              <div class="field-error" data-modal-error="meal.referenceNumber"></div>
+            </div>
+            <div class="field">
+              <label for="mealPaymentProof">Payment Proof (Optional)</label>
+              <input id="mealPaymentProof" type="file" accept="image/*,.pdf" />
+              <div class="field-error" data-modal-error="meal.paymentProof"></div>
+            </div>
+          `,
+          onSubmit: submitMealSettlement,
+        });
+      }
+
+      async function submitMealSettlement() {
+        if (state.modal.submitting || !state.modal.payload) return;
+        clearModalErrors();
+
+        const currentTraderId = state.meal.eligible?.trader?.traderId || "";
+        const formData = new FormData();
+        state.modal.payload.forEach((item) => formData.append("shipmentIds[]", item.shipmentId));
+        const referenceNumber = document.getElementById("mealReferenceNumber").value.trim();
+        if (referenceNumber) formData.append("referenceNumber", referenceNumber);
+        const proof = validateOptionalFile("mealPaymentProof");
+        if (proof) formData.append("paymentProof", proof);
+
+        try {
+          setModalSubmitting(true, "Settling...");
+          const json = await fetchJson("/finance/meal/settle", {
+            method: "POST",
+            body: formData,
+          });
+          closeModal();
+          showBanner("success", getMessage(json, "Meal settlement completed successfully"));
+          await loadMealSources();
+          if (currentTraderId) {
+            document.getElementById("mealTraderSelect").value = currentTraderId;
+            await loadMealEligible(
+              `/finance/meal/eligible-shipments?traderId=${encodeURIComponent(currentTraderId)}`,
+            );
+          } else {
+            resetMealSelection();
+          }
+        } catch (error) {
+          showBanner("error", error.message || "Failed to settle meal payments");
+          setModalSubmitting(false, "Confirm Meal Settlement");
+        }
+      }
+
+      async function openMonthlyModal(periodKey) {
+        const period = getMonthlyPeriod(periodKey);
+        if (!period || !state.monthly.currentTrader?.traderId) return;
+
+        const traderId = state.monthly.currentTrader.traderId;
+        const query = period.month && period.year
+          ? `traderId=${encodeURIComponent(traderId)}&month=${encodeURIComponent(period.month)}&year=${encodeURIComponent(period.year)}`
+          : `traderId=${encodeURIComponent(traderId)}&from=${encodeURIComponent(period.from)}&to=${encodeURIComponent(period.to)}`;
+
+        try {
+          showBanner("", "");
+          const json = await fetchJson(`/finance/monthly/eligible-periods?${query}`);
+          const selection = json?.data?.selection || {
+            shipments: period.shipments || [],
+            summary: {
+              shipmentCount: period.shipmentCount,
+              totalAmount: period.totalAmount,
+              paymentMethod: period.paymentMethod,
+            },
+            shipmentIds: period.shipmentIds || [],
+            month: period.month,
+            year: period.year,
+            from: period.from,
+            to: period.to,
+          };
+
+          state.modal.type = "monthly";
+          state.modal.payload = { period, selection, trader: state.monthly.currentTrader };
+
+          openModalShell({
+            title: "Settle Monthly Period",
+            subtitle: "The shipment preview below is refreshed from the exact period selection endpoint.",
+            submitLabel: "Confirm Monthly Settlement",
+            bodyHtml: `
+              <div class="preview-grid">
+                <div class="preview-item">
+                  <strong>Trader</strong>
+                  ${escapeHtml(state.monthly.currentTrader?.traderName || "-")}
+                </div>
+                <div class="preview-item">
+                  <strong>Period</strong>
+                  ${escapeHtml(period.periodLabel || period.periodKey || "-")}
+                </div>
+                <div class="preview-item">
+                  <strong>Shipments</strong>
+                  ${Number(selection.summary?.shipmentCount || 0).toLocaleString("en-US")}
+                </div>
+                <div class="preview-item">
+                  <strong>Total Amount</strong>
+                  ${formatMoney(selection.summary?.totalAmount)}
+                </div>
+              </div>
+              <div class="card" style="box-shadow:none;border:1px solid var(--gray-200);margin-bottom:16px;">
+                <div class="card-header">
+                  <h3>Period Shipment Preview</h3>
+                </div>
+                <div class="card-body">
+                  <div class="table-wrap">
+                    <table>
+                      <thead>
+                        <tr>
+                          <th>Shipment No</th>
+                          <th>Amount</th>
+                          <th>Status</th>
+                          <th>Weighted KG</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        ${(selection.shipments || [])
+                          .map(
+                            (item) => `
+                              <tr>
+                                <td>${escapeHtml(item.shipmentNumber || item.shipmentId || "-")}</td>
+                                <td>${formatMoney(item.amount)}</td>
+                                <td>${escapeHtml(item.financialStatus || "-")}</td>
+                                <td>${Number(item.totalWeightedKg || 0).toLocaleString("en-US")}</td>
+                              </tr>
+                            `,
+                          )
+                          .join("")}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+              <div class="field">
+                <label for="monthlyReferenceNumber">Reference Number</label>
+                <input id="monthlyReferenceNumber" placeholder="Settlement reference" />
+                <div class="field-error" data-modal-error="monthly.referenceNumber"></div>
+              </div>
+              <div class="field">
+                <label for="monthlyPaymentProof">Payment Proof (Optional)</label>
+                <input id="monthlyPaymentProof" type="file" accept="image/*,.pdf" />
+                <div class="field-error" data-modal-error="monthly.paymentProof"></div>
+              </div>
+            `,
+            onSubmit: submitMonthlySettlement,
+          });
+        } catch (error) {
+          showBanner("error", error.message || "Failed to load monthly settlement preview");
+        }
+      }
+
+      async function submitMonthlySettlement() {
+        if (state.modal.submitting || !state.modal.payload) return;
+        clearModalErrors();
+
+        const { selection, trader } = state.modal.payload;
+        const formData = new FormData();
+        formData.append("traderId", trader.traderId);
+
+        if (selection.month && selection.year) {
+          formData.append("month", String(selection.month));
+          formData.append("year", String(selection.year));
+        } else {
+          formData.append("from", selection.from);
+          formData.append("to", selection.to);
+        }
+
+        const referenceNumber = document.getElementById("monthlyReferenceNumber").value.trim();
+        if (referenceNumber) formData.append("referenceNumber", referenceNumber);
+        const proof = validateOptionalFile("monthlyPaymentProof");
+        if (proof) formData.append("paymentProof", proof);
+
+        try {
+          setModalSubmitting(true, "Settling...");
+          const json = await fetchJson("/finance/monthly/settle/by-period", {
+            method: "POST",
+            body: formData,
+          });
+          closeModal();
+          showBanner("success", getMessage(json, "Monthly settlement completed successfully"));
+          await loadMonthlySources();
+          if (trader?.traderId) {
+            document.getElementById("monthlyTraderSelect").value = trader.traderId;
+            await loadMonthlyPeriods();
+          } else {
+            resetMonthlySelection();
+          }
+        } catch (error) {
+          showBanner("error", error.message || "Failed to settle monthly period");
+          setModalSubmitting(false, "Confirm Monthly Settlement");
+        }
+      }
+
+      window.onLanguageChange = () => {
+        renderExternalTable();
+        renderMealSources();
+        renderMealEligibility();
+        renderMonthlySources();
+        renderMonthlyPeriods();
+      };
+
+      async function init() {
+        try {
+          await Promise.all([loadExternalTraders(), loadMealSources(), loadMonthlySources()]);
+          await loadExternalEligible(1);
+          renderMealEligibility();
+          renderMonthlyPeriods();
+        } catch (error) {
+          showBanner("error", error.message || "Failed to load finance management data");
+        }
+      }
+
+      init();
+    </script>
+    <script src="./site-i18n.js"></script>
+  </body>
+</html>

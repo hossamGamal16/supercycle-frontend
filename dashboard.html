@@ -463,6 +463,19 @@
               </div>
             </div>
           </div>
+
+          <div class="card accounts" onclick="go('finance-management.html')">
+            <div class="card-header">
+              <div class="card-icon">💸</div>
+              <span class="badge" id="financePendingCount">–</span>
+            </div>
+            <div class="card-body">
+              <div>
+                <h3>Finance Management</h3>
+                <p>Confirm transfer payments and settle meal and monthly finance flows</p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -483,14 +496,22 @@
         location.href = path;
       }
 
-      // OPTIONAL: load counts later
       async function loadCounts() {
-        // Future endpoint:
-        // GET /admin/dashboard/summary
-        // For now, placeholders
         document.getElementById("pendingApprovalCount").innerText = "–";
         document.getElementById("pendingSegmentationCount").innerText = "–";
         document.getElementById("ecoRedeemCount").innerText = "–";
+        document.getElementById("financePendingCount").innerText = "–";
+
+        try {
+          const res = await fetch(`${API_BASE}/admin/finance/stats?type=all`, {
+            headers: { Authorization: "Bearer " + token },
+          });
+          const json = await res.json();
+          const pending = json?.data?.overview?.pendingShipments;
+          if (pending != null) {
+            document.getElementById("financePendingCount").innerText = pending;
+          }
+        } catch (_) {}
       }
 
       loadCounts();
