@@ -75,8 +75,19 @@
       .modal-header,.modal-body,.modal-footer { padding:18px 20px; }
       .modal-header { border-bottom:1px solid var(--gray-200); display:flex; justify-content:space-between; align-items:center; gap:12px; }
       .modal-footer { border-top:1px solid var(--gray-200); display:flex; justify-content:flex-end; gap:10px; flex-wrap:wrap; }
+      .inspector-card { background:linear-gradient(180deg,#fcfefc 0%,#f4faf6 100%); border:1px solid rgba(22,101,52,.12); }
+      .inspector-summary { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:16px; }
+      .inspector-pill { background:#fff; border:1px solid var(--gray-200); border-radius:14px; padding:14px; }
+      .inspector-pill strong { display:block; font-size:12px; color:var(--gray-500); text-transform:uppercase; margin-bottom:6px; }
+      .inspector-title { font-size:16px; font-weight:800; color:#14532d; }
+      .inspector-note { color:var(--gray-500); font-size:13px; line-height:1.6; }
+      .profile-hero { display:flex; justify-content:space-between; align-items:flex-start; gap:16px; padding:18px; border-radius:18px; background:linear-gradient(135deg,#0f5132 0%,#17844e 58%,#1ea768 100%); color:#fff; margin-bottom:16px; }
+      .profile-hero h4 { font-size:22px; margin-bottom:6px; }
+      .profile-hero p { color:rgba(255,255,255,.82); font-size:14px; }
+      .profile-badge { display:inline-flex; align-items:center; padding:7px 12px; border-radius:999px; background:rgba(255,255,255,.16); border:1px solid rgba(255,255,255,.22); font-size:12px; font-weight:800; }
+      .modal-detail-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
       @media (max-width:1180px) { .hero-grid,.layout { grid-template-columns:1fr; } .stats-grid,.filters { grid-template-columns:1fr 1fr; } }
-      @media (max-width:760px) { .header { padding:18px; flex-direction:column; align-items:stretch; } .container { padding:18px 14px 28px; } .form-grid,.filters,.detail-grid,.stats-grid { grid-template-columns:1fr; } .card-header,.card-body { padding-left:14px; padding-right:14px; } }
+      @media (max-width:760px) { .header { padding:18px; flex-direction:column; align-items:stretch; } .container { padding:18px 14px 28px; } .form-grid,.filters,.detail-grid,.stats-grid,.inspector-summary,.modal-detail-grid { grid-template-columns:1fr; } .card-header,.card-body { padding-left:14px; padding-right:14px; } .profile-hero { flex-direction:column; } }
     </style>
   </head>
   <body>
@@ -148,23 +159,17 @@
                 </form>
               </div>
             </div>
-            <div class="card">
-              <div class="card-header"><div><h3>Manager Details</h3><p class="card-hint">Click any manager row to load full details.</p></div></div>
+            <div class="card inspector-card">
+              <div class="card-header"><div><h3>Manager Inspector</h3><p class="card-hint">Enterprise-style quick actions with popup profile view.</p></div></div>
               <div class="card-body">
-                <div id="managerDetailState" class="empty-state">Select a manager to inspect profile details.</div>
-                <div id="managerDetailWrap" hidden>
-                  <div class="detail-grid">
-                    <div class="detail-item"><strong>Name</strong><span id="managerDetailName">-</span></div>
-                    <div class="detail-item"><strong>Phone</strong><span id="managerDetailPhone">-</span></div>
-                    <div class="detail-item"><strong>Email</strong><span id="managerDetailEmail">-</span></div>
-                    <div class="detail-item"><strong>National ID</strong><span id="managerDetailNationalId">-</span></div>
-                    <div class="detail-item"><strong>Address</strong><span id="managerDetailAddress">-</span></div>
-                    <div class="detail-item"><strong>ID</strong><span id="managerDetailId">-</span></div>
-                  </div>
-                  <div class="actions">
-                    <button class="btn-primary" type="button" onclick="editSelectedManager()">Edit Selected Manager</button>
-                    <button class="btn-danger" type="button" onclick="deleteSelectedManager()">Delete Selected Manager</button>
-                  </div>
+                <div class="inspector-summary">
+                  <div class="inspector-pill"><strong>Current Selection</strong><div id="managerInspectorName" class="inspector-title">No manager selected</div></div>
+                  <div class="inspector-pill"><strong>Next Step</strong><div class="inspector-note">Use View to open a full profile popup, then edit or delete from inside the inspector.</div></div>
+                </div>
+                <div class="actions">
+                  <button class="btn-primary" type="button" onclick="openSelectedManagerView()" id="openManagerInspectorBtn" disabled>Open Manager Profile</button>
+                  <button class="btn-secondary" type="button" onclick="editSelectedManager()" id="editSelectedManagerBtn" disabled>Edit Selected Manager</button>
+                  <button class="btn-danger" type="button" onclick="deleteSelectedManager()" id="deleteSelectedManagerBtn" disabled>Delete Selected Manager</button>
                 </div>
               </div>
             </div>
@@ -216,23 +221,17 @@
                 </form>
               </div>
             </div>
-            <div class="card">
-              <div class="card-header"><div><h3>Warehouse Details</h3><p class="card-hint">Open a warehouse row for full detail and fast actions.</p></div></div>
+            <div class="card inspector-card">
+              <div class="card-header"><div><h3>Warehouse Inspector</h3><p class="card-hint">Focused popup viewing with a cleaner operations workflow.</p></div></div>
               <div class="card-body">
-                <div id="warehouseDetailState" class="empty-state">Select a warehouse to inspect storage details.</div>
-                <div id="warehouseDetailWrap" hidden>
-                  <div class="detail-grid">
-                    <div class="detail-item"><strong>Name</strong><span id="warehouseDetailName">-</span></div>
-                    <div class="detail-item"><strong>Manager</strong><span id="warehouseDetailManager">-</span></div>
-                    <div class="detail-item"><strong>Location</strong><span id="warehouseDetailLocation">-</span></div>
-                    <div class="detail-item"><strong>Capacity KG</strong><span id="warehouseDetailCapacity">-</span></div>
-                    <div class="detail-item"><strong>Current Stored KG</strong><span id="warehouseDetailStored">-</span></div>
-                    <div class="detail-item"><strong>ID</strong><span id="warehouseDetailId">-</span></div>
-                  </div>
-                  <div class="actions">
-                    <button class="btn-primary" type="button" onclick="editSelectedWarehouse()">Edit Selected Warehouse</button>
-                    <button class="btn-danger" type="button" onclick="deleteSelectedWarehouse()">Delete Selected Warehouse</button>
-                  </div>
+                <div class="inspector-summary">
+                  <div class="inspector-pill"><strong>Current Selection</strong><div id="warehouseInspectorName" class="inspector-title">No warehouse selected</div></div>
+                  <div class="inspector-pill"><strong>Next Step</strong><div class="inspector-note">Open the warehouse inspector popup to review manager, location, and storage metrics in one place.</div></div>
+                </div>
+                <div class="actions">
+                  <button class="btn-primary" type="button" onclick="openSelectedWarehouseView()" id="openWarehouseInspectorBtn" disabled>Open Warehouse Profile</button>
+                  <button class="btn-secondary" type="button" onclick="editSelectedWarehouse()" id="editSelectedWarehouseBtn" disabled>Edit Selected Warehouse</button>
+                  <button class="btn-danger" type="button" onclick="deleteSelectedWarehouse()" id="deleteSelectedWarehouseBtn" disabled>Delete Selected Warehouse</button>
                 </div>
               </div>
             </div>
@@ -291,6 +290,48 @@
         <div class="modal-footer"><button class="btn-secondary" type="button" onclick="closeWarehouseEditModal()">Cancel</button><button class="btn-primary" type="button" onclick="submitWarehouseEditModal()">Save Changes</button></div>
       </div>
     </div>
+    <div id="managerViewModal" class="modal" onclick="closeManagerViewModal(event)">
+      <div class="modal-content" onclick="event.stopPropagation()">
+        <div class="modal-header"><div><h3>Manager Profile</h3><p class="card-hint">Profile inspector with fast management actions.</p></div><button class="btn-secondary" type="button" onclick="closeManagerViewModal()">Close</button></div>
+        <div class="modal-body">
+          <div class="profile-hero">
+            <div>
+              <h4 id="managerViewName">-</h4>
+              <p id="managerViewAddress">-</p>
+            </div>
+            <span class="profile-badge">Warehouse Manager</span>
+          </div>
+          <div class="modal-detail-grid">
+            <div class="detail-item"><strong>Phone</strong><span id="managerViewPhone">-</span></div>
+            <div class="detail-item"><strong>Email</strong><span id="managerViewEmail">-</span></div>
+            <div class="detail-item"><strong>National ID</strong><span id="managerViewNationalId">-</span></div>
+            <div class="detail-item"><strong>ID</strong><span id="managerViewId">-</span></div>
+          </div>
+        </div>
+        <div class="modal-footer"><button class="btn-secondary" type="button" onclick="editSelectedManager()">Edit</button><button class="btn-danger" type="button" onclick="deleteSelectedManager()">Delete</button></div>
+      </div>
+    </div>
+    <div id="warehouseViewModal" class="modal" onclick="closeWarehouseViewModal(event)">
+      <div class="modal-content" onclick="event.stopPropagation()">
+        <div class="modal-header"><div><h3>Warehouse Profile</h3><p class="card-hint">Operational inspector with core storage metrics.</p></div><button class="btn-secondary" type="button" onclick="closeWarehouseViewModal()">Close</button></div>
+        <div class="modal-body">
+          <div class="profile-hero">
+            <div>
+              <h4 id="warehouseViewName">-</h4>
+              <p id="warehouseViewLocation">-</p>
+            </div>
+            <span class="profile-badge">Warehouse</span>
+          </div>
+          <div class="modal-detail-grid">
+            <div class="detail-item"><strong>Manager</strong><span id="warehouseViewManager">-</span></div>
+            <div class="detail-item"><strong>Capacity KG</strong><span id="warehouseViewCapacity">-</span></div>
+            <div class="detail-item"><strong>Current Stored KG</strong><span id="warehouseViewStored">-</span></div>
+            <div class="detail-item"><strong>ID</strong><span id="warehouseViewId">-</span></div>
+          </div>
+        </div>
+        <div class="modal-footer"><button class="btn-secondary" type="button" onclick="editSelectedWarehouse()">Edit</button><button class="btn-danger" type="button" onclick="deleteSelectedWarehouse()">Delete</button></div>
+      </div>
+    </div>
     <script>
       const API_BASE = "https://supercycle-api-855015056699.europe-west1.run.app";
       const token = localStorage.getItem("token");
@@ -317,10 +358,13 @@
       function managerQuery(page = 1){ const params = new URLSearchParams(); params.set("page", String(page)); params.set("limit", document.getElementById("managerLimit").value || "10"); const search = document.getElementById("managerSearch").value.trim(); if(search) params.set("search", search); return `?${params.toString()}`; }
       function warehouseQuery(page = 1){ const params = new URLSearchParams(); params.set("page", String(page)); params.set("limit", document.getElementById("warehouseLimit").value || "10"); const search = document.getElementById("warehouseSearch").value.trim(); const managerId = document.getElementById("warehouseFilterManagerId").value; if(search) params.set("search", search); if(managerId) params.set("managerId", managerId); return `?${params.toString()}`; }
       async function loadManagers(page = 1){ setState("managers","loading-state","Loading managers..."); try { const json = await fetchJson(`/admin/warehouse-managers${managerQuery(page)}`); state.managers = extractCollection(json); state.managerMeta = { page: json?.page || json?.data?.page || page, totalPages: json?.totalPages || json?.data?.totalPages || 1, total: json?.total || json?.data?.total || state.managers.length }; renderManagers(); populateManagerSelects(); updateOverview(); } catch(error){ state.managers = []; setState("managers","empty-state", error.message || "Failed to load managers"); } }
-      function renderManagers(){ if(!state.managers.length){ setState("managers","empty-state","No managers found"); updateManagersPagination(); return; } document.getElementById("managersRows").innerHTML = state.managers.map((item) => `<tr><td><div class="inline-stack"><strong>${escapeHtml(item.fullName || "-")}</strong><span class="subtle">${escapeHtml(item.address || "-")}</span></div></td><td>${escapeHtml(item.phone || "-")}</td><td>${escapeHtml(item.email || "-")}</td><td>${escapeHtml(item.nationalId || "-")}</td><td><div class="row-actions"><button class="btn-link" type="button" onclick="selectManager('${getId(item)}')">View</button><button class="btn-link" type="button" onclick="quickEditManager('${getId(item)}')">Edit</button></div></td></tr>`).join(""); document.getElementById("managersState").hidden = true; document.getElementById("managersTable").hidden = false; updateManagersPagination(); }
+      function renderManagers(){ if(!state.managers.length){ setState("managers","empty-state","No managers found"); updateManagersPagination(); return; } document.getElementById("managersRows").innerHTML = state.managers.map((item) => `<tr><td><div class="inline-stack"><strong>${escapeHtml(item.fullName || "-")}</strong><span class="subtle">${escapeHtml(item.address || "-")}</span></div></td><td>${escapeHtml(item.phone || "-")}</td><td>${escapeHtml(item.email || "-")}</td><td>${escapeHtml(item.nationalId || "-")}</td><td><div class="row-actions"><button class="btn-link" type="button" onclick="selectManager('${getId(item)}', true)">View</button><button class="btn-link" type="button" onclick="quickEditManager('${getId(item)}')">Edit</button></div></td></tr>`).join(""); document.getElementById("managersState").hidden = true; document.getElementById("managersTable").hidden = false; updateManagersPagination(); }
       function updateManagersPagination(){ const page = state.managerMeta.page || 1; const totalPages = state.managerMeta.totalPages || 1; document.getElementById("managersPaginationLabel").textContent = `Page ${page} of ${totalPages}`; document.getElementById("managersPrevBtn").disabled = page <= 1; document.getElementById("managersNextBtn").disabled = page >= totalPages; }
-      async function selectManager(id){ state.selectedManagerId = id; document.getElementById("managerDetailState").className = "loading-state"; document.getElementById("managerDetailState").textContent = "Loading manager details..."; document.getElementById("managerDetailState").hidden = false; document.getElementById("managerDetailWrap").hidden = true; try { const json = await fetchJson(`/admin/warehouse-managers/${id}`); state.selectedManager = json?.data || json || null; renderSelectedManager(); updateOverview(); } catch(error){ state.selectedManager = null; document.getElementById("managerDetailState").className = "empty-state"; document.getElementById("managerDetailState").textContent = error.message || "Failed to load manager details"; } }
-      function renderSelectedManager(){ const item = state.selectedManager; if(!item){ document.getElementById("managerDetailWrap").hidden = true; document.getElementById("managerDetailState").hidden = false; return; } document.getElementById("managerDetailState").hidden = true; document.getElementById("managerDetailWrap").hidden = false; document.getElementById("managerDetailName").textContent = item.fullName || "-"; document.getElementById("managerDetailPhone").textContent = item.phone || "-"; document.getElementById("managerDetailEmail").textContent = item.email || "-"; document.getElementById("managerDetailNationalId").textContent = item.nationalId || "-"; document.getElementById("managerDetailAddress").textContent = item.address || "-"; document.getElementById("managerDetailId").textContent = getId(item) || "-"; }
+      async function selectManager(id, openModal = false){ state.selectedManagerId = id; try { const json = await fetchJson(`/admin/warehouse-managers/${id}`); state.selectedManager = json?.data || json || null; renderSelectedManager(); updateOverview(); if(openModal && state.selectedManager) openManagerViewModal(state.selectedManager); } catch(error){ state.selectedManager = null; renderSelectedManager(); showBanner("error", error.message || "Failed to load manager details"); } }
+      function renderSelectedManager(){ const item = state.selectedManager; document.getElementById("managerInspectorName").textContent = item?.fullName || "No manager selected"; document.getElementById("openManagerInspectorBtn").disabled = !item; document.getElementById("editSelectedManagerBtn").disabled = !item; document.getElementById("deleteSelectedManagerBtn").disabled = !item; if(!item) return; document.getElementById("managerViewName").textContent = item.fullName || "-"; document.getElementById("managerViewAddress").textContent = item.address || "-"; document.getElementById("managerViewPhone").textContent = item.phone || "-"; document.getElementById("managerViewEmail").textContent = item.email || "-"; document.getElementById("managerViewNationalId").textContent = item.nationalId || "-"; document.getElementById("managerViewId").textContent = getId(item) || "-"; }
+      function openManagerViewModal(item){ renderSelectedManager(); document.getElementById("managerViewModal").classList.add("open"); }
+      function closeManagerViewModal(event){ if(event && event.target !== event.currentTarget) return; document.getElementById("managerViewModal").classList.remove("open"); }
+      function openSelectedManagerView(){ if(state.selectedManager) openManagerViewModal(state.selectedManager); }
       function resetManagerForm(){ state.editingManagerId = null; clearErrors("manager"); document.getElementById("managerFormTitle").textContent = "Create Warehouse Manager"; document.getElementById("managerSubmitBtn").textContent = "Create Manager"; document.getElementById("managerForm").reset(); }
       function fillManagerForm(item){ state.editingManagerId = getId(item); document.getElementById("managerFormTitle").textContent = "Edit Warehouse Manager"; document.getElementById("managerSubmitBtn").textContent = "Save Changes"; document.getElementById("managerFullName").value = item.fullName || ""; document.getElementById("managerPhone").value = item.phone || ""; document.getElementById("managerEmail").value = item.email || ""; document.getElementById("managerNationalId").value = item.nationalId || ""; document.getElementById("managerPassword").value = ""; document.getElementById("managerPic").value = item.pic || ""; document.getElementById("managerAddress").value = item.address || ""; }
       function openManagerEditModal(item){ state.modalManagerId = getId(item); clearManagerModalErrors(); document.getElementById("modalManagerFullName").value = item.fullName || ""; document.getElementById("modalManagerPhone").value = item.phone || ""; document.getElementById("modalManagerEmail").value = item.email || ""; document.getElementById("modalManagerNationalId").value = item.nationalId || ""; document.getElementById("modalManagerPic").value = item.pic || ""; document.getElementById("modalManagerAddress").value = item.address || ""; document.getElementById("managerEditModal").classList.add("open"); }
@@ -330,14 +374,17 @@
       async function submitManagerEditModal(){ if(!state.modalManagerId) return; const currentId = state.modalManagerId; const payload = validateManagerModalForm(); if(!payload) return; try { const json = await fetchJson(`/admin/warehouse-managers/${currentId}`, { method:"PATCH", body: JSON.stringify(payload) }); closeManagerEditModal(); showBanner("success", getMessage(json, "Warehouse manager updated successfully")); await Promise.all([loadManagers(state.managerMeta.page || 1), loadWarehouses(state.warehouseMeta.page || 1), selectManager(currentId)]); } catch(error){ showBanner("error", error.message || "Failed to save warehouse manager"); } }
       async function submitManagerForm(event){ event.preventDefault(); const payload = validateManagerForm(); if(!payload) return; const isEditing = Boolean(state.editingManagerId); try { const json = await fetchJson(isEditing ? `/admin/warehouse-managers/${state.editingManagerId}` : "/admin/warehouse-managers", { method: isEditing ? "PATCH" : "POST", body: JSON.stringify(payload) }); resetManagerForm(); showBanner("success", getMessage(json, isEditing ? "Warehouse manager updated successfully" : "Warehouse manager created successfully")); await loadManagers(isEditing ? state.managerMeta.page || 1 : 1); } catch(error){ showBanner("error", error.message || "Failed to save warehouse manager"); } }
       async function quickEditManager(id){ await selectManager(id); if(state.selectedManager) openManagerEditModal(state.selectedManager); }
-      function editSelectedManager(){ if(state.selectedManager) openManagerEditModal(state.selectedManager); }
-      async function deleteSelectedManager(){ if(!state.selectedManager) return; try { const json = await fetchJson(`/admin/warehouse-managers/${getId(state.selectedManager)}`, { method: "DELETE" }); showBanner("success", getMessage(json, "Warehouse manager deleted successfully")); state.selectedManager = null; state.selectedManagerId = null; renderSelectedManager(); await Promise.all([loadManagers(state.managerMeta.page || 1), loadWarehouses(state.warehouseMeta.page || 1)]); } catch(error){ showBanner("error", error.message || "Failed to delete warehouse manager"); } }
+      function editSelectedManager(){ if(state.selectedManager){ closeManagerViewModal(); openManagerEditModal(state.selectedManager); } }
+      async function deleteSelectedManager(){ if(!state.selectedManager) return; try { const json = await fetchJson(`/admin/warehouse-managers/${getId(state.selectedManager)}`, { method: "DELETE" }); closeManagerViewModal(); showBanner("success", getMessage(json, "Warehouse manager deleted successfully")); state.selectedManager = null; state.selectedManagerId = null; renderSelectedManager(); await Promise.all([loadManagers(state.managerMeta.page || 1), loadWarehouses(state.warehouseMeta.page || 1)]); } catch(error){ showBanner("error", error.message || "Failed to delete warehouse manager"); } }
       async function loadWarehouses(page = 1){ setState("warehouses","loading-state","Loading warehouses..."); try { const json = await fetchJson(`/admin/warehouses${warehouseQuery(page)}`); state.warehouses = extractCollection(json); state.warehouseMeta = { page: json?.page || json?.data?.page || page, totalPages: json?.totalPages || json?.data?.totalPages || 1, total: json?.total || json?.data?.total || state.warehouses.length }; renderWarehouses(); updateOverview(); } catch(error){ state.warehouses = []; setState("warehouses","empty-state", error.message || "Failed to load warehouses"); } }
       function findManagerName(managerId, fallbackManager){ if(fallbackManager?.fullName) return fallbackManager.fullName; const item = state.managers.find((manager) => getId(manager) === managerId); return item?.fullName || managerId || "-"; }
-      function renderWarehouses(){ if(!state.warehouses.length){ setState("warehouses","empty-state","No warehouses found"); updateWarehousesPagination(); return; } document.getElementById("warehousesRows").innerHTML = state.warehouses.map((item) => `<tr><td><div class="inline-stack"><strong>${escapeHtml(item.name || "-")}</strong><span class="subtle">${escapeHtml(item.location || "-")}</span></div></td><td>${escapeHtml(findManagerName(item.managerId || item.manager?._id || item.manager?.id, item.manager))}</td><td>${formatNumber(item.capacityKg)}</td><td>${formatNumber(item.currentStoredKg)}</td><td><div class="row-actions"><button class="btn-link" type="button" onclick="selectWarehouse('${getId(item)}')">View</button><button class="btn-link" type="button" onclick="quickEditWarehouse('${getId(item)}')">Edit</button></div></td></tr>`).join(""); document.getElementById("warehousesState").hidden = true; document.getElementById("warehousesTable").hidden = false; updateWarehousesPagination(); }
+      function renderWarehouses(){ if(!state.warehouses.length){ setState("warehouses","empty-state","No warehouses found"); updateWarehousesPagination(); return; } document.getElementById("warehousesRows").innerHTML = state.warehouses.map((item) => `<tr><td><div class="inline-stack"><strong>${escapeHtml(item.name || "-")}</strong><span class="subtle">${escapeHtml(item.location || "-")}</span></div></td><td>${escapeHtml(findManagerName(item.managerId || item.manager?._id || item.manager?.id, item.manager))}</td><td>${formatNumber(item.capacityKg)}</td><td>${formatNumber(item.currentStoredKg)}</td><td><div class="row-actions"><button class="btn-link" type="button" onclick="selectWarehouse('${getId(item)}', true)">View</button><button class="btn-link" type="button" onclick="quickEditWarehouse('${getId(item)}')">Edit</button></div></td></tr>`).join(""); document.getElementById("warehousesState").hidden = true; document.getElementById("warehousesTable").hidden = false; updateWarehousesPagination(); }
       function updateWarehousesPagination(){ const page = state.warehouseMeta.page || 1; const totalPages = state.warehouseMeta.totalPages || 1; document.getElementById("warehousesPaginationLabel").textContent = `Page ${page} of ${totalPages}`; document.getElementById("warehousesPrevBtn").disabled = page <= 1; document.getElementById("warehousesNextBtn").disabled = page >= totalPages; }
-      async function selectWarehouse(id){ state.selectedWarehouseId = id; document.getElementById("warehouseDetailState").className = "loading-state"; document.getElementById("warehouseDetailState").textContent = "Loading warehouse details..."; document.getElementById("warehouseDetailState").hidden = false; document.getElementById("warehouseDetailWrap").hidden = true; try { const json = await fetchJson(`/admin/warehouses/${id}`); state.selectedWarehouse = json?.data || json || null; renderSelectedWarehouse(); updateOverview(); } catch(error){ state.selectedWarehouse = null; document.getElementById("warehouseDetailState").className = "empty-state"; document.getElementById("warehouseDetailState").textContent = error.message || "Failed to load warehouse details"; } }
-      function renderSelectedWarehouse(){ const item = state.selectedWarehouse; if(!item){ document.getElementById("warehouseDetailWrap").hidden = true; document.getElementById("warehouseDetailState").hidden = false; return; } document.getElementById("warehouseDetailState").hidden = true; document.getElementById("warehouseDetailWrap").hidden = false; document.getElementById("warehouseDetailName").textContent = item.name || "-"; document.getElementById("warehouseDetailManager").textContent = findManagerName(item.managerId || item.manager?._id || item.manager?.id, item.manager); document.getElementById("warehouseDetailLocation").textContent = item.location || "-"; document.getElementById("warehouseDetailCapacity").textContent = formatNumber(item.capacityKg); document.getElementById("warehouseDetailStored").textContent = formatNumber(item.currentStoredKg); document.getElementById("warehouseDetailId").textContent = getId(item) || "-"; }
+      async function selectWarehouse(id, openModal = false){ state.selectedWarehouseId = id; try { const json = await fetchJson(`/admin/warehouses/${id}`); state.selectedWarehouse = json?.data || json || null; renderSelectedWarehouse(); updateOverview(); if(openModal && state.selectedWarehouse) openWarehouseViewModal(state.selectedWarehouse); } catch(error){ state.selectedWarehouse = null; renderSelectedWarehouse(); showBanner("error", error.message || "Failed to load warehouse details"); } }
+      function renderSelectedWarehouse(){ const item = state.selectedWarehouse; document.getElementById("warehouseInspectorName").textContent = item?.name || "No warehouse selected"; document.getElementById("openWarehouseInspectorBtn").disabled = !item; document.getElementById("editSelectedWarehouseBtn").disabled = !item; document.getElementById("deleteSelectedWarehouseBtn").disabled = !item; if(!item) return; document.getElementById("warehouseViewName").textContent = item.name || "-"; document.getElementById("warehouseViewLocation").textContent = item.location || "-"; document.getElementById("warehouseViewManager").textContent = findManagerName(item.managerId || item.manager?._id || item.manager?.id, item.manager); document.getElementById("warehouseViewCapacity").textContent = formatNumber(item.capacityKg); document.getElementById("warehouseViewStored").textContent = formatNumber(item.currentStoredKg); document.getElementById("warehouseViewId").textContent = getId(item) || "-"; }
+      function openWarehouseViewModal(item){ renderSelectedWarehouse(); document.getElementById("warehouseViewModal").classList.add("open"); }
+      function closeWarehouseViewModal(event){ if(event && event.target !== event.currentTarget) return; document.getElementById("warehouseViewModal").classList.remove("open"); }
+      function openSelectedWarehouseView(){ if(state.selectedWarehouse) openWarehouseViewModal(state.selectedWarehouse); }
       function resetWarehouseForm(){ state.editingWarehouseId = null; clearErrors("warehouse"); document.getElementById("warehouseFormTitle").textContent = "Create Warehouse"; document.getElementById("warehouseSubmitBtn").textContent = "Create Warehouse"; document.getElementById("warehouseForm").reset(); document.getElementById("warehouseManagerId").value = ""; }
       function fillWarehouseForm(item){ state.editingWarehouseId = getId(item); document.getElementById("warehouseFormTitle").textContent = "Edit Warehouse"; document.getElementById("warehouseSubmitBtn").textContent = "Save Changes"; document.getElementById("warehouseName").value = item.name || ""; document.getElementById("warehouseLocation").value = item.location || ""; document.getElementById("warehouseCapacityKg").value = item.capacityKg ?? ""; document.getElementById("warehouseCurrentStoredKg").value = item.currentStoredKg ?? ""; document.getElementById("warehouseManagerId").value = item.managerId || item.manager?._id || item.manager?.id || ""; }
       function openWarehouseEditModal(item){ state.modalWarehouseId = getId(item); clearWarehouseModalErrors(); document.getElementById("modalWarehouseName").value = item.name || ""; document.getElementById("modalWarehouseLocation").value = item.location || ""; document.getElementById("modalWarehouseCapacityKg").value = item.capacityKg ?? ""; document.getElementById("modalWarehouseCurrentStoredKg").value = item.currentStoredKg ?? ""; document.getElementById("modalWarehouseManagerId").value = item.managerId || item.manager?._id || item.manager?.id || ""; document.getElementById("warehouseEditModal").classList.add("open"); }
@@ -347,8 +394,8 @@
       async function submitWarehouseEditModal(){ if(!state.modalWarehouseId) return; const currentId = state.modalWarehouseId; const payload = validateWarehouseModalForm(); if(!payload) return; try { const json = await fetchJson(`/admin/warehouses/${currentId}`, { method:"PATCH", body: JSON.stringify(payload) }); closeWarehouseEditModal(); showBanner("success", getMessage(json, "Warehouse updated successfully")); await Promise.all([loadWarehouses(state.warehouseMeta.page || 1), selectWarehouse(currentId)]); } catch(error){ showBanner("error", error.message || "Failed to save warehouse"); } }
       async function submitWarehouseForm(event){ event.preventDefault(); const payload = validateWarehouseForm(); if(!payload) return; const isEditing = Boolean(state.editingWarehouseId); try { const json = await fetchJson(isEditing ? `/admin/warehouses/${state.editingWarehouseId}` : "/admin/warehouses", { method: isEditing ? "PATCH" : "POST", body: JSON.stringify(payload) }); resetWarehouseForm(); showBanner("success", getMessage(json, isEditing ? "Warehouse updated successfully" : "Warehouse created successfully")); await loadWarehouses(isEditing ? state.warehouseMeta.page || 1 : 1); } catch(error){ showBanner("error", error.message || "Failed to save warehouse"); } }
       async function quickEditWarehouse(id){ await selectWarehouse(id); if(state.selectedWarehouse) openWarehouseEditModal(state.selectedWarehouse); }
-      function editSelectedWarehouse(){ if(state.selectedWarehouse) openWarehouseEditModal(state.selectedWarehouse); }
-      async function deleteSelectedWarehouse(){ if(!state.selectedWarehouse) return; try { const json = await fetchJson(`/admin/warehouses/${getId(state.selectedWarehouse)}`, { method: "DELETE" }); showBanner("success", getMessage(json, "Warehouse deleted successfully")); state.selectedWarehouse = null; state.selectedWarehouseId = null; renderSelectedWarehouse(); await loadWarehouses(state.warehouseMeta.page || 1); } catch(error){ showBanner("error", error.message || "Failed to delete warehouse"); } }
+      function editSelectedWarehouse(){ if(state.selectedWarehouse){ closeWarehouseViewModal(); openWarehouseEditModal(state.selectedWarehouse); } }
+      async function deleteSelectedWarehouse(){ if(!state.selectedWarehouse) return; try { const json = await fetchJson(`/admin/warehouses/${getId(state.selectedWarehouse)}`, { method: "DELETE" }); closeWarehouseViewModal(); showBanner("success", getMessage(json, "Warehouse deleted successfully")); state.selectedWarehouse = null; state.selectedWarehouseId = null; renderSelectedWarehouse(); await loadWarehouses(state.warehouseMeta.page || 1); } catch(error){ showBanner("error", error.message || "Failed to delete warehouse"); } }
       function resetManagerFilters(){ document.getElementById("managerSearch").value = ""; document.getElementById("managerLimit").value = "10"; loadManagers(1); }
       function resetWarehouseFilters(){ document.getElementById("warehouseSearch").value = ""; document.getElementById("warehouseFilterManagerId").value = ""; document.getElementById("warehouseLimit").value = "10"; loadWarehouses(1); }
       function changeManagersPage(delta){ const next = (state.managerMeta.page || 1) + delta; if(next < 1 || next > (state.managerMeta.totalPages || 1)) return; loadManagers(next); }

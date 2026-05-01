@@ -547,6 +547,39 @@
         padding: 18px 20px;
       }
 
+      .profile-hero {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 16px;
+        padding: 18px;
+        border-radius: 18px;
+        background: linear-gradient(135deg, #0f5132 0%, #17844e 58%, #1ea768 100%);
+        color: var(--white);
+        margin-bottom: 16px;
+      }
+
+      .profile-hero h4 {
+        font-size: 22px;
+        margin-bottom: 6px;
+      }
+
+      .profile-hero p {
+        color: rgba(255, 255, 255, 0.82);
+        font-size: 14px;
+      }
+
+      .profile-badge {
+        display: inline-flex;
+        align-items: center;
+        padding: 7px 12px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.16);
+        border: 1px solid rgba(255, 255, 255, 0.22);
+        font-size: 12px;
+        font-weight: 800;
+      }
+
       .modal-header {
         border-bottom: 1px solid var(--gray-200);
         display: flex;
@@ -937,6 +970,42 @@
         <div class="modal-footer">
           <button class="btn-secondary" type="button" onclick="closeFactoryEditModal()">Cancel</button>
           <button class="btn-primary" type="button" onclick="submitFactoryEditModal()">Save Changes</button>
+        </div>
+      </div>
+    </div>
+    <div id="factoryViewModal" class="modal" onclick="closeFactoryViewModal(event)">
+      <div class="modal-content" onclick="event.stopPropagation()">
+        <div class="modal-header">
+          <div>
+            <h3>Factory Profile</h3>
+            <p class="card-hint">Review full factory details and live stats from a focused popup.</p>
+          </div>
+          <button class="btn-secondary" type="button" onclick="closeFactoryViewModal()">Close</button>
+        </div>
+        <div class="modal-body">
+          <div class="profile-hero">
+            <div>
+              <h4 id="factoryViewName">-</h4>
+              <p id="factoryViewAddress">-</p>
+            </div>
+            <span id="factoryViewStatus" class="profile-badge">-</span>
+          </div>
+          <div class="detail-grid">
+            <div class="detail-item"><strong>Receiver</strong><span id="factoryViewReceiver">-</span></div>
+            <div class="detail-item"><strong>Phone</strong><span id="factoryViewPhone">-</span></div>
+            <div class="detail-item"><strong>Capacity KG</strong><span id="factoryViewCapacity">-</span></div>
+            <div class="detail-item"><strong>Accepted Types</strong><span id="factoryViewAcceptedTypes">-</span></div>
+            <div class="detail-item"><strong>Notes</strong><span id="factoryViewNotes">-</span></div>
+          </div>
+          <div class="stats-row">
+            <div class="stats-box"><strong id="factoryViewStatsA">-</strong><span id="factoryViewStatsALabel">Stat A</span></div>
+            <div class="stats-box"><strong id="factoryViewStatsB">-</strong><span id="factoryViewStatsBLabel">Stat B</span></div>
+            <div class="stats-box"><strong id="factoryViewStatsC">-</strong><span id="factoryViewStatsCLabel">Stat C</span></div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn-primary" type="button" onclick="editSelectedFactory()">Edit Factory</button>
+          <button class="btn-secondary" type="button" onclick="toggleSelectedFactoryStatus()" id="factoryViewToggleBtn">Toggle Status</button>
         </div>
       </div>
     </div>
@@ -1444,7 +1513,7 @@
                 </td>
                 <td>
                   <div class="row-actions">
-                    <button class="btn-link" type="button" onclick="selectFactory('${getId(item)}')">View</button>
+                    <button class="btn-link" type="button" onclick="selectFactory('${getId(item)}', true)">View</button>
                     <button class="btn-link" type="button" onclick="quickEditFactory('${getId(item)}')">Edit</button>
                   </div>
                 </td>
@@ -1528,6 +1597,17 @@
         document.getElementById("detailNotes").textContent = detail.notes || "-";
         document.getElementById("insightSelection").textContent = detail.name || "Selected";
         toggleBtn.textContent = detail.isActive !== false ? "Deactivate Factory" : "Activate Factory";
+        document.getElementById("factoryViewName").textContent = detail.name || "-";
+        document.getElementById("factoryViewAddress").textContent = detail.address || "-";
+        document.getElementById("factoryViewStatus").textContent = detail.isActive !== false ? "Active" : "Inactive";
+        document.getElementById("factoryViewReceiver").textContent = detail.factoryReceiverName || "-";
+        document.getElementById("factoryViewPhone").textContent = detail.factoryReceiverPhone || "-";
+        document.getElementById("factoryViewCapacity").textContent = formatNumber(detail.capacityKg);
+        document.getElementById("factoryViewAcceptedTypes").textContent =
+          (detail.acceptedDoshTypes || []).map(findDoshTypeName).join(", ") || "-";
+        document.getElementById("factoryViewNotes").textContent = detail.notes || "-";
+        document.getElementById("factoryViewToggleBtn").textContent =
+          detail.isActive !== false ? "Deactivate Factory" : "Activate Factory";
 
         const logo = document.getElementById("detailLogo");
         if (detail.logoUrl) {
@@ -1551,6 +1631,12 @@
           document.getElementById("factoryStatsBLabel").textContent = "Stat B";
           document.getElementById("factoryStatsC").textContent = "-";
           document.getElementById("factoryStatsCLabel").textContent = "Stat C";
+          document.getElementById("factoryViewStatsA").textContent = "-";
+          document.getElementById("factoryViewStatsALabel").textContent = "Stat A";
+          document.getElementById("factoryViewStatsB").textContent = "-";
+          document.getElementById("factoryViewStatsBLabel").textContent = "Stat B";
+          document.getElementById("factoryViewStatsC").textContent = "-";
+          document.getElementById("factoryViewStatsCLabel").textContent = "Stat C";
           return;
         }
 
@@ -1578,6 +1664,13 @@
           document.getElementById(valueId).textContent =
             typeof value === "number" ? formatNumber(value) : String(value);
           document.getElementById(labelId).textContent = label
+            .replace(/([a-z])([A-Z])/g, "$1 $2")
+            .replace(/_/g, " ");
+          const viewValueId = valueId.replace("factoryStats", "factoryViewStats");
+          const viewLabelId = labelId.replace("factoryStats", "factoryViewStats");
+          document.getElementById(viewValueId).textContent =
+            typeof value === "number" ? formatNumber(value) : String(value);
+          document.getElementById(viewLabelId).textContent = label
             .replace(/([a-z])([A-Z])/g, "$1 $2")
             .replace(/_/g, " ");
         });
@@ -1611,7 +1704,7 @@
         renderDoshTypeOptions();
       }
 
-      async function selectFactory(id) {
+      async function selectFactory(id, openModal = false) {
         state.selectedFactoryId = id;
         state.selectedFactoryDetail = null;
         state.selectedFactoryStats = null;
@@ -1630,6 +1723,7 @@
 
           state.selectedFactoryDetail = detailJson?.data || detailJson || null;
           renderSelectedFactory();
+          if (openModal && state.selectedFactoryDetail) openFactoryViewModal();
         } catch (error) {
           state.selectedFactoryDetail = null;
           state.selectedFactoryStats = null;
@@ -1650,7 +1744,21 @@
       }
 
       function editSelectedFactory() {
-        if (state.selectedFactoryDetail) openFactoryEditModal(state.selectedFactoryDetail);
+        if (state.selectedFactoryDetail) {
+          closeFactoryViewModal();
+          openFactoryEditModal(state.selectedFactoryDetail);
+        }
+      }
+
+      function openFactoryViewModal() {
+        if (state.selectedFactoryDetail) {
+          document.getElementById("factoryViewModal").classList.add("open");
+        }
+      }
+
+      function closeFactoryViewModal(event) {
+        if (event && event.target !== event.currentTarget) return;
+        document.getElementById("factoryViewModal").classList.remove("open");
       }
 
       async function toggleSelectedFactoryStatus() {
