@@ -1,0 +1,1549 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>SuperCycle - Factories Management</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      :root {
+        --primary: #166534;
+        --primary-light: #22a06b;
+        --primary-dark: #14532d;
+        --accent: #1d4ed8;
+        --accent-soft: #dbeafe;
+        --warning: #b45309;
+        --warning-soft: #fef3c7;
+        --danger: #b91c1c;
+        --danger-soft: #fee2e2;
+        --success: #166534;
+        --success-soft: #dcfce7;
+        --gray-50: #f8fafc;
+        --gray-100: #f1f5f9;
+        --gray-200: #e2e8f0;
+        --gray-300: #cbd5e1;
+        --gray-500: #64748b;
+        --gray-700: #334155;
+        --gray-900: #0f172a;
+        --white: #ffffff;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, sans-serif;
+        background:
+          radial-gradient(circle at top right, rgba(34, 160, 107, 0.12), transparent 20%),
+          linear-gradient(180deg, #f5faf7 0%, #f4f7fb 100%);
+        color: var(--gray-900);
+      }
+
+      .header {
+        background: linear-gradient(135deg, #0f5132, #17844e 58%, #1ea768);
+        color: var(--white);
+        padding: 22px 32px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 16px;
+      }
+
+      .header h1 {
+        font-size: 28px;
+        font-weight: 800;
+        letter-spacing: -0.04em;
+        margin-bottom: 6px;
+      }
+
+      .header p {
+        color: rgba(255, 255, 255, 0.82);
+        font-size: 14px;
+      }
+
+      .header-actions {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+
+      .header-btn {
+        background: rgba(255, 255, 255, 0.14);
+        color: var(--white);
+        border: 1px solid rgba(255, 255, 255, 0.24);
+        padding: 10px 16px;
+        border-radius: 12px;
+        cursor: pointer;
+        font-weight: 700;
+      }
+
+      .container {
+        max-width: 1480px;
+        margin: 0 auto;
+        padding: 26px 20px 38px;
+      }
+
+      .banner {
+        display: none;
+        padding: 14px 16px;
+        border-radius: 14px;
+        margin-bottom: 18px;
+        font-weight: 700;
+      }
+
+      .banner.success {
+        display: block;
+        background: var(--success-soft);
+        color: var(--success);
+        border: 1px solid #b8e3c7;
+      }
+
+      .banner.error {
+        display: block;
+        background: var(--danger-soft);
+        color: var(--danger);
+        border: 1px solid #f2b7b7;
+      }
+
+      .hero-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1.65fr) minmax(320px, 0.95fr);
+        gap: 18px;
+        margin-bottom: 18px;
+      }
+
+      .card {
+        background: rgba(255, 255, 255, 0.96);
+        border: 1px solid rgba(226, 232, 240, 0.9);
+        border-radius: 22px;
+        box-shadow: 0 18px 42px rgba(15, 23, 42, 0.07);
+        overflow: hidden;
+      }
+
+      .card-header {
+        padding: 18px 20px;
+        border-bottom: 1px solid var(--gray-200);
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 14px;
+      }
+
+      .card-header h2,
+      .card-header h3 {
+        font-size: 18px;
+      }
+
+      .card-hint {
+        font-size: 13px;
+        color: var(--gray-500);
+        margin-top: 6px;
+      }
+
+      .card-body {
+        padding: 20px;
+      }
+
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 12px;
+      }
+
+      .stat {
+        background: var(--gray-50);
+        border: 1px solid var(--gray-200);
+        border-radius: 16px;
+        padding: 16px;
+      }
+
+      .stat strong {
+        display: block;
+        font-size: 28px;
+        color: var(--primary-dark);
+        line-height: 1.05;
+        margin-bottom: 8px;
+      }
+
+      .stat span {
+        color: var(--gray-500);
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        font-weight: 700;
+      }
+
+      .insight-stack {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .insight {
+        border: 1px solid var(--gray-200);
+        background: linear-gradient(135deg, #f7fbff 0%, #eef8f2 100%);
+        border-radius: 16px;
+        padding: 14px 16px;
+      }
+
+      .insight span {
+        display: block;
+        color: var(--gray-500);
+        font-size: 12px;
+        margin-bottom: 4px;
+      }
+
+      .insight strong {
+        font-size: 16px;
+      }
+
+      .layout {
+        display: grid;
+        grid-template-columns: minmax(380px, 460px) minmax(0, 1fr);
+        gap: 18px;
+        align-items: start;
+      }
+
+      .section-block {
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+      }
+
+      .form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+      }
+
+      .field {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+
+      .field.full {
+        grid-column: 1 / -1;
+      }
+
+      .field.checkbox {
+        flex-direction: row;
+        align-items: center;
+        gap: 10px;
+        padding-top: 28px;
+      }
+
+      .field.checkbox input {
+        width: 18px;
+        height: 18px;
+      }
+
+      .field label {
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--gray-700);
+      }
+
+      .field input,
+      .field select,
+      .field textarea {
+        width: 100%;
+        border: 1px solid var(--gray-300);
+        border-radius: 12px;
+        padding: 11px 12px;
+        font-size: 14px;
+        background: var(--white);
+      }
+
+      .field textarea {
+        min-height: 96px;
+        resize: vertical;
+      }
+
+      .field input:focus,
+      .field select:focus,
+      .field textarea:focus {
+        outline: none;
+        border-color: var(--primary-light);
+        box-shadow: 0 0 0 3px rgba(34, 160, 107, 0.16);
+      }
+
+      .field-error {
+        min-height: 16px;
+        font-size: 12px;
+        color: var(--danger);
+      }
+
+      .helper-text {
+        color: var(--gray-500);
+        font-size: 12px;
+      }
+
+      .chip-list {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        margin-top: 4px;
+      }
+
+      .chip-option {
+        display: flex;
+        gap: 10px;
+        align-items: flex-start;
+        padding: 12px;
+        border-radius: 14px;
+        background: var(--gray-50);
+        border: 1px solid var(--gray-200);
+      }
+
+      .chip-option input {
+        margin-top: 2px;
+      }
+
+      .chip-option strong {
+        display: block;
+        font-size: 13px;
+      }
+
+      .chip-option span {
+        display: block;
+        color: var(--gray-500);
+        font-size: 12px;
+      }
+
+      .filters {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 12px;
+        margin-bottom: 16px;
+      }
+
+      .filter-pill {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 11px 12px;
+        border-radius: 12px;
+        border: 1px solid var(--gray-200);
+        background: var(--gray-50);
+        min-height: 46px;
+        font-size: 14px;
+        font-weight: 600;
+      }
+
+      .actions,
+      .inline-actions,
+      .row-actions,
+      .pagination {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        align-items: center;
+      }
+
+      .actions {
+        margin-top: 18px;
+      }
+
+      button {
+        border: none;
+        border-radius: 12px;
+        padding: 10px 14px;
+        cursor: pointer;
+        font-weight: 700;
+      }
+
+      button:disabled {
+        opacity: 0.55;
+        cursor: not-allowed;
+      }
+
+      .btn-primary {
+        background: var(--primary-light);
+        color: var(--white);
+      }
+
+      .btn-secondary {
+        background: var(--gray-100);
+        color: var(--gray-700);
+      }
+
+      .btn-link {
+        background: transparent;
+        color: var(--accent);
+        padding: 0;
+      }
+
+      .btn-danger {
+        background: #b91c1c;
+        color: var(--white);
+      }
+
+      .table-wrap {
+        overflow-x: auto;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      th,
+      td {
+        padding: 14px 12px;
+        border-bottom: 1px solid var(--gray-200);
+        font-size: 13px;
+        text-align: left;
+        vertical-align: top;
+      }
+
+      th {
+        background: var(--gray-50);
+        color: var(--gray-700);
+        font-size: 12px;
+        text-transform: uppercase;
+      }
+
+      tbody tr:hover {
+        background: #fbfdfc;
+      }
+
+      .inline-stack {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+
+      .subtle {
+        color: var(--gray-500);
+        font-size: 12px;
+      }
+
+      .status-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 10px;
+        border-radius: 999px;
+        font-size: 12px;
+        font-weight: 700;
+      }
+
+      .status-pill.active {
+        background: var(--success-soft);
+        color: var(--success);
+      }
+
+      .status-pill.inactive {
+        background: var(--warning-soft);
+        color: var(--warning);
+      }
+
+      .loading-state,
+      .empty-state {
+        padding: 30px 16px;
+        text-align: center;
+        color: var(--gray-500);
+        font-weight: 600;
+      }
+
+      .pagination {
+        justify-content: flex-end;
+        margin-top: 16px;
+      }
+
+      .detail-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+        margin-bottom: 16px;
+      }
+
+      .detail-item {
+        background: var(--gray-50);
+        border: 1px solid var(--gray-200);
+        border-radius: 14px;
+        padding: 14px;
+      }
+
+      .detail-item strong {
+        display: block;
+        font-size: 12px;
+        color: var(--gray-500);
+        text-transform: uppercase;
+        margin-bottom: 6px;
+      }
+
+      .detail-item span {
+        font-size: 14px;
+      }
+
+      .logo-preview {
+        width: 100%;
+        max-width: 180px;
+        aspect-ratio: 16 / 10;
+        object-fit: cover;
+        border-radius: 16px;
+        border: 1px solid var(--gray-200);
+        background: var(--gray-50);
+      }
+
+      .stats-row {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 12px;
+      }
+
+      .stats-box {
+        padding: 14px;
+        border-radius: 16px;
+        border: 1px solid var(--gray-200);
+        background: linear-gradient(135deg, #f9fcff 0%, #f4fbf7 100%);
+      }
+
+      .stats-box strong {
+        display: block;
+        font-size: 24px;
+        color: var(--primary-dark);
+        margin-bottom: 6px;
+      }
+
+      .stats-box span {
+        color: var(--gray-500);
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+
+      @media (max-width: 1180px) {
+        .hero-grid,
+        .layout {
+          grid-template-columns: 1fr;
+        }
+
+        .stats-grid,
+        .filters,
+        .stats-row {
+          grid-template-columns: 1fr 1fr;
+        }
+      }
+
+      @media (max-width: 760px) {
+        .header {
+          padding: 18px 18px;
+          flex-direction: column;
+          align-items: stretch;
+        }
+
+        .header-actions {
+          justify-content: stretch;
+        }
+
+        .header-btn {
+          flex: 1 1 0;
+        }
+
+        .container {
+          padding: 18px 14px 28px;
+        }
+
+        .form-grid,
+        .chip-list,
+        .filters,
+        .detail-grid,
+        .stats-grid,
+        .stats-row {
+          grid-template-columns: 1fr;
+        }
+
+        .card-header,
+        .card-body {
+          padding-left: 14px;
+          padding-right: 14px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <div>
+        <h1>Factories Management</h1>
+        <p>Admin control for factory onboarding, capacity, accepted dosh types, and operating status.</p>
+      </div>
+      <div class="header-actions">
+        <button class="header-btn" onclick="goBack()">Back to Dashboard</button>
+        <button class="header-btn" onclick="logout()">Logout</button>
+      </div>
+    </div>
+
+    <div class="container">
+      <div id="pageBanner" class="banner"></div>
+
+      <section class="hero-grid">
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h2>Factory Network Overview</h2>
+              <p class="card-hint">A compact executive layer to keep the network visible while you edit master data.</p>
+            </div>
+            <div class="inline-actions">
+              <button class="btn-secondary" type="button" onclick="refreshAll()">Refresh All</button>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="stats-grid">
+              <div class="stat">
+                <strong id="factoriesTotal">0</strong>
+                <span>Total Factories</span>
+              </div>
+              <div class="stat">
+                <strong id="factoriesActive">0</strong>
+                <span>Active</span>
+              </div>
+              <div class="stat">
+                <strong id="factoriesInactive">0</strong>
+                <span>Inactive</span>
+              </div>
+              <div class="stat">
+                <strong id="factoriesCapacity">0</strong>
+                <span>Total Capacity KG</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h3>Operational Insights</h3>
+              <p class="card-hint">Useful snapshots derived from the current visible list.</p>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="insight-stack">
+              <div class="insight">
+                <span>Highest Capacity Factory</span>
+                <strong id="insightLargestFactory">-</strong>
+              </div>
+              <div class="insight">
+                <span>Accepted Dosh Coverage</span>
+                <strong id="insightDoshCoverage">-</strong>
+              </div>
+              <div class="insight">
+                <span>Current Selection</span>
+                <strong id="insightSelection">No factory selected</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="layout">
+        <div class="section-block">
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <h2 id="factoryFormTitle">Create Factory</h2>
+                <p class="card-hint">Create or update a factory with receiver, accepted dosh types, and operating status.</p>
+              </div>
+            </div>
+            <div class="card-body">
+              <form id="factoryForm" onsubmit="submitFactoryForm(event)">
+                <div class="form-grid">
+                  <div class="field">
+                    <label for="factoryName">Factory Name</label>
+                    <input id="factoryName" name="name" />
+                    <div class="field-error" data-error-for="factory.name"></div>
+                  </div>
+
+                  <div class="field">
+                    <label for="factoryCapacityKg">Capacity KG</label>
+                    <input id="factoryCapacityKg" name="capacityKg" type="number" min="0" step="0.01" />
+                    <div class="field-error" data-error-for="factory.capacityKg"></div>
+                  </div>
+
+                  <div class="field full">
+                    <label for="factoryAddress">Address</label>
+                    <input id="factoryAddress" name="address" />
+                    <div class="field-error" data-error-for="factory.address"></div>
+                  </div>
+
+                  <div class="field">
+                    <label for="factoryReceiverName">Receiver Name</label>
+                    <input id="factoryReceiverName" name="factoryReceiverName" />
+                    <div class="field-error" data-error-for="factory.factoryReceiverName"></div>
+                  </div>
+
+                  <div class="field">
+                    <label for="factoryReceiverPhone">Receiver Phone</label>
+                    <input id="factoryReceiverPhone" name="factoryReceiverPhone" />
+                    <div class="field-error" data-error-for="factory.factoryReceiverPhone"></div>
+                  </div>
+
+                  <div class="field full">
+                    <label for="factoryLogoUrl">Logo URL</label>
+                    <input id="factoryLogoUrl" name="logoUrl" placeholder="https://..." />
+                    <div class="field-error" data-error-for="factory.logoUrl"></div>
+                  </div>
+
+                  <div class="field full">
+                    <label>Accepted Dosh Types</label>
+                    <div id="acceptedDoshTypesList" class="chip-list"></div>
+                    <div class="helper-text">Choose one or more active dosh types accepted by this factory.</div>
+                    <div class="field-error" data-error-for="factory.acceptedDoshTypes"></div>
+                  </div>
+
+                  <div class="field full">
+                    <label for="factoryNotes">Notes</label>
+                    <textarea id="factoryNotes" name="notes"></textarea>
+                    <div class="field-error" data-error-for="factory.notes"></div>
+                  </div>
+
+                  <label class="field checkbox">
+                    <input id="factoryIsActive" name="isActive" type="checkbox" checked />
+                    <span>Factory is active and selectable in routing workflows</span>
+                  </label>
+                </div>
+
+                <div class="actions">
+                  <button id="factorySubmitBtn" class="btn-primary" type="submit">Create Factory</button>
+                  <button class="btn-secondary" type="button" onclick="resetFactoryForm()">Clear</button>
+                </div>
+              </form>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <h3>Selected Factory</h3>
+                <p class="card-hint">Review loaded details, accepted dosh types, and stats before making changes.</p>
+              </div>
+              <div class="inline-actions">
+                <button class="btn-secondary" type="button" onclick="reloadSelectedFactory()" id="selectedRefreshBtn" disabled>
+                  Refresh Selection
+                </button>
+              </div>
+            </div>
+            <div class="card-body">
+              <div id="factoryDetailState" class="empty-state">Choose a factory from the list to load full details and stats.</div>
+              <div id="factoryDetailWrap" hidden>
+                <div class="detail-grid">
+                  <div class="detail-item">
+                    <strong>Name</strong>
+                    <span id="detailName">-</span>
+                  </div>
+                  <div class="detail-item">
+                    <strong>Status</strong>
+                    <span id="detailStatus">-</span>
+                  </div>
+                  <div class="detail-item">
+                    <strong>Receiver</strong>
+                    <span id="detailReceiver">-</span>
+                  </div>
+                  <div class="detail-item">
+                    <strong>Phone</strong>
+                    <span id="detailPhone">-</span>
+                  </div>
+                  <div class="detail-item">
+                    <strong>Capacity KG</strong>
+                    <span id="detailCapacity">-</span>
+                  </div>
+                  <div class="detail-item">
+                    <strong>Accepted Types</strong>
+                    <span id="detailAcceptedTypes">-</span>
+                  </div>
+                  <div class="detail-item">
+                    <strong>Address</strong>
+                    <span id="detailAddress">-</span>
+                  </div>
+                  <div class="detail-item">
+                    <strong>Notes</strong>
+                    <span id="detailNotes">-</span>
+                  </div>
+                </div>
+
+                <div style="margin-bottom:16px">
+                  <img id="detailLogo" class="logo-preview" alt="Factory logo preview" hidden />
+                </div>
+
+                <div class="stats-row" id="factoryStatsGrid">
+                  <div class="stats-box">
+                    <strong id="factoryStatsA">-</strong>
+                    <span id="factoryStatsALabel">Stat A</span>
+                  </div>
+                  <div class="stats-box">
+                    <strong id="factoryStatsB">-</strong>
+                    <span id="factoryStatsBLabel">Stat B</span>
+                  </div>
+                  <div class="stats-box">
+                    <strong id="factoryStatsC">-</strong>
+                    <span id="factoryStatsCLabel">Stat C</span>
+                  </div>
+                </div>
+
+                <div class="actions">
+                  <button class="btn-primary" type="button" onclick="editSelectedFactory()">Edit Selected Factory</button>
+                  <button class="btn-secondary" type="button" onclick="toggleSelectedFactoryStatus()" id="toggleFactoryStatusBtn">
+                    Toggle Status
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section-block">
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <h2>Factories Directory</h2>
+                <p class="card-hint">Filter the factory network, paginate results, and open any row for detail and action.</p>
+              </div>
+              <div class="inline-actions">
+                <button class="btn-secondary" type="button" onclick="resetFilters()">Reset Filters</button>
+                <button class="btn-primary" type="button" onclick="loadFactories(1)">Apply Filters</button>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="filters">
+                <div class="field">
+                  <label for="filterIsActive">Status</label>
+                  <select id="filterIsActive">
+                    <option value="">All statuses</option>
+                    <option value="true">Active only</option>
+                    <option value="false">Inactive only</option>
+                  </select>
+                </div>
+
+                <div class="field">
+                  <label for="filterAcceptedDoshType">Accepted Dosh Type</label>
+                  <select id="filterAcceptedDoshType"></select>
+                </div>
+
+                <div class="field">
+                  <label for="filterMinCapacityKg">Min Capacity KG</label>
+                  <input id="filterMinCapacityKg" type="number" min="0" step="0.01" />
+                </div>
+
+                <div class="field">
+                  <label for="filterLimit">Page Size</label>
+                  <select id="filterLimit">
+                    <option value="10">10</option>
+                    <option value="20">20</option>
+                    <option value="50">50</option>
+                  </select>
+                </div>
+              </div>
+
+              <div id="factoriesState" class="loading-state">Loading factories...</div>
+              <div class="table-wrap">
+                <table id="factoriesTable" hidden>
+                  <thead>
+                    <tr>
+                      <th>Factory</th>
+                      <th>Receiver</th>
+                      <th>Accepted Types</th>
+                      <th>Capacity</th>
+                      <th>Status</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody id="factoriesRows"></tbody>
+                </table>
+              </div>
+
+              <div class="pagination">
+                <button class="btn-secondary" id="prevPageBtn" type="button" onclick="changePage(-1)">Previous</button>
+                <span id="paginationLabel" class="subtle">Page 1 of 1</span>
+                <button class="btn-secondary" id="nextPageBtn" type="button" onclick="changePage(1)">Next</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <script>
+      const API_BASE =
+        "https://supercycle-api-855015056699.europe-west1.run.app";
+      const token = localStorage.getItem("token");
+
+      if (!token) location.href = "index.html";
+
+      const state = {
+        factories: [],
+        meta: { page: 1, limit: 10, total: 0, totalPages: 1 },
+        doshTypes: [],
+        editingFactoryId: null,
+        selectedFactoryId: null,
+        selectedFactoryDetail: null,
+        selectedFactoryStats: null,
+      };
+
+      function goBack() {
+        location.href = "dashboard.html";
+      }
+
+      function logout() {
+        localStorage.removeItem("token");
+        location.href = "index.html";
+      }
+
+      function getMessage(json, fallback) {
+        return (
+          json?.message ||
+          json?.error ||
+          json?.data?.message ||
+          json?.errors?.[0]?.message ||
+          fallback
+        );
+      }
+
+      function getId(item) {
+        return item?._id || item?.id || item?.factoryId;
+      }
+
+      function extractCollection(json) {
+        if (Array.isArray(json)) return json;
+        if (Array.isArray(json?.data)) return json.data;
+        if (Array.isArray(json?.data?.data)) return json.data.data;
+        if (Array.isArray(json?.items)) return json.items;
+        if (Array.isArray(json?.results)) return json.results;
+        return [];
+      }
+
+      function clearErrors(scope) {
+        document.querySelectorAll(`[data-error-for^="${scope}."]`).forEach((el) => {
+          el.textContent = "";
+        });
+      }
+
+      function setFieldError(key, message) {
+        const el = document.querySelector(`[data-error-for="${key}"]`);
+        if (el) el.textContent = message;
+      }
+
+      function showBanner(type, message) {
+        const el = document.getElementById("pageBanner");
+        if (!message) {
+          el.className = "banner";
+          el.textContent = "";
+          return;
+        }
+
+        el.className = `banner ${type}`;
+        el.textContent = message;
+      }
+
+      function setLoading(section, message) {
+        const stateEl = document.getElementById(`${section}State`);
+        const table = document.getElementById(`${section}Table`);
+        stateEl.className = "loading-state";
+        stateEl.textContent = message;
+        stateEl.hidden = false;
+        table.hidden = true;
+      }
+
+      function setEmpty(section, message) {
+        const stateEl = document.getElementById(`${section}State`);
+        const table = document.getElementById(`${section}Table`);
+        stateEl.className = "empty-state";
+        stateEl.textContent = message;
+        stateEl.hidden = false;
+        table.hidden = true;
+      }
+
+      function showTable(section) {
+        document.getElementById(`${section}State`).hidden = true;
+        document.getElementById(`${section}Table`).hidden = false;
+      }
+
+      function isValidUrl(value) {
+        if (!value) return true;
+        try {
+          new URL(value);
+          return true;
+        } catch (_) {
+          return false;
+        }
+      }
+
+      function toNumber(value) {
+        if (value === "" || value == null) return null;
+        const num = Number(value);
+        return Number.isFinite(num) ? num : NaN;
+      }
+
+      function formatNumber(value) {
+        if (value == null || value === "" || Number.isNaN(Number(value))) return "-";
+        return Number(value).toLocaleString("en-US");
+      }
+
+      function escapeHtml(value) {
+        return String(value ?? "-")
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;")
+          .replace(/'/g, "&#39;");
+      }
+
+      async function fetchJson(path, options = {}) {
+        const response = await fetch(`${API_BASE}${path}`, {
+          ...options,
+          headers: {
+            Authorization: `Bearer ${token}`,
+            ...(options.body ? { "Content-Type": "application/json" } : {}),
+            ...(options.headers || {}),
+          },
+        });
+
+        const text = await response.text();
+        let json = null;
+
+        try {
+          json = text ? JSON.parse(text) : null;
+        } catch (_) {
+          json = null;
+        }
+
+        if (!response.ok) {
+          throw {
+            status: response.status,
+            json,
+            message: getMessage(json, text || "Request failed"),
+          };
+        }
+
+        return json;
+      }
+
+      function findDoshTypeName(id) {
+        const item = state.doshTypes.find((type) => getId(type) === id);
+        return item?.name || id || "-";
+      }
+
+      function buildDoshTypeLabel(item) {
+        const unit = item?.unit ? ` (${item.unit})` : "";
+        return `${item?.name || getId(item)}${unit}`;
+      }
+
+      function renderDoshTypeOptions() {
+        const activeTypes = state.doshTypes.filter((item) => item.isActive !== false);
+        const container = document.getElementById("acceptedDoshTypesList");
+
+        if (!activeTypes.length) {
+          container.innerHTML = `
+            <div class="chip-option" style="grid-column:1 / -1">
+              <div>
+                <strong>No active dosh types found</strong>
+                <span>Create dosh types first from Dosh Management.</span>
+              </div>
+            </div>
+          `;
+        } else {
+          container.innerHTML = activeTypes
+            .map((item) => {
+              const id = getId(item);
+              return `
+                <label class="chip-option">
+                  <input type="checkbox" value="${id}" data-dosh-checkbox />
+                  <div>
+                    <strong>${escapeHtml(buildDoshTypeLabel(item))}</strong>
+                    <span>${escapeHtml(item.description || "Accepted material category")}</span>
+                  </div>
+                </label>
+              `;
+            })
+            .join("");
+        }
+
+        const filterOptions = ['<option value="">All dosh types</option>'].concat(
+          state.doshTypes.map(
+            (item) =>
+              `<option value="${getId(item)}">${escapeHtml(buildDoshTypeLabel(item))}</option>`,
+          ),
+        );
+
+        document.getElementById("filterAcceptedDoshType").innerHTML = filterOptions.join("");
+      }
+
+      function getCheckedDoshTypeIds() {
+        return Array.from(document.querySelectorAll("[data-dosh-checkbox]:checked")).map(
+          (input) => input.value,
+        );
+      }
+
+      function setCheckedDoshTypeIds(ids) {
+        const values = new Set(ids || []);
+        document.querySelectorAll("[data-dosh-checkbox]").forEach((input) => {
+          input.checked = values.has(input.value);
+        });
+      }
+
+      function validateFactoryForm() {
+        clearErrors("factory");
+
+        const name = document.getElementById("factoryName").value.trim();
+        const address = document.getElementById("factoryAddress").value.trim();
+        const acceptedDoshTypes = getCheckedDoshTypeIds();
+        const factoryReceiverName = document.getElementById("factoryReceiverName").value.trim();
+        const factoryReceiverPhone = document.getElementById("factoryReceiverPhone").value.trim();
+        const notes = document.getElementById("factoryNotes").value.trim();
+        const logoUrl = document.getElementById("factoryLogoUrl").value.trim();
+        const capacityKg = toNumber(document.getElementById("factoryCapacityKg").value);
+        const isActive = document.getElementById("factoryIsActive").checked;
+        let isValid = true;
+
+        if (!name) {
+          setFieldError("factory.name", "Factory name is required");
+          isValid = false;
+        }
+
+        if (!address) {
+          setFieldError("factory.address", "Address is required");
+          isValid = false;
+        }
+
+        if (!acceptedDoshTypes.length) {
+          setFieldError("factory.acceptedDoshTypes", "Select at least one accepted dosh type");
+          isValid = false;
+        }
+
+        if (!factoryReceiverName) {
+          setFieldError("factory.factoryReceiverName", "Receiver name is required");
+          isValid = false;
+        }
+
+        if (!factoryReceiverPhone) {
+          setFieldError("factory.factoryReceiverPhone", "Receiver phone is required");
+          isValid = false;
+        }
+
+        if (capacityKg != null && Number.isNaN(capacityKg)) {
+          setFieldError("factory.capacityKg", "Enter a valid capacity");
+          isValid = false;
+        }
+
+        if (capacityKg != null && capacityKg < 0) {
+          setFieldError("factory.capacityKg", "Capacity must be zero or greater");
+          isValid = false;
+        }
+
+        if (logoUrl && !isValidUrl(logoUrl)) {
+          setFieldError("factory.logoUrl", "Enter a valid logo URL");
+          isValid = false;
+        }
+
+        if (!isValid) return null;
+
+        return {
+          name,
+          address,
+          acceptedDoshTypes,
+          factoryReceiverName,
+          factoryReceiverPhone,
+          notes: notes || undefined,
+          logoUrl: logoUrl || undefined,
+          capacityKg: capacityKg == null ? undefined : capacityKg,
+          isActive,
+        };
+      }
+
+      function resetFactoryForm() {
+        state.editingFactoryId = null;
+        clearErrors("factory");
+        document.getElementById("factoryFormTitle").textContent = "Create Factory";
+        document.getElementById("factorySubmitBtn").textContent = "Create Factory";
+        document.getElementById("factoryForm").reset();
+        document.getElementById("factoryIsActive").checked = true;
+        setCheckedDoshTypeIds([]);
+      }
+
+      function fillFactoryForm(item) {
+        state.editingFactoryId = getId(item);
+        document.getElementById("factoryFormTitle").textContent = "Edit Factory";
+        document.getElementById("factorySubmitBtn").textContent = "Save Changes";
+        document.getElementById("factoryName").value = item.name || "";
+        document.getElementById("factoryAddress").value = item.address || "";
+        document.getElementById("factoryReceiverName").value = item.factoryReceiverName || "";
+        document.getElementById("factoryReceiverPhone").value = item.factoryReceiverPhone || "";
+        document.getElementById("factoryLogoUrl").value = item.logoUrl || "";
+        document.getElementById("factoryCapacityKg").value = item.capacityKg ?? "";
+        document.getElementById("factoryNotes").value = item.notes || "";
+        document.getElementById("factoryIsActive").checked = item.isActive !== false;
+        setCheckedDoshTypeIds(item.acceptedDoshTypes || []);
+      }
+
+      function updateOverviewCards() {
+        const items = state.factories;
+        const active = items.filter((item) => item.isActive !== false).length;
+        const inactive = items.length - active;
+        const totalCapacity = items.reduce((sum, item) => sum + Number(item.capacityKg || 0), 0);
+        const largest = items
+          .slice()
+          .sort((a, b) => Number(b.capacityKg || 0) - Number(a.capacityKg || 0))[0];
+
+        const uniqueAcceptedTypes = new Set();
+        items.forEach((item) => {
+          (item.acceptedDoshTypes || []).forEach((id) => uniqueAcceptedTypes.add(id));
+        });
+
+        document.getElementById("factoriesTotal").textContent = formatNumber(state.meta.total || items.length);
+        document.getElementById("factoriesActive").textContent = formatNumber(active);
+        document.getElementById("factoriesInactive").textContent = formatNumber(inactive);
+        document.getElementById("factoriesCapacity").textContent = formatNumber(totalCapacity);
+        document.getElementById("insightLargestFactory").textContent =
+          largest ? `${largest.name || "-"} (${formatNumber(largest.capacityKg)} KG)` : "-";
+        document.getElementById("insightDoshCoverage").textContent =
+          `${uniqueAcceptedTypes.size} dosh types represented`;
+        document.getElementById("insightSelection").textContent = state.selectedFactoryDetail?.name || "No factory selected";
+      }
+
+      function renderFactories() {
+        updateOverviewCards();
+
+        if (!state.factories.length) {
+          setEmpty("factories", "No factories found for the current filters");
+          return;
+        }
+
+        const rows = document.getElementById("factoriesRows");
+        rows.innerHTML = state.factories
+          .map((item) => {
+            const accepted = (item.acceptedDoshTypes || []).map(findDoshTypeName).join(", ") || "-";
+            return `
+              <tr>
+                <td>
+                  <div class="inline-stack">
+                    <strong>${escapeHtml(item.name || "-")}</strong>
+                    <span class="subtle">${escapeHtml(item.address || "-")}</span>
+                  </div>
+                </td>
+                <td>
+                  <div class="inline-stack">
+                    <strong>${escapeHtml(item.factoryReceiverName || "-")}</strong>
+                    <span class="subtle">${escapeHtml(item.factoryReceiverPhone || "-")}</span>
+                  </div>
+                </td>
+                <td>${escapeHtml(accepted)}</td>
+                <td>${formatNumber(item.capacityKg)}</td>
+                <td>
+                  <span class="status-pill ${item.isActive !== false ? "active" : "inactive"}">
+                    ${item.isActive !== false ? "Active" : "Inactive"}
+                  </span>
+                </td>
+                <td>
+                  <div class="row-actions">
+                    <button class="btn-link" type="button" onclick="selectFactory('${getId(item)}')">View</button>
+                    <button class="btn-link" type="button" onclick="quickEditFactory('${getId(item)}')">Edit</button>
+                  </div>
+                </td>
+              </tr>
+            `;
+          })
+          .join("");
+
+        showTable("factories");
+        updatePagination();
+      }
+
+      function updatePagination() {
+        const page = state.meta.page || 1;
+        const totalPages = state.meta.totalPages || 1;
+
+        document.getElementById("paginationLabel").textContent = `Page ${page} of ${totalPages}`;
+        document.getElementById("prevPageBtn").disabled = page <= 1;
+        document.getElementById("nextPageBtn").disabled = page >= totalPages;
+      }
+
+      function buildFactoryQuery(page = 1) {
+        const params = new URLSearchParams();
+        params.set("page", String(page));
+        params.set("limit", document.getElementById("filterLimit").value || "10");
+
+        const isActive = document.getElementById("filterIsActive").value;
+        const acceptedDoshType = document.getElementById("filterAcceptedDoshType").value;
+        const minCapacityKg = document.getElementById("filterMinCapacityKg").value.trim();
+
+        if (isActive) params.set("isActive", isActive);
+        if (acceptedDoshType) params.set("acceptedDoshType", acceptedDoshType);
+        if (minCapacityKg) params.set("minCapacityKg", minCapacityKg);
+
+        return `?${params.toString()}`;
+      }
+
+      async function loadFactoryStats(id) {
+        try {
+          const json = await fetchJson(`/admin/factories/${id}/stats`);
+          state.selectedFactoryStats = json?.data || json || null;
+        } catch (_) {
+          state.selectedFactoryStats = null;
+        }
+      }
+
+      function renderSelectedFactory() {
+        const detail = state.selectedFactoryDetail;
+        const detailWrap = document.getElementById("factoryDetailWrap");
+        const detailState = document.getElementById("factoryDetailState");
+        const refreshBtn = document.getElementById("selectedRefreshBtn");
+        const toggleBtn = document.getElementById("toggleFactoryStatusBtn");
+
+        refreshBtn.disabled = !detail;
+        toggleBtn.disabled = !detail;
+
+        if (!detail) {
+          detailWrap.hidden = true;
+          detailState.hidden = false;
+          detailState.className = "empty-state";
+          detailState.textContent = "Choose a factory from the list to load full details and stats.";
+          document.getElementById("insightSelection").textContent = "No factory selected";
+          return;
+        }
+
+        detailState.hidden = true;
+        detailWrap.hidden = false;
+
+        document.getElementById("detailName").textContent = detail.name || "-";
+        document.getElementById("detailStatus").innerHTML = `
+          <span class="status-pill ${detail.isActive !== false ? "active" : "inactive"}">
+            ${detail.isActive !== false ? "Active" : "Inactive"}
+          </span>
+        `;
+        document.getElementById("detailReceiver").textContent = detail.factoryReceiverName || "-";
+        document.getElementById("detailPhone").textContent = detail.factoryReceiverPhone || "-";
+        document.getElementById("detailCapacity").textContent = formatNumber(detail.capacityKg);
+        document.getElementById("detailAcceptedTypes").textContent =
+          (detail.acceptedDoshTypes || []).map(findDoshTypeName).join(", ") || "-";
+        document.getElementById("detailAddress").textContent = detail.address || "-";
+        document.getElementById("detailNotes").textContent = detail.notes || "-";
+        document.getElementById("insightSelection").textContent = detail.name || "Selected";
+        toggleBtn.textContent = detail.isActive !== false ? "Deactivate Factory" : "Activate Factory";
+
+        const logo = document.getElementById("detailLogo");
+        if (detail.logoUrl) {
+          logo.hidden = false;
+          logo.src = detail.logoUrl;
+        } else {
+          logo.hidden = true;
+          logo.removeAttribute("src");
+        }
+
+        renderFactoryStats();
+      }
+
+      function renderFactoryStats() {
+        const stats = state.selectedFactoryStats;
+
+        if (!stats || typeof stats !== "object") {
+          document.getElementById("factoryStatsA").textContent = "-";
+          document.getElementById("factoryStatsALabel").textContent = "Stat A";
+          document.getElementById("factoryStatsB").textContent = "-";
+          document.getElementById("factoryStatsBLabel").textContent = "Stat B";
+          document.getElementById("factoryStatsC").textContent = "-";
+          document.getElementById("factoryStatsCLabel").textContent = "Stat C";
+          return;
+        }
+
+        const entries = Object.entries(stats)
+          .filter(([, value]) => value == null || ["string", "number", "boolean"].includes(typeof value))
+          .slice(0, 3);
+
+        const fallback = [
+          ["receivedShipments", "-"],
+          ["totalKg", "-"],
+          ["lastActivityAt", "-"],
+        ];
+        const usedEntries = entries.length ? entries : fallback;
+
+        const ids = [
+          ["factoryStatsA", "factoryStatsALabel"],
+          ["factoryStatsB", "factoryStatsBLabel"],
+          ["factoryStatsC", "factoryStatsCLabel"],
+        ];
+
+        ids.forEach(([valueId, labelId], index) => {
+          const entry = usedEntries[index];
+          const label = entry ? entry[0] : `stat_${index + 1}`;
+          const value = entry ? entry[1] : "-";
+          document.getElementById(valueId).textContent =
+            typeof value === "number" ? formatNumber(value) : String(value);
+          document.getElementById(labelId).textContent = label
+            .replace(/([a-z])([A-Z])/g, "$1 $2")
+            .replace(/_/g, " ");
+        });
+      }
+
+      async function loadFactories(page = 1) {
+        setLoading("factories", "Loading factories...");
+
+        try {
+          const json = await fetchJson(`/admin/factories${buildFactoryQuery(page)}`);
+          const collection = extractCollection(json);
+
+          state.factories = collection;
+          state.meta = {
+            page: json?.page || json?.data?.page || page,
+            limit: json?.limit || json?.data?.limit || Number(document.getElementById("filterLimit").value || 10),
+            total: json?.total || json?.data?.total || collection.length,
+            totalPages: json?.totalPages || json?.data?.totalPages || 1,
+          };
+
+          renderFactories();
+        } catch (error) {
+          state.factories = [];
+          setEmpty("factories", error.message || "Failed to load factories");
+        }
+      }
+
+      async function loadDoshTypes() {
+        const json = await fetchJson("/admin/dosh/types");
+        state.doshTypes = extractCollection(json);
+        renderDoshTypeOptions();
+      }
+
+      async function selectFactory(id) {
+        state.selectedFactoryId = id;
+        state.selectedFactoryDetail = null;
+        state.selectedFactoryStats = null;
+        renderSelectedFactory();
+
+        const detailState = document.getElementById("factoryDetailState");
+        detailState.hidden = false;
+        detailState.className = "loading-state";
+        detailState.textContent = "Loading factory details...";
+
+        try {
+          const [detailJson] = await Promise.all([
+            fetchJson(`/admin/factories/${id}`),
+            loadFactoryStats(id),
+          ]);
+
+          state.selectedFactoryDetail = detailJson?.data || detailJson || null;
+          renderSelectedFactory();
+        } catch (error) {
+          state.selectedFactoryDetail = null;
+          state.selectedFactoryStats = null;
+          renderSelectedFactory();
+          detailState.className = "empty-state";
+          detailState.textContent = error.message || "Failed to load factory details";
+        }
+      }
+
+      async function reloadSelectedFactory() {
+        if (!state.selectedFactoryId) return;
+        await selectFactory(state.selectedFactoryId);
+      }
+
+      async function quickEditFactory(id) {
+        await selectFactory(id);
+        if (state.selectedFactoryDetail) fillFactoryForm(state.selectedFactoryDetail);
+      }
+
+      function editSelectedFactory() {
+        if (state.selectedFactoryDetail) fillFactoryForm(state.selectedFactoryDetail);
+      }
+
+      async function toggleSelectedFactoryStatus() {
+        const detail = state.selectedFactoryDetail;
+        if (!detail) return;
+
+        const id = getId(detail);
+        const endpoint = detail.isActive !== false ? "deactivate" : "activate";
+
+        try {
+          const json = await fetchJson(`/admin/factories/${id}/${endpoint}`, {
+            method: "PATCH",
+          });
+          showBanner(
+            "success",
+            getMessage(
+              json,
+              detail.isActive !== false ? "Factory deactivated successfully" : "Factory activated successfully",
+            ),
+          );
+          await Promise.all([loadFactories(state.meta.page || 1), selectFactory(id)]);
+        } catch (error) {
+          showBanner("error", error.message || "Failed to update factory status");
+        }
+      }
+
+      async function submitFactoryForm(event) {
+        event.preventDefault();
+        const payload = validateFactoryForm();
+        if (!payload) return;
+
+        const isEditing = Boolean(state.editingFactoryId);
+
+        try {
+          const json = await fetchJson(
+            isEditing ? `/admin/factories/${state.editingFactoryId}` : "/admin/factories",
+            {
+              method: isEditing ? "PATCH" : "POST",
+              body: JSON.stringify(payload),
+            },
+          );
+
+          const createdId = json?.data?.id || state.editingFactoryId;
+          resetFactoryForm();
+          showBanner(
+            "success",
+            getMessage(
+              json,
+              isEditing ? "Factory updated successfully" : "Factory created successfully",
+            ),
+          );
+          await loadFactories(isEditing ? state.meta.page || 1 : 1);
+          if (createdId) await selectFactory(createdId);
+        } catch (error) {
+          showBanner("error", error.message || "Failed to save factory");
+        }
+      }
+
+      function changePage(delta) {
+        const nextPage = (state.meta.page || 1) + delta;
+        if (nextPage < 1 || nextPage > (state.meta.totalPages || 1)) return;
+        loadFactories(nextPage);
+      }
+
+      function resetFilters() {
+        document.getElementById("filterIsActive").value = "";
+        document.getElementById("filterAcceptedDoshType").value = "";
+        document.getElementById("filterMinCapacityKg").value = "";
+        document.getElementById("filterLimit").value = "10";
+        loadFactories(1);
+      }
+
+      async function refreshAll() {
+        showBanner("", "");
+        await Promise.all([loadDoshTypes(), loadFactories(state.meta.page || 1)]);
+        if (state.selectedFactoryId) {
+          await selectFactory(state.selectedFactoryId);
+        } else {
+          renderSelectedFactory();
+        }
+      }
+
+      async function init() {
+        try {
+          await Promise.all([loadDoshTypes(), loadFactories(1)]);
+          renderSelectedFactory();
+        } catch (error) {
+          showBanner("error", error.message || "Failed to initialize factories management");
+        }
+      }
+
+      window.onLanguageChange = () => {
+        updateOverviewCards();
+        renderFactories();
+        renderSelectedFactory();
+      };
+
+      init();
+    </script>
+    <script src="./site-i18n.js"></script>
+  </body>
+</html>

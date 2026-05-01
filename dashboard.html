@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>SuperCycle – Admin Dashboard</title>
+    <title>SuperCycle - Admin Dashboard</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <style>
@@ -13,471 +13,625 @@
       }
 
       :root {
-        --primary: #1a7f4f;
-        --primary-light: #2ba572;
-        --primary-lighter: #4db895;
-        --primary-dark: #155d3b;
-        --success: #08783b;
-        --success-light: #d4f4e1;
-        --warning: #d97706;
-        --warning-light: #fef3c7;
+        --primary: #166534;
+        --primary-light: #22a06b;
+        --primary-soft: #e8f7ef;
+        --operations: #d97706;
+        --operations-soft: #fff3e2;
+        --eco: #15803d;
+        --eco-soft: #ecfdf3;
+        --business: #1d4ed8;
+        --business-soft: #eaf2ff;
+        --surface: #ffffff;
+        --surface-2: #f8fafc;
+        --border: #dbe4ee;
+        --text: #0f172a;
+        --muted: #64748b;
         --danger: #c5192d;
-        --danger-light: #fee2e2;
-        --gray-900: #0f172a;
-        --gray-700: #374151;
-        --gray-600: #4b5563;
-        --gray-500: #6b7280;
-        --gray-200: #e5e7eb;
-        --gray-100: #f3f4f6;
-        --white: #ffffff;
+        --shadow: 0 18px 50px rgba(15, 23, 42, 0.08);
       }
 
       body {
-        font-family:
-          -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-          "Ubuntu", "Cantarell", sans-serif;
-        background: var(--gray-100);
-        color: var(--gray-900);
+        font-family: "Segoe UI", Tahoma, sans-serif;
+        background:
+          radial-gradient(circle at top left, rgba(34, 160, 107, 0.12), transparent 22%),
+          linear-gradient(180deg, #f7fbf8 0%, #f4f7fb 100%);
+        color: var(--text);
         line-height: 1.5;
       }
 
-      /* ===== Header ===== */
       .header {
-        background: linear-gradient(
-          135deg,
-          var(--primary) 0%,
-          var(--primary-light) 50%,
-          var(--primary) 100%
-        );
-        color: var(--white);
+        background: linear-gradient(135deg, #0f5132 0%, #17844e 50%, #1ea768 100%);
+        color: #fff;
         padding: 24px 32px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        box-shadow: 0 4px 16px rgba(26, 127, 79, 0.15);
+        box-shadow: 0 10px 30px rgba(22, 101, 52, 0.16);
       }
 
-      .header h1 {
-        font-size: 24px;
-        font-weight: 700;
+      .header-bar {
+        max-width: 1440px;
+        margin: 0 auto;
         display: flex;
-        align-items: center;
-        gap: 12px;
-        letter-spacing: -0.5px;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 20px;
+      }
+
+      .header-copy h1 {
+        font-size: 28px;
+        font-weight: 800;
+        letter-spacing: -0.04em;
+        margin-bottom: 8px;
+      }
+
+      .header-copy p {
+        max-width: 760px;
+        font-size: 14px;
+        color: rgba(255, 255, 255, 0.82);
       }
 
       .logout-btn {
-        background: rgba(255, 255, 255, 0.2);
-        color: var(--white);
-        border: 1px solid rgba(255, 255, 255, 0.3);
+        border: 1px solid rgba(255, 255, 255, 0.24);
+        background: rgba(255, 255, 255, 0.14);
+        color: #fff;
+        border-radius: 12px;
         padding: 10px 18px;
-        border-radius: 6px;
         cursor: pointer;
-        font-weight: 600;
-        font-size: 14px;
-        transition: all 0.2s ease;
+        font-weight: 700;
       }
 
-      .logout-btn:hover {
-        background: rgba(255, 255, 255, 0.3);
-        border-color: rgba(255, 255, 255, 0.5);
-      }
-
-      /* ===== Layout ===== */
       .container {
-        max-width: 1360px;
-        margin: auto;
-        padding: 40px 32px;
+        max-width: 1440px;
+        margin: 0 auto;
+        padding: 28px 24px 36px;
+      }
+
+      .hero {
+        display: grid;
+        grid-template-columns: minmax(0, 1.4fr) minmax(320px, 0.9fr);
+        gap: 18px;
+        margin-top: -18px;
+        margin-bottom: 28px;
+      }
+
+      .hero-panel,
+      .hero-aside,
+      .card {
+        background: rgba(255, 255, 255, 0.96);
+        border: 1px solid rgba(219, 228, 238, 0.8);
+        border-radius: 22px;
+        box-shadow: var(--shadow);
+      }
+
+      .hero-panel {
+        padding: 24px;
+      }
+
+      .hero-panel h2 {
+        font-size: 22px;
+        letter-spacing: -0.04em;
+        margin-bottom: 10px;
+      }
+
+      .hero-panel p {
+        color: var(--muted);
+        margin-bottom: 18px;
+      }
+
+      .summary-grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 12px;
+      }
+
+      .summary-tile {
+        padding: 16px;
+        border-radius: 18px;
+        background: var(--surface-2);
+        border: 1px solid var(--border);
+      }
+
+      .summary-tile strong {
+        display: block;
+        font-size: 28px;
+        line-height: 1;
+        margin-bottom: 8px;
+        color: var(--primary);
+      }
+
+      .summary-tile span {
+        display: block;
+        font-size: 12px;
+        color: var(--muted);
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+      }
+
+      .hero-aside {
+        padding: 22px;
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+      }
+
+      .hero-aside h3 {
+        font-size: 16px;
+        margin-bottom: 2px;
+      }
+
+      .muted {
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      .aside-item {
+        display: flex;
+        justify-content: space-between;
+        gap: 14px;
+        padding: 12px 14px;
+        border-radius: 16px;
+        background: linear-gradient(135deg, #f8fbff 0%, #eef8f2 100%);
+        border: 1px solid var(--border);
+      }
+
+      .aside-item span {
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      .aside-item strong {
+        font-size: 15px;
       }
 
       .section {
-        margin-bottom: 52px;
-      }
-
-      .section h2 {
-        font-size: 18px;
-        font-weight: 700;
         margin-bottom: 28px;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        color: var(--gray-900);
-        letter-spacing: -0.3px;
       }
 
-      /* ===== Cards Grid ===== */
+      .section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: end;
+        gap: 12px;
+        margin-bottom: 14px;
+      }
+
+      .section-header h2 {
+        font-size: 18px;
+        letter-spacing: -0.03em;
+      }
+
+      .section-header p {
+        color: var(--muted);
+        font-size: 13px;
+      }
+
       .cards {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-        gap: 28px;
+        grid-template-columns: repeat(auto-fit, minmax(245px, 1fr));
+        gap: 16px;
       }
 
-      /* ===== Card Base Styles ===== */
       .card {
-        background: var(--white);
-        border: none;
-        border-radius: 14px;
-        padding: 0;
-        cursor: pointer;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-        transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-        position: relative;
         overflow: hidden;
-        display: flex;
-        flex-direction: column;
-        min-height: 260px;
+        cursor: pointer;
+        transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+        min-height: 188px;
       }
 
       .card:hover {
-        transform: translateY(-8px);
-        box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
+        transform: translateY(-4px);
+        box-shadow: 0 24px 48px rgba(15, 23, 42, 0.12);
+        border-color: rgba(34, 160, 107, 0.32);
       }
 
-      /* Card Header with Icon */
-      .card-header {
-        padding: 32px 28px 24px;
+      .card-top {
+        padding: 18px 18px 14px;
         display: flex;
-        align-items: flex-start;
         justify-content: space-between;
-        position: relative;
+        align-items: flex-start;
+        gap: 12px;
       }
 
       .card-icon {
-        font-size: 48px;
+        width: 52px;
+        height: 52px;
+        border-radius: 16px;
         display: flex;
         align-items: center;
         justify-content: center;
-        width: 70px;
-        height: 70px;
-        border-radius: 12px;
-        background: rgba(255, 255, 255, 0.5);
-        filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+        font-size: 24px;
+        font-weight: 800;
+        color: #fff;
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3);
       }
 
-      .badge {
-        position: absolute;
-        top: 20px;
-        right: 20px;
-        background: var(--danger);
-        color: var(--white);
-        border-radius: 20px;
-        padding: 6px 14px;
+      .card-badge {
+        min-width: 38px;
+        padding: 6px 10px;
+        border-radius: 999px;
         font-size: 12px;
-        font-weight: 700;
-        letter-spacing: 0.3px;
-        min-width: 36px;
+        font-weight: 800;
         text-align: center;
-        box-shadow: 0 2px 8px rgba(197, 25, 45, 0.3);
+        background: #eef2f7;
+        color: #334155;
       }
 
-      /* Card Body */
       .card-body {
-        padding: 0 28px 28px;
-        flex-grow: 1;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
+        padding: 0 18px 18px;
       }
 
       .card h3 {
-        font-size: 18px;
-        font-weight: 700;
+        font-size: 16px;
         margin-bottom: 8px;
-        color: var(--gray-900);
       }
 
       .card p {
-        font-size: 14px;
-        color: var(--gray-600);
-        line-height: 1.6;
-        margin-bottom: 0;
+        font-size: 13px;
+        color: var(--muted);
+        margin-bottom: 14px;
       }
 
-      /* ===== Operations Cards (Orange) ===== */
-      .card.operations {
-        background: linear-gradient(135deg, #fff8f0 0%, #fffbf7 100%);
+      .card-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+        padding-top: 12px;
+        border-top: 1px solid var(--border);
+        font-size: 12px;
+        font-weight: 700;
+        color: var(--muted);
       }
 
-      .card.operations .card-header {
-        background: linear-gradient(135deg, #f39c12 0%, #e8860f 100%);
-        color: var(--white);
+      .card-footer strong {
+        color: var(--text);
+        font-size: 13px;
       }
 
-      .card.operations .card-icon {
-        background: rgba(255, 255, 255, 0.25);
+      .operations .card-icon {
+        background: linear-gradient(135deg, #f59e0b, #d97706);
       }
 
-      .card.operations h3 {
-        color: #d97706;
+      .operations .card-badge {
+        background: var(--operations-soft);
+        color: var(--operations);
       }
 
-      .card.operations:hover {
-        background: linear-gradient(135deg, #fff5e6 0%, #fffdf5 100%);
+      .eco .card-icon {
+        background: linear-gradient(135deg, #16a34a, #15803d);
       }
 
-      /* ===== Eco Cards (Green) ===== */
-      .card.eco {
-        background: linear-gradient(135deg, #f0fdf4 0%, #f7fcf5 100%);
+      .eco .card-badge {
+        background: var(--eco-soft);
+        color: var(--eco);
       }
 
-      .card.eco .card-header {
-        background: linear-gradient(
-          135deg,
-          var(--primary) 0%,
-          var(--primary-light) 100%
-        );
-        color: var(--white);
+      .business .card-icon {
+        background: linear-gradient(135deg, #2563eb, #1d4ed8);
       }
 
-      .card.eco .card-icon {
-        background: rgba(255, 255, 255, 0.25);
+      .business .card-badge {
+        background: var(--business-soft);
+        color: var(--business);
       }
 
-      .card.eco h3 {
-        color: var(--primary-dark);
-      }
-
-      .card.eco:hover {
-        background: linear-gradient(135deg, #f5fef5 0%, #fafdfa 100%);
-      }
-
-      /* ===== Accounts Cards (Blue) ===== */
-      .card.accounts {
-        background: linear-gradient(135deg, #eff6ff 0%, #f7fafc 100%);
-      }
-
-      .card.accounts .card-header {
-        background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
-        color: var(--white);
-      }
-
-      .card.accounts .card-icon {
-        background: rgba(255, 255, 255, 0.25);
-      }
-
-      .card.accounts h3 {
-        color: #2c3e50;
-      }
-
-      .card.accounts:hover {
-        background: linear-gradient(135deg, #f0f8ff 0%, #f5f9ff 100%);
-      }
-
-      /* ===== Responsive ===== */
-      @media (max-width: 768px) {
-        .header {
-          padding: 20px 20px;
-          flex-direction: column;
-          gap: 12px;
-          text-align: center;
+      @media (max-width: 1080px) {
+        .hero {
+          grid-template-columns: 1fr;
         }
 
-        .header h1 {
-          justify-content: center;
-          font-size: 20px;
+        .summary-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+
+      @media (max-width: 720px) {
+        .header {
+          padding: 20px 18px;
+        }
+
+        .header-bar {
+          flex-direction: column;
+          align-items: stretch;
         }
 
         .container {
-          padding: 32px 20px;
+          padding: 18px 14px 28px;
         }
 
-        .cards {
-          grid-template-columns: 1fr;
-          gap: 24px;
+        .hero-panel,
+        .hero-aside {
+          padding: 18px;
         }
 
-        .section h2 {
-          justify-content: center;
-          margin-bottom: 24px;
-        }
-
-        .card {
-          min-height: 240px;
-        }
-
-        .card-header {
-          padding: 28px 24px 20px;
-        }
-
-        .card-icon {
-          width: 60px;
-          height: 60px;
-          font-size: 40px;
-        }
-
-        .card-body {
-          padding: 0 24px 24px;
+        .summary-grid {
+          grid-template-columns: 1fr 1fr;
         }
       }
 
-      @media (max-width: 600px) {
-        .header h1 {
-          font-size: 18px;
+      @media (max-width: 560px) {
+        .summary-grid,
+        .cards {
+          grid-template-columns: 1fr;
         }
 
-        .card-header {
-          padding: 24px 20px 16px;
-        }
-
-        .card-body {
-          padding: 0 20px 20px;
-        }
-
-        .card h3 {
-          font-size: 16px;
-        }
-
-        .card p {
-          font-size: 13px;
-        }
-
-        .card-icon {
-          width: 52px;
-          height: 52px;
-          font-size: 32px;
+        .section-header {
+          align-items: flex-start;
+          flex-direction: column;
         }
       }
     </style>
   </head>
 
   <body>
-    <!-- ===== Header ===== -->
     <div class="header">
-      <h1><span>♻️</span>SuperCycle – Admin Dashboard</h1>
-      <button class="logout-btn" onclick="logout()">Logout</button>
+      <div class="header-bar">
+        <div class="header-copy">
+          <h1>SuperCycle Admin Command Center</h1>
+          <p>
+            Monitor operational queues, eco workflows, and business master data from one compact dashboard.
+          </p>
+        </div>
+        <button class="logout-btn" onclick="logout()">Logout</button>
+      </div>
     </div>
 
     <div class="container">
-      <!-- ===== OPERATIONS ===== -->
-      <div class="section">
-        <h2>📦 Operations</h2>
+      <section class="hero">
+        <div class="hero-panel">
+          <h2>Executive Snapshot</h2>
+          <p>
+            A tighter dashboard layout so the whole control surface fits more comfortably on one screen.
+          </p>
+          <div class="summary-grid">
+            <div class="summary-tile">
+              <strong id="summaryPendingApprovals">-</strong>
+              <span>Pending Approvals</span>
+            </div>
+            <div class="summary-tile">
+              <strong id="summaryPendingSegmentation">-</strong>
+              <span>Pending Segmentation</span>
+            </div>
+            <div class="summary-tile">
+              <strong id="summaryFinancePending">-</strong>
+              <span>Finance Queue</span>
+            </div>
+            <div class="summary-tile">
+              <strong id="summaryActiveFactories">-</strong>
+              <span>Active Factories</span>
+            </div>
+          </div>
+        </div>
+
+        <aside class="hero-aside">
+          <div>
+            <h3>Operational Focus</h3>
+            <p class="muted">Fast access to the highest-impact admin actions.</p>
+          </div>
+          <div class="aside-item">
+            <span>Today</span>
+            <strong id="todayDate">-</strong>
+          </div>
+          <div class="aside-item">
+            <span>Finance Pending</span>
+            <strong id="focusFinancePending">-</strong>
+          </div>
+          <div class="aside-item">
+            <span>Factory Network</span>
+            <strong id="focusFactoryCoverage">Loading...</strong>
+          </div>
+        </aside>
+      </section>
+
+      <section class="section">
+        <div class="section-header">
+          <div>
+            <h2>Operations</h2>
+            <p>Approval and routing queues for the daily execution team.</p>
+          </div>
+        </div>
         <div class="cards">
-          <div
-            class="card operations"
-            onclick="go('shipments.html?type=approval')"
-          >
-            <div class="card-header">
-              <div class="card-icon">📋</div>
-              <span class="badge" id="pendingApprovalCount">–</span>
+          <div class="card operations" onclick="go('shipments.html?type=approval')">
+            <div class="card-top">
+              <div class="card-icon">AP</div>
+              <div class="card-badge" id="pendingApprovalCount">-</div>
             </div>
             <div class="card-body">
-              <div>
-                <h3>Pending Approvals</h3>
-                <p>
-                  Review and approve shipments waiting for admin verification
-                </p>
+              <h3>Pending Approvals</h3>
+              <p>Review shipments waiting for admin validation before they move downstream.</p>
+              <div class="card-footer">
+                <span>Workflow</span>
+                <strong>Approve & edit</strong>
               </div>
             </div>
           </div>
 
-          <div
-            class="card operations"
-            onclick="go('shipments.html?type=segmentation')"
-          >
-            <div class="card-header">
-              <div class="card-icon">🔀</div>
-              <span class="badge" id="pendingSegmentationCount">–</span>
+          <div class="card operations" onclick="go('shipments.html?type=segmentation')">
+            <div class="card-top">
+              <div class="card-icon">SG</div>
+              <div class="card-badge" id="pendingSegmentationCount">-</div>
             </div>
             <div class="card-body">
-              <div>
-                <h3>Pending Segmentation</h3>
-                <p>
-                  Route and segment shipments for optimal logistics planning
-                </p>
+              <h3>Pending Segmentation</h3>
+              <p>Split shipments and assign the right routing structure for logistics readiness.</p>
+              <div class="card-footer">
+                <span>Workflow</span>
+                <strong>Segment & route</strong>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      </section>
 
-      <!-- ===== ECO PROGRAM ===== -->
-      <div class="section">
-        <h2>🌱 Eco Program</h2>
+      <section class="section">
+        <div class="section-header">
+          <div>
+            <h2>Eco Program</h2>
+            <p>Participant growth and redeem approval activity.</p>
+          </div>
+        </div>
         <div class="cards">
           <div class="card eco" onclick="go('eco-participants.html')">
-            <div class="card-header">
-              <div class="card-icon">👥</div>
+            <div class="card-top">
+              <div class="card-icon">EP</div>
+              <div class="card-badge">View</div>
             </div>
             <div class="card-body">
-              <div>
-                <h3>Eco Participants</h3>
-                <p>Enroll and manage environmental program participants</p>
+              <h3>Eco Participants</h3>
+              <p>Manage enrollment and keep participant records clean and accessible.</p>
+              <div class="card-footer">
+                <span>Coverage</span>
+                <strong>People & accounts</strong>
               </div>
             </div>
           </div>
 
           <div class="card eco" onclick="go('eco-redeems.html')">
-            <div class="card-header">
-              <div class="card-icon">🎁</div>
-              <span class="badge" id="ecoRedeemCount">–</span>
+            <div class="card-top">
+              <div class="card-icon">RD</div>
+              <div class="card-badge" id="ecoRedeemCount">-</div>
             </div>
             <div class="card-body">
-              <div>
-                <h3>Redemption Requests</h3>
-                <p>Process approvals and track environmental impact metrics</p>
+              <h3>Redemption Requests</h3>
+              <p>Track redeem demand, approvals, and planting follow-through in one place.</p>
+              <div class="card-footer">
+                <span>Workflow</span>
+                <strong>Approve & track</strong>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      </section>
 
-      <!-- ===== ACCOUNTS ===== -->
-      <div class="section">
-        <h2>👤 Accounts</h2>
+      <section class="section">
+        <div class="section-header">
+          <div>
+            <h2>Business Management</h2>
+            <p>Master data, pricing rules, and financial workflows for scaling operations.</p>
+          </div>
+        </div>
         <div class="cards">
-          <div
-            class="card accounts"
-            onclick="go('representatives-create.html')"
-          >
-            <div class="card-header">
-              <div class="card-icon">👨‍💼</div>
+          <div class="card business" onclick="go('representatives-create.html')">
+            <div class="card-top">
+              <div class="card-icon">FR</div>
+              <div class="card-badge">Manage</div>
             </div>
             <div class="card-body">
-              <div>
-                <h3>Field Representatives</h3>
-                <p>Create and manage field operations representatives</p>
+              <h3>Field Representatives</h3>
+              <p>Create and maintain representative accounts for field execution coverage.</p>
+              <div class="card-footer">
+                <span>People Ops</span>
+                <strong>Users & roles</strong>
               </div>
             </div>
           </div>
 
-          <div class="card accounts" onclick="go('contracts-create.html')">
-            <div class="card-header">
-              <div class="card-icon">📄</div>
+          <div class="card business" onclick="go('contracts-create.html')">
+            <div class="card-top">
+              <div class="card-icon">CT</div>
+              <div class="card-badge">Setup</div>
             </div>
             <div class="card-body">
-              <div>
-                <h3>Contracts & Pricing</h3>
-                <p>Establish trader contracts and configure pricing models</p>
+              <h3>Contracts & Pricing</h3>
+              <p>Define trader agreements and the commercial terms behind recurring work.</p>
+              <div class="card-footer">
+                <span>Commercial</span>
+                <strong>Contracts</strong>
               </div>
             </div>
           </div>
 
-          <div class="card accounts" onclick="go('dosh-management.html')">
-            <div class="card-header">
-              <div class="card-icon">⚖️</div>
+          <div class="card business" onclick="go('dosh-management.html')">
+            <div class="card-top">
+              <div class="card-icon">DS</div>
+              <div class="card-badge">Rules</div>
             </div>
             <div class="card-body">
-              <div>
-                <h3>Dosh Management</h3>
-                <p>Manage dosh types, quantity tiers, and effective price records</p>
+              <h3>Dosh Management</h3>
+              <p>Control dosh types, quantity tiers, and pricing validity windows.</p>
+              <div class="card-footer">
+                <span>Pricing Engine</span>
+                <strong>Master data</strong>
               </div>
             </div>
           </div>
 
-          <div class="card accounts" onclick="go('finance-management.html')">
-            <div class="card-header">
-              <div class="card-icon">💸</div>
-              <span class="badge" id="financePendingCount">–</span>
+          <div class="card business" onclick="go('factories-management.html')">
+            <div class="card-top">
+              <div class="card-icon">FC</div>
+              <div class="card-badge" id="factoryCount">-</div>
             </div>
             <div class="card-body">
-              <div>
-                <h3>Finance Management</h3>
-                <p>Confirm transfer payments and settle meal and monthly finance flows</p>
+              <h3>Factories Management</h3>
+              <p>Manage receiving factories, accepted dosh types, capacity, and operating status.</p>
+              <div class="card-footer">
+                <span>Network</span>
+                <strong>Factories & stats</strong>
+              </div>
+            </div>
+          </div>
+
+          <div class="card business" onclick="go('warehouses-management.html')">
+            <div class="card-top">
+              <div class="card-icon">WH</div>
+              <div class="card-badge" id="warehouseCount">-</div>
+            </div>
+            <div class="card-body">
+              <h3>Warehouses Management</h3>
+              <p>Manage warehouses and warehouse managers with assignment-aware admin controls.</p>
+              <div class="card-footer">
+                <span>Storage Ops</span>
+                <strong>Warehouses & managers</strong>
+              </div>
+            </div>
+          </div>
+
+          <div class="card business" onclick="go('vehicles-management.html')">
+            <div class="card-top">
+              <div class="card-icon">VH</div>
+              <div class="card-badge" id="vehicleCount">-</div>
+            </div>
+            <div class="card-body">
+              <h3>Vehicles Management</h3>
+              <p>Control fleet records, capacity, driver details, and operational vehicle status.</p>
+              <div class="card-footer">
+                <span>Fleet Ops</span>
+                <strong>Vehicles & status</strong>
+              </div>
+            </div>
+          </div>
+
+          <div class="card business" onclick="go('contact-management.html')">
+            <div class="card-top">
+              <div class="card-icon">CX</div>
+              <div class="card-badge" id="contactNewCount">-</div>
+            </div>
+            <div class="card-body">
+              <h3>Contact Management</h3>
+              <p>Review incoming messages, reply to customers, and close or remove resolved cases.</p>
+              <div class="card-footer">
+                <span>Service Desk</span>
+                <strong>Inbox & replies</strong>
+              </div>
+            </div>
+          </div>
+
+          <div class="card business" onclick="go('finance-management.html')">
+            <div class="card-top">
+              <div class="card-icon">FN</div>
+              <div class="card-badge" id="financePendingCount">-</div>
+            </div>
+            <div class="card-body">
+              <h3>Finance Management</h3>
+              <p>Confirm transfers and settle meal and monthly payment flows with control.</p>
+              <div class="card-footer">
+                <span>Finance Ops</span>
+                <strong>Pending review</strong>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      </section>
     </div>
 
     <script>
@@ -496,24 +650,130 @@
         location.href = path;
       }
 
-      async function loadCounts() {
-        document.getElementById("pendingApprovalCount").innerText = "–";
-        document.getElementById("pendingSegmentationCount").innerText = "–";
-        document.getElementById("ecoRedeemCount").innerText = "–";
-        document.getElementById("financePendingCount").innerText = "–";
+      async function fetchJson(path) {
+        const response = await fetch(`${API_BASE}${path}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        const text = await response.text();
+        let json = null;
 
         try {
-          const res = await fetch(`${API_BASE}/admin/finance/stats?type=all`, {
-            headers: { Authorization: "Bearer " + token },
-          });
-          const json = await res.json();
-          const pending = json?.data?.overview?.pendingShipments;
-          if (pending != null) {
-            document.getElementById("financePendingCount").innerText = pending;
-          }
+          json = text ? JSON.parse(text) : null;
+        } catch (_) {
+          json = null;
+        }
+
+        if (!response.ok) {
+          throw new Error(json?.message || text || "Request failed");
+        }
+
+        return json;
+      }
+
+      function setCount(id, value) {
+        const element = document.getElementById(id);
+        if (element) element.textContent = value == null ? "-" : value;
+      }
+
+      async function loadCounts() {
+        setCount("pendingApprovalCount", "-");
+        setCount("pendingSegmentationCount", "-");
+        setCount("ecoRedeemCount", "-");
+        setCount("financePendingCount", "-");
+        setCount("factoryCount", "-");
+        setCount("warehouseCount", "-");
+        setCount("vehicleCount", "-");
+        setCount("contactNewCount", "-");
+        setCount("summaryPendingApprovals", "-");
+        setCount("summaryPendingSegmentation", "-");
+        setCount("summaryFinancePending", "-");
+        setCount("summaryActiveFactories", "-");
+        setCount("focusFinancePending", "-");
+        document.getElementById("focusFactoryCoverage").textContent = "Loading...";
+
+        try {
+          const [financeJson, factoriesJson] = await Promise.all([
+            fetchJson("/admin/finance/stats?type=all"),
+            fetchJson("/admin/factories?page=1&limit=100&isActive=true"),
+          ]);
+
+          const pending = financeJson?.data?.overview?.pendingShipments ?? 0;
+          const activeFactories =
+            factoriesJson?.total ??
+            factoriesJson?.data?.total ??
+            factoriesJson?.data?.meta?.total ??
+            (Array.isArray(factoriesJson?.data?.data)
+              ? factoriesJson.data.data.length
+              : Array.isArray(factoriesJson?.data)
+                ? factoriesJson.data.length
+                : 0);
+
+          setCount("financePendingCount", pending);
+          setCount("summaryFinancePending", pending);
+          setCount("focusFinancePending", pending);
+          setCount("factoryCount", activeFactories);
+          setCount("summaryActiveFactories", activeFactories);
+          document.getElementById("focusFactoryCoverage").textContent =
+            `${activeFactories} active factories`;
+        } catch (_) {
+          document.getElementById("focusFactoryCoverage").textContent =
+            "Unavailable";
+        }
+
+        try {
+          const [warehousesJson, vehiclesJson, contactJson] = await Promise.all([
+            fetchJson("/admin/warehouses?page=1&limit=1"),
+            fetchJson("/admin/vehicles?page=1&limit=1"),
+            fetchJson("/admin/contact-messages?page=1&limit=1&status=new"),
+          ]);
+
+          const warehouseCount =
+            warehousesJson?.total ??
+            warehousesJson?.data?.total ??
+            warehousesJson?.meta?.total ??
+            warehousesJson?.data?.meta?.total ??
+            (Array.isArray(warehousesJson?.data?.data)
+              ? warehousesJson.data.data.length
+              : Array.isArray(warehousesJson?.data)
+                ? warehousesJson.data.length
+                : 0);
+          const vehicleCount =
+            vehiclesJson?.total ??
+            vehiclesJson?.data?.total ??
+            vehiclesJson?.meta?.total ??
+            vehiclesJson?.data?.meta?.total ??
+            (Array.isArray(vehiclesJson?.data?.data)
+              ? vehiclesJson.data.data.length
+              : Array.isArray(vehiclesJson?.data)
+                ? vehiclesJson.data.length
+                : 0);
+          const contactCount =
+            contactJson?.total ??
+            contactJson?.data?.total ??
+            contactJson?.meta?.total ??
+            contactJson?.data?.meta?.total ??
+            (Array.isArray(contactJson?.data?.data)
+              ? contactJson.data.data.length
+              : Array.isArray(contactJson?.data)
+                ? contactJson.data.length
+                : 0);
+
+          setCount("warehouseCount", warehouseCount);
+          setCount("vehicleCount", vehicleCount);
+          setCount("contactNewCount", contactCount);
         } catch (_) {}
       }
 
+      function initDashboardMeta() {
+        const today = new Date();
+        document.getElementById("todayDate").textContent = today.toLocaleDateString(
+          "en-GB",
+          { day: "2-digit", month: "short", year: "numeric" },
+        );
+      }
+
+      initDashboardMeta();
       loadCounts();
     </script>
     <script src="./site-i18n.js"></script>
