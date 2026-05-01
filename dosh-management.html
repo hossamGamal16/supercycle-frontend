@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>SuperCycle - Dosh Management</title>
+    <title>SuperCycle - Dosht Management</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <style>
       * {
@@ -395,6 +395,60 @@
         font-size: 13px;
       }
 
+      .modal {
+        position: fixed;
+        inset: 0;
+        background: rgba(15, 23, 42, 0.45);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        z-index: 2000;
+      }
+
+      .modal.open {
+        display: flex;
+      }
+
+      .modal-content {
+        width: min(720px, 100%);
+        max-height: calc(100vh - 40px);
+        overflow: auto;
+        background: var(--white);
+        border-radius: 18px;
+        box-shadow: 0 24px 70px rgba(15, 23, 42, 0.2);
+      }
+
+      .modal-header,
+      .modal-footer {
+        padding: 18px 20px;
+        border-bottom: 1px solid var(--gray-200);
+      }
+
+      .modal-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+      }
+
+      .modal-header h3 {
+        font-size: 20px;
+      }
+
+      .modal-body {
+        padding: 20px;
+      }
+
+      .modal-footer {
+        border-bottom: none;
+        border-top: 1px solid var(--gray-200);
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+
       @media (max-width: 1080px) {
         .layout {
           grid-template-columns: 1fr;
@@ -433,7 +487,7 @@
   </head>
   <body>
     <div class="header">
-      <h1>Dosh Management</h1>
+      <h1>Dosht Management</h1>
       <div class="header-actions">
         <button class="header-btn" onclick="goBack()">Back to Dashboard</button>
         <button class="header-btn" onclick="logout()">Logout</button>
@@ -442,20 +496,20 @@
 
     <div class="container">
       <p class="page-intro">
-        Manage reusable dosh configuration for admin pricing workflows.
+        Manage reusable Dosht configuration for admin pricing workflows.
       </p>
 
       <div id="pageBanner" class="banner"></div>
 
       <div class="tabs">
         <button class="tab-btn active" data-tab="types" onclick="setTab('types')">
-          Dosh Types
+          Dosht Types
         </button>
         <button class="tab-btn" data-tab="tiers" onclick="setTab('tiers')">
           Quantity Tiers
         </button>
         <button class="tab-btn" data-tab="prices" onclick="setTab('prices')">
-          Dosh Prices
+          Dosht Prices
         </button>
       </div>
 
@@ -464,9 +518,9 @@
           <div class="card">
             <div class="card-header">
               <div>
-                <h2 id="typeFormTitle">Create Dosh Type</h2>
+                <h2 id="typeFormTitle">Create Dosht Type</h2>
                 <p class="card-hint">
-                  Names must stay unique across all dosh types.
+                  Names must stay unique across all Dosht types.
                 </p>
               </div>
             </div>
@@ -533,7 +587,7 @@
               </div>
             </div>
             <div class="card-body">
-              <div id="typesState" class="loading-state">Loading dosh types...</div>
+              <div id="typesState" class="loading-state">Loading Dosht types...</div>
               <table id="typesTable" hidden>
                 <thead>
                   <tr>
@@ -677,7 +731,7 @@
               <form id="priceForm" onsubmit="submitPriceForm(event)">
                 <div class="form-grid">
                   <div class="field">
-                    <label for="priceTypeId">Dosh Type</label>
+                    <label for="priceTypeId">Dosht Type</label>
                     <select id="priceTypeId" name="doshTypeId"></select>
                     <div class="field-error" data-error-for="price.doshTypeId"></div>
                   </div>
@@ -776,6 +830,162 @@
       </section>
     </div>
 
+    <div id="typeEditModal" class="modal" onclick="closeTypeEditModal(event)">
+      <div class="modal-content" onclick="event.stopPropagation()">
+        <div class="modal-header">
+          <div>
+            <h3>Edit Dosht Type</h3>
+            <p class="card-hint">Update the selected Dosht type without leaving the list.</p>
+          </div>
+          <button class="btn-secondary" type="button" onclick="closeTypeEditModal()">Close</button>
+        </div>
+        <div class="modal-body">
+          <form id="typeEditForm" onsubmit="submitTypeEditModal(event)">
+            <div class="form-grid">
+              <div class="field">
+                <label for="modalTypeName">Name</label>
+                <input id="modalTypeName" name="name" />
+                <div class="field-error" data-error-for="modalType.name"></div>
+              </div>
+
+              <div class="field">
+                <label for="modalTypeUnit">Unit</label>
+                <input id="modalTypeUnit" name="unit" placeholder="kg" />
+                <div class="field-error" data-error-for="modalType.unit"></div>
+              </div>
+
+              <div class="field full">
+                <label for="modalTypeDescription">Description</label>
+                <textarea id="modalTypeDescription" name="description"></textarea>
+                <div class="field-error" data-error-for="modalType.description"></div>
+              </div>
+
+              <div class="field full">
+                <label for="modalTypeImageUrl">Image URL</label>
+                <input id="modalTypeImageUrl" name="imageUrl" placeholder="https://..." />
+                <div class="field-error" data-error-for="modalType.imageUrl"></div>
+              </div>
+
+              <label class="field checkbox">
+                <input id="modalTypeIsActive" name="isActive" type="checkbox" />
+                <span>Active and selectable</span>
+              </label>
+            </div>
+
+            <div class="modal-footer">
+              <button class="btn-secondary" type="button" onclick="closeTypeEditModal()">Cancel</button>
+              <button class="btn-primary" type="submit">Save Changes</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div id="tierEditModal" class="modal" onclick="closeTierEditModal(event)">
+      <div class="modal-content" onclick="event.stopPropagation()">
+        <div class="modal-header">
+          <div>
+            <h3>Edit Quantity Tier</h3>
+            <p class="card-hint">Adjust the range and order from a focused popup.</p>
+          </div>
+          <button class="btn-secondary" type="button" onclick="closeTierEditModal()">Close</button>
+        </div>
+        <div class="modal-body">
+          <form id="tierEditForm" onsubmit="submitTierEditModal(event)">
+            <div class="form-grid">
+              <div class="field">
+                <label for="modalTierName">Name</label>
+                <input id="modalTierName" name="name" />
+                <div class="field-error" data-error-for="modalTier.name"></div>
+              </div>
+
+              <div class="field">
+                <label for="modalTierOrder">Display Order</label>
+                <input id="modalTierOrder" name="order" type="number" min="1" step="1" />
+                <div class="field-error" data-error-for="modalTier.order"></div>
+              </div>
+
+              <div class="field">
+                <label for="modalTierMinQuantity">Min Quantity</label>
+                <input id="modalTierMinQuantity" name="minQuantity" type="number" min="0" step="0.01" />
+                <div class="field-error" data-error-for="modalTier.minQuantity"></div>
+              </div>
+
+              <div class="field">
+                <label for="modalTierMaxQuantity">Max Quantity</label>
+                <input id="modalTierMaxQuantity" name="maxQuantity" type="number" min="0" step="0.01" />
+                <div class="field-error" data-error-for="modalTier.maxQuantity"></div>
+                <div class="helper-text">Leave empty for an open-ended tier.</div>
+              </div>
+
+              <label class="field checkbox">
+                <input id="modalTierIsActive" name="isActive" type="checkbox" />
+                <span>Active and selectable</span>
+              </label>
+            </div>
+
+            <div class="modal-footer">
+              <button class="btn-secondary" type="button" onclick="closeTierEditModal()">Cancel</button>
+              <button class="btn-primary" type="submit">Save Changes</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div id="priceEditModal" class="modal" onclick="closePriceEditModal(event)">
+      <div class="modal-content" onclick="event.stopPropagation()">
+        <div class="modal-header">
+          <div>
+            <h3>Edit Price Record</h3>
+            <p class="card-hint">Update the active price window in a popup workflow.</p>
+          </div>
+          <button class="btn-secondary" type="button" onclick="closePriceEditModal()">Close</button>
+        </div>
+        <div class="modal-body">
+          <form id="priceEditForm" onsubmit="submitPriceEditModal(event)">
+            <div class="form-grid">
+              <div class="field">
+                <label for="modalPriceTypeId">Dosht Type</label>
+                <select id="modalPriceTypeId" name="doshTypeId"></select>
+                <div class="field-error" data-error-for="modalPrice.doshTypeId"></div>
+              </div>
+
+              <div class="field">
+                <label for="modalPriceTierId">Quantity Tier</label>
+                <select id="modalPriceTierId" name="quantityTierId"></select>
+                <div class="field-error" data-error-for="modalPrice.quantityTierId"></div>
+              </div>
+
+              <div class="field">
+                <label for="modalPricePerKg">Price Per KG</label>
+                <input id="modalPricePerKg" name="pricePerKg" type="number" min="0" step="0.01" />
+                <div class="field-error" data-error-for="modalPrice.pricePerKg"></div>
+              </div>
+
+              <div class="field">
+                <label for="modalPriceEffectiveFrom">Effective From</label>
+                <input id="modalPriceEffectiveFrom" name="effectiveFrom" type="datetime-local" />
+                <div class="field-error" data-error-for="modalPrice.effectiveFrom"></div>
+              </div>
+
+              <div class="field">
+                <label for="modalPriceEffectiveTo">Effective To</label>
+                <input id="modalPriceEffectiveTo" name="effectiveTo" type="datetime-local" />
+                <div class="field-error" data-error-for="modalPrice.effectiveTo"></div>
+                <div class="helper-text">Leave empty to keep the price open-ended.</div>
+              </div>
+            </div>
+
+            <div class="modal-footer">
+              <button class="btn-secondary" type="button" onclick="closePriceEditModal()">Cancel</button>
+              <button class="btn-primary" type="submit">Save Changes</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
     <script src="./site-i18n.js"></script>
     <script>
       const API_BASE =
@@ -793,6 +1003,9 @@
         editingTypeId: null,
         editingTierId: null,
         editingPriceId: null,
+        modalEditingTypeId: null,
+        modalEditingTierId: null,
+        modalEditingPriceId: null,
       };
 
       function goBack() {
@@ -1136,6 +1349,17 @@
         setTab("types");
       }
 
+      function clearModalErrors(scope) {
+        document.querySelectorAll(`[data-error-for^="${scope}."]`).forEach((el) => {
+          el.textContent = "";
+        });
+      }
+
+      function setModalFieldError(key, message) {
+        const el = document.querySelector(`[data-error-for="${key}"]`);
+        if (el) el.textContent = message;
+      }
+
       function resetTypeForm() {
         state.editingTypeId = null;
         clearErrors("type");
@@ -1143,6 +1367,71 @@
         document.getElementById("typeSubmitBtn").textContent = __t("Create Type");
         document.getElementById("typeForm").reset();
         document.getElementById("typeIsActive").checked = true;
+      }
+
+      function openTypeEditModal(item) {
+        state.modalEditingTypeId = getId(item);
+        clearModalErrors("modalType");
+        document.getElementById("modalTypeName").value = item.name || "";
+        document.getElementById("modalTypeDescription").value = item.description || "";
+        document.getElementById("modalTypeUnit").value = item.unit || "";
+        document.getElementById("modalTypeImageUrl").value = item.imageUrl || "";
+        document.getElementById("modalTypeIsActive").checked = item.isActive !== false;
+        document.getElementById("typeEditModal").classList.add("open");
+      }
+
+      function closeTypeEditModal(event) {
+        if (event && event.target !== event.currentTarget) return;
+        state.modalEditingTypeId = null;
+        clearModalErrors("modalType");
+        document.getElementById("typeEditModal").classList.remove("open");
+      }
+
+      function validateTypeModalForm() {
+        clearModalErrors("modalType");
+
+        const name = document.getElementById("modalTypeName").value.trim();
+        const description = document.getElementById("modalTypeDescription").value.trim();
+        const unit = document.getElementById("modalTypeUnit").value.trim();
+        const imageUrl = document.getElementById("modalTypeImageUrl").value.trim();
+        let isValid = true;
+
+        if (!name) {
+          setModalFieldError("modalType.name", __t("Name is required"));
+          isValid = false;
+        }
+
+        if (!description) {
+          setModalFieldError("modalType.description", __t("Description is required"));
+          isValid = false;
+        }
+
+        const duplicate = state.types.find((type) => {
+          return (
+            normalizeText(type.name) === normalizeText(name) &&
+            getId(type) !== state.modalEditingTypeId
+          );
+        });
+
+        if (duplicate) {
+          setModalFieldError("modalType.name", __t("Type name must be unique"));
+          isValid = false;
+        }
+
+        if (imageUrl && !isValidUrl(imageUrl)) {
+          setModalFieldError("modalType.imageUrl", __t("Enter a valid image URL"));
+          isValid = false;
+        }
+
+        if (!isValid) return null;
+
+        return {
+          name,
+          description,
+          unit: unit || undefined,
+          imageUrl: imageUrl || undefined,
+          isActive: document.getElementById("modalTypeIsActive").checked,
+        };
       }
 
       function fillTierForm(item) {
@@ -1166,6 +1455,87 @@
         document.getElementById("tierIsActive").checked = true;
       }
 
+      function openTierEditModal(item) {
+        state.modalEditingTierId = getId(item);
+        clearModalErrors("modalTier");
+        document.getElementById("modalTierName").value = item.name || "";
+        document.getElementById("modalTierOrder").value = item.order ?? "";
+        document.getElementById("modalTierMinQuantity").value = item.minQuantity ?? "";
+        document.getElementById("modalTierMaxQuantity").value = item.maxQuantity ?? "";
+        document.getElementById("modalTierIsActive").checked = item.isActive !== false;
+        document.getElementById("tierEditModal").classList.add("open");
+      }
+
+      function closeTierEditModal(event) {
+        if (event && event.target !== event.currentTarget) return;
+        state.modalEditingTierId = null;
+        clearModalErrors("modalTier");
+        document.getElementById("tierEditModal").classList.remove("open");
+      }
+
+      function validateTierModalForm() {
+        clearModalErrors("modalTier");
+
+        const name = document.getElementById("modalTierName").value.trim();
+        const order = toNumber(document.getElementById("modalTierOrder").value);
+        const minQuantity = toNumber(document.getElementById("modalTierMinQuantity").value);
+        const maxQuantity = toNumber(document.getElementById("modalTierMaxQuantity").value);
+        let isValid = true;
+
+        if (!name) {
+          setModalFieldError("modalTier.name", __t("Name is required"));
+          isValid = false;
+        }
+
+        if (order == null || Number.isNaN(order)) {
+          setModalFieldError("modalTier.order", __t("Order is required"));
+          isValid = false;
+        }
+
+        if (minQuantity == null || Number.isNaN(minQuantity)) {
+          setModalFieldError("modalTier.minQuantity", __t("Min quantity is required"));
+          isValid = false;
+        }
+
+        if (maxQuantity != null && Number.isNaN(maxQuantity)) {
+          setModalFieldError("modalTier.maxQuantity", __t("Enter a valid max quantity"));
+          isValid = false;
+        }
+
+        if (
+          minQuantity != null &&
+          maxQuantity != null &&
+          !Number.isNaN(minQuantity) &&
+          !Number.isNaN(maxQuantity) &&
+          maxQuantity <= minQuantity
+        ) {
+          setModalFieldError(
+            "modalTier.maxQuantity",
+            __t("Max quantity must be greater than min quantity"),
+          );
+          isValid = false;
+        }
+
+        const duplicateOrder = state.tiers.find((tier) => {
+          return tier.order === order && getId(tier) !== state.modalEditingTierId;
+        });
+
+        if (duplicateOrder) {
+          setModalFieldError("modalTier.order", __t("Tier order must be unique"));
+          isValid = false;
+        }
+
+        if (!isValid) return null;
+
+        return {
+          name,
+          minQuantity,
+          maxQuantity,
+          order,
+          isActive: document.getElementById("modalTierIsActive").checked,
+        };
+      }
+
       function fillPriceForm(item) {
         state.editingPriceId = getId(item);
         document.getElementById("priceFormTitle").textContent = __t("Edit Price Record");
@@ -1184,6 +1554,96 @@
         document.getElementById("priceFormTitle").textContent = __t("Create Price Record");
         document.getElementById("priceSubmitBtn").textContent = __t("Create Price");
         document.getElementById("priceForm").reset();
+      }
+
+      function openPriceEditModal(item) {
+        state.modalEditingPriceId = getId(item);
+        clearModalErrors("modalPrice");
+        document.getElementById("modalPriceTypeId").innerHTML =
+          document.getElementById("priceTypeId").innerHTML;
+        document.getElementById("modalPriceTierId").innerHTML =
+          document.getElementById("priceTierId").innerHTML;
+        document.getElementById("modalPriceTypeId").value = item.doshTypeId || "";
+        document.getElementById("modalPriceTierId").value = item.quantityTierId || "";
+        document.getElementById("modalPricePerKg").value = item.pricePerKg ?? "";
+        document.getElementById("modalPriceEffectiveFrom").value = toDatetimeLocalValue(item.effectiveFrom);
+        document.getElementById("modalPriceEffectiveTo").value = toDatetimeLocalValue(item.effectiveTo);
+        document.getElementById("priceEditModal").classList.add("open");
+      }
+
+      function closePriceEditModal(event) {
+        if (event && event.target !== event.currentTarget) return;
+        state.modalEditingPriceId = null;
+        clearModalErrors("modalPrice");
+        document.getElementById("priceEditModal").classList.remove("open");
+      }
+
+      function validatePriceModalForm() {
+        clearModalErrors("modalPrice");
+
+        const doshTypeId = document.getElementById("modalPriceTypeId").value;
+        const quantityTierId = document.getElementById("modalPriceTierId").value;
+        const pricePerKg = toNumber(document.getElementById("modalPricePerKg").value);
+        const effectiveFromValue = document.getElementById("modalPriceEffectiveFrom").value;
+        const effectiveToValue = document.getElementById("modalPriceEffectiveTo").value;
+        let isValid = true;
+
+        if (!doshTypeId) {
+          setModalFieldError("modalPrice.doshTypeId", __t("Dosh type is required"));
+          isValid = false;
+        }
+
+        if (!quantityTierId) {
+          setModalFieldError("modalPrice.quantityTierId", __t("Quantity tier is required"));
+          isValid = false;
+        }
+
+        if (pricePerKg == null || Number.isNaN(pricePerKg)) {
+          setModalFieldError("modalPrice.pricePerKg", __t("Price per KG is required"));
+          isValid = false;
+        }
+
+        if (!effectiveFromValue) {
+          setModalFieldError("modalPrice.effectiveFrom", __t("Effective from is required"));
+          isValid = false;
+        }
+
+        if (!isValid) return null;
+
+        const effectiveFrom = toIsoDateTime(effectiveFromValue);
+        const effectiveTo = effectiveToValue ? toIsoDateTime(effectiveToValue) : null;
+
+        if (effectiveTo && new Date(effectiveTo).getTime() <= new Date(effectiveFrom).getTime()) {
+          setModalFieldError("modalPrice.effectiveTo", __t("Effective to must be after effective from"));
+          isValid = false;
+        }
+
+        const overlappingRecord = state.allPrices.find((price) => {
+          return (
+            price.doshTypeId === doshTypeId &&
+            price.quantityTierId === quantityTierId &&
+            getId(price) !== state.modalEditingPriceId &&
+            rangesOverlap(effectiveFrom, effectiveTo, price.effectiveFrom, price.effectiveTo)
+          );
+        });
+
+        if (overlappingRecord) {
+          setModalFieldError(
+            "modalPrice.effectiveFrom",
+            __t("Price periods must not overlap for the same type and tier"),
+          );
+          isValid = false;
+        }
+
+        if (!isValid) return null;
+
+        return {
+          doshTypeId,
+          quantityTierId,
+          pricePerKg,
+          effectiveFrom,
+          effectiveTo,
+        };
       }
 
       function buildSelectOptions(collection, placeholder, formatter) {
@@ -1216,6 +1676,8 @@
 
         document.getElementById("priceTypeId").innerHTML = typeOptions;
         document.getElementById("priceTierId").innerHTML = tierOptions;
+        document.getElementById("modalPriceTypeId").innerHTML = typeOptions;
+        document.getElementById("modalPriceTierId").innerHTML = tierOptions;
         document.getElementById("priceFilterType").innerHTML = buildSelectOptions(
           state.types,
           __t("All types"),
@@ -1229,6 +1691,15 @@
 
         document.getElementById("priceTypeId").value = currentTypeValue;
         document.getElementById("priceTierId").value = currentTierValue;
+        if (state.modalEditingPriceId) {
+          const modalPrice =
+            state.filteredPrices.find((price) => getId(price) === state.modalEditingPriceId) ||
+            state.allPrices.find((price) => getId(price) === state.modalEditingPriceId);
+          if (modalPrice) {
+            document.getElementById("modalPriceTypeId").value = modalPrice.doshTypeId || "";
+            document.getElementById("modalPriceTierId").value = modalPrice.quantityTierId || "";
+          }
+        }
         document.getElementById("priceFilterType").value = currentFilterType;
         document.getElementById("priceFilterTier").value = currentFilterTier;
 
@@ -1268,7 +1739,7 @@
                 </td>
                 <td>
                   <div class="row-actions">
-                    <button class="btn-link" type="button" onclick="fillTypeFormById('${getId(item)}')">
+                    <button class="btn-link" type="button" onclick="openTypeEditModalById('${getId(item)}')">
                       ${__t("Edit")}
                     </button>
                   </div>
@@ -1307,7 +1778,7 @@
                 </td>
                 <td>
                   <div class="row-actions">
-                    <button class="btn-link" type="button" onclick="fillTierFormById('${getId(item)}')">
+                    <button class="btn-link" type="button" onclick="openTierEditModalById('${getId(item)}')">
                       ${__t("Edit")}
                     </button>
                   </div>
@@ -1337,7 +1808,7 @@
                 <td>${formatEffectiveWindow(item.effectiveFrom, item.effectiveTo)}</td>
                 <td>
                   <div class="row-actions">
-                    <button class="btn-link" type="button" onclick="fillPriceFormById('${getId(item)}')">
+                    <button class="btn-link" type="button" onclick="openPriceEditModalById('${getId(item)}')">
                       ${__t("Edit")}
                     </button>
                   </div>
@@ -1436,9 +1907,19 @@
         if (item) fillTypeForm(item);
       }
 
+      function openTypeEditModalById(id) {
+        const item = state.types.find((type) => getId(type) === id);
+        if (item) openTypeEditModal(item);
+      }
+
       function fillTierFormById(id) {
         const item = state.tiers.find((tier) => getId(tier) === id);
         if (item) fillTierForm(item);
+      }
+
+      function openTierEditModalById(id) {
+        const item = state.tiers.find((tier) => getId(tier) === id);
+        if (item) openTierEditModal(item);
       }
 
       function fillPriceFormById(id) {
@@ -1446,6 +1927,13 @@
           state.filteredPrices.find((price) => getId(price) === id) ||
           state.allPrices.find((price) => getId(price) === id);
         if (item) fillPriceForm(item);
+      }
+
+      function openPriceEditModalById(id) {
+        const item =
+          state.filteredPrices.find((price) => getId(price) === id) ||
+          state.allPrices.find((price) => getId(price) === id);
+        if (item) openPriceEditModal(item);
       }
 
       async function submitTypeForm(event) {
@@ -1540,6 +2028,75 @@
           if (error.status === 409) {
             setFieldError(
               "price.effectiveFrom",
+              __t("Price periods must not overlap for the same type and tier"),
+            );
+          }
+          showBanner("error", error.message || __t("Failed to save price record"));
+        }
+      }
+
+      async function submitTypeEditModal(event) {
+        event.preventDefault();
+        const payload = validateTypeModalForm();
+        if (!payload || !state.modalEditingTypeId) return;
+
+        try {
+          const json = await fetchJson(`/admin/dosh/types/${state.modalEditingTypeId}`, {
+            method: "PATCH",
+            body: JSON.stringify(payload),
+          });
+
+          closeTypeEditModal();
+          await loadTypes();
+          showBanner("success", getMessage(json, __t("Dosh type updated successfully")));
+        } catch (error) {
+          if (error.status === 409) {
+            setModalFieldError("modalType.name", __t("Type name must be unique"));
+          }
+          showBanner("error", error.message || __t("Failed to save dosh type"));
+        }
+      }
+
+      async function submitTierEditModal(event) {
+        event.preventDefault();
+        const payload = validateTierModalForm();
+        if (!payload || !state.modalEditingTierId) return;
+
+        try {
+          const json = await fetchJson(`/admin/dosh/tiers/${state.modalEditingTierId}`, {
+            method: "PATCH",
+            body: JSON.stringify(payload),
+          });
+
+          closeTierEditModal();
+          await loadTiers();
+          showBanner("success", getMessage(json, __t("Quantity tier updated successfully")));
+        } catch (error) {
+          if (error.status === 409) {
+            setModalFieldError("modalTier.order", __t("Tier order must be unique"));
+          }
+          showBanner("error", error.message || __t("Failed to save quantity tier"));
+        }
+      }
+
+      async function submitPriceEditModal(event) {
+        event.preventDefault();
+        const payload = validatePriceModalForm();
+        if (!payload || !state.modalEditingPriceId) return;
+
+        try {
+          const json = await fetchJson(`/admin/dosh/prices/${state.modalEditingPriceId}`, {
+            method: "PATCH",
+            body: JSON.stringify(payload),
+          });
+
+          closePriceEditModal();
+          await loadPrices();
+          showBanner("success", getMessage(json, __t("Price record updated successfully")));
+        } catch (error) {
+          if (error.status === 409) {
+            setModalFieldError(
+              "modalPrice.effectiveFrom",
               __t("Price periods must not overlap for the same type and tier"),
             );
           }

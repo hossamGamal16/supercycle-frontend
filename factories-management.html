@@ -517,6 +517,52 @@
         letter-spacing: 0.05em;
       }
 
+      .modal {
+        position: fixed;
+        inset: 0;
+        background: rgba(15, 23, 42, 0.48);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: 24px;
+        z-index: 999;
+      }
+
+      .modal.open {
+        display: flex;
+      }
+
+      .modal-content {
+        width: min(860px, 100%);
+        max-height: calc(100vh - 48px);
+        overflow-y: auto;
+        background: var(--white);
+        border-radius: 18px;
+        box-shadow: 0 18px 40px rgba(15, 23, 42, 0.18);
+      }
+
+      .modal-header,
+      .modal-body,
+      .modal-footer {
+        padding: 18px 20px;
+      }
+
+      .modal-header {
+        border-bottom: 1px solid var(--gray-200);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .modal-footer {
+        border-top: 1px solid var(--gray-200);
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+
       @media (max-width: 1180px) {
         .hero-grid,
         .layout {
@@ -570,7 +616,7 @@
     <div class="header">
       <div>
         <h1>Factories Management</h1>
-        <p>Admin control for factory onboarding, capacity, accepted dosh types, and operating status.</p>
+        <p>Admin control for factory onboarding, capacity, accepted Dosht types, and operating status.</p>
       </div>
       <div class="header-actions">
         <button class="header-btn" onclick="goBack()">Back to Dashboard</button>
@@ -628,7 +674,7 @@
                 <strong id="insightLargestFactory">-</strong>
               </div>
               <div class="insight">
-                <span>Accepted Dosh Coverage</span>
+                <span>Accepted Dosht Coverage</span>
                 <strong id="insightDoshCoverage">-</strong>
               </div>
               <div class="insight">
@@ -646,7 +692,7 @@
             <div class="card-header">
               <div>
                 <h2 id="factoryFormTitle">Create Factory</h2>
-                <p class="card-hint">Create or update a factory with receiver, accepted dosh types, and operating status.</p>
+                <p class="card-hint">Create or update a factory with receiver, accepted Dosht types, and operating status.</p>
               </div>
             </div>
             <div class="card-body">
@@ -689,9 +735,9 @@
                   </div>
 
                   <div class="field full">
-                    <label>Accepted Dosh Types</label>
+                    <label>Accepted Dosht Types</label>
                     <div id="acceptedDoshTypesList" class="chip-list"></div>
-                    <div class="helper-text">Choose one or more active dosh types accepted by this factory.</div>
+                    <div class="helper-text">Choose one or more active Dosht types accepted by this factory.</div>
                     <div class="field-error" data-error-for="factory.acceptedDoshTypes"></div>
                   </div>
 
@@ -719,7 +765,7 @@
             <div class="card-header">
               <div>
                 <h3>Selected Factory</h3>
-                <p class="card-hint">Review loaded details, accepted dosh types, and stats before making changes.</p>
+                <p class="card-hint">Review loaded details, accepted Dosht types, and stats before making changes.</p>
               </div>
               <div class="inline-actions">
                 <button class="btn-secondary" type="button" onclick="reloadSelectedFactory()" id="selectedRefreshBtn" disabled>
@@ -819,7 +865,7 @@
                 </div>
 
                 <div class="field">
-                  <label for="filterAcceptedDoshType">Accepted Dosh Type</label>
+                  <label for="filterAcceptedDoshType">Accepted Dosht Type</label>
                   <select id="filterAcceptedDoshType"></select>
                 </div>
 
@@ -866,6 +912,34 @@
       </section>
     </div>
 
+    <div id="factoryEditModal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <div>
+            <h3>Edit Factory</h3>
+            <p class="card-hint">Update the selected factory without leaving the current list context.</p>
+          </div>
+          <button class="btn-secondary" type="button" onclick="closeFactoryEditModal()">Close</button>
+        </div>
+        <div class="modal-body">
+          <div class="form-grid">
+            <div class="field"><label for="modalFactoryName">Factory Name</label><input id="modalFactoryName" /><div class="field-error" data-modal-error-for="factory.name"></div></div>
+            <div class="field"><label for="modalFactoryCapacityKg">Capacity KG</label><input id="modalFactoryCapacityKg" type="number" min="0" step="0.01" /><div class="field-error" data-modal-error-for="factory.capacityKg"></div></div>
+            <div class="field full"><label for="modalFactoryAddress">Address</label><input id="modalFactoryAddress" /><div class="field-error" data-modal-error-for="factory.address"></div></div>
+            <div class="field"><label for="modalFactoryReceiverName">Receiver Name</label><input id="modalFactoryReceiverName" /><div class="field-error" data-modal-error-for="factory.factoryReceiverName"></div></div>
+            <div class="field"><label for="modalFactoryReceiverPhone">Receiver Phone</label><input id="modalFactoryReceiverPhone" /><div class="field-error" data-modal-error-for="factory.factoryReceiverPhone"></div></div>
+            <div class="field full"><label for="modalFactoryLogoUrl">Logo URL</label><input id="modalFactoryLogoUrl" placeholder="https://..." /><div class="field-error" data-modal-error-for="factory.logoUrl"></div></div>
+            <div class="field full"><label>Accepted Dosht Types</label><div id="modalAcceptedDoshTypesList" class="chip-list"></div><div class="field-error" data-modal-error-for="factory.acceptedDoshTypes"></div></div>
+            <div class="field full"><label for="modalFactoryNotes">Notes</label><textarea id="modalFactoryNotes"></textarea><div class="field-error" data-modal-error-for="factory.notes"></div></div>
+            <label class="field checkbox"><input id="modalFactoryIsActive" type="checkbox" /><span>Factory is active and selectable in routing workflows</span></label>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn-secondary" type="button" onclick="closeFactoryEditModal()">Cancel</button>
+          <button class="btn-primary" type="button" onclick="submitFactoryEditModal()">Save Changes</button>
+        </div>
+      </div>
+    </div>
     <script>
       const API_BASE =
         "https://supercycle-api-855015056699.europe-west1.run.app";
@@ -881,6 +955,7 @@
         selectedFactoryId: null,
         selectedFactoryDetail: null,
         selectedFactoryStats: null,
+        modalFactoryId: null,
       };
 
       function goBack() {
@@ -1039,8 +1114,8 @@
           container.innerHTML = `
             <div class="chip-option" style="grid-column:1 / -1">
               <div>
-                <strong>No active dosh types found</strong>
-                <span>Create dosh types first from Dosh Management.</span>
+                <strong>No active Dosht types found</strong>
+                <span>Create Dosht types first from Dosht Management.</span>
               </div>
             </div>
           `;
@@ -1061,7 +1136,7 @@
             .join("");
         }
 
-        const filterOptions = ['<option value="">All dosh types</option>'].concat(
+        const filterOptions = ['<option value="">All Dosht types</option>'].concat(
           state.doshTypes.map(
             (item) =>
               `<option value="${getId(item)}">${escapeHtml(buildDoshTypeLabel(item))}</option>`,
@@ -1082,6 +1157,42 @@
         document.querySelectorAll("[data-dosh-checkbox]").forEach((input) => {
           input.checked = values.has(input.value);
         });
+      }
+
+      function clearFactoryModalErrors() {
+        document.querySelectorAll("[data-modal-error-for]").forEach((el) => {
+          el.textContent = "";
+        });
+      }
+
+      function setFactoryModalError(key, message) {
+        const el = document.querySelector(`[data-modal-error-for="${key}"]`);
+        if (el) el.textContent = message;
+      }
+
+      function renderFactoryModalDoshOptions(selectedIds = []) {
+        const selected = new Set(selectedIds);
+        document.getElementById("modalAcceptedDoshTypesList").innerHTML = state.doshTypes
+          .filter((item) => item.isActive !== false)
+          .map((item) => {
+            const id = getId(item);
+            return `
+              <label class="chip-option">
+                <input type="checkbox" value="${id}" data-modal-dosh-checkbox ${selected.has(id) ? "checked" : ""} />
+                <div>
+                  <strong>${escapeHtml(buildDoshTypeLabel(item))}</strong>
+                  <span>${escapeHtml(item.description || "Accepted material category")}</span>
+                </div>
+              </label>
+            `;
+          })
+          .join("");
+      }
+
+      function getModalAcceptedDoshTypes() {
+        return Array.from(document.querySelectorAll("[data-modal-dosh-checkbox]:checked")).map(
+          (input) => input.value,
+        );
       }
 
       function validateFactoryForm() {
@@ -1109,7 +1220,7 @@
         }
 
         if (!acceptedDoshTypes.length) {
-          setFieldError("factory.acceptedDoshTypes", "Select at least one accepted dosh type");
+          setFieldError("factory.acceptedDoshTypes", "Select at least one accepted Dosht type");
           isValid = false;
         }
 
@@ -1178,6 +1289,101 @@
         setCheckedDoshTypeIds(item.acceptedDoshTypes || []);
       }
 
+      function openFactoryEditModal(item) {
+        state.modalFactoryId = getId(item);
+        clearFactoryModalErrors();
+        document.getElementById("modalFactoryName").value = item.name || "";
+        document.getElementById("modalFactoryCapacityKg").value = item.capacityKg ?? "";
+        document.getElementById("modalFactoryAddress").value = item.address || "";
+        document.getElementById("modalFactoryReceiverName").value = item.factoryReceiverName || "";
+        document.getElementById("modalFactoryReceiverPhone").value = item.factoryReceiverPhone || "";
+        document.getElementById("modalFactoryLogoUrl").value = item.logoUrl || "";
+        document.getElementById("modalFactoryNotes").value = item.notes || "";
+        document.getElementById("modalFactoryIsActive").checked = item.isActive !== false;
+        renderFactoryModalDoshOptions(item.acceptedDoshTypes || []);
+        document.getElementById("factoryEditModal").classList.add("open");
+      }
+
+      function closeFactoryEditModal() {
+        state.modalFactoryId = null;
+        document.getElementById("factoryEditModal").classList.remove("open");
+      }
+
+      function validateFactoryModalPayload() {
+        clearFactoryModalErrors();
+        const name = document.getElementById("modalFactoryName").value.trim();
+        const address = document.getElementById("modalFactoryAddress").value.trim();
+        const acceptedDoshTypes = getModalAcceptedDoshTypes();
+        const factoryReceiverName = document.getElementById("modalFactoryReceiverName").value.trim();
+        const factoryReceiverPhone = document.getElementById("modalFactoryReceiverPhone").value.trim();
+        const notes = document.getElementById("modalFactoryNotes").value.trim();
+        const logoUrl = document.getElementById("modalFactoryLogoUrl").value.trim();
+        const capacityKg = toNumber(document.getElementById("modalFactoryCapacityKg").value);
+        const isActive = document.getElementById("modalFactoryIsActive").checked;
+        let isValid = true;
+
+        if (!name) {
+          setFactoryModalError("factory.name", "Factory name is required");
+          isValid = false;
+        }
+        if (!address) {
+          setFactoryModalError("factory.address", "Address is required");
+          isValid = false;
+        }
+        if (!acceptedDoshTypes.length) {
+          setFactoryModalError("factory.acceptedDoshTypes", "Select at least one accepted Dosht type");
+          isValid = false;
+        }
+        if (!factoryReceiverName) {
+          setFactoryModalError("factory.factoryReceiverName", "Receiver name is required");
+          isValid = false;
+        }
+        if (!factoryReceiverPhone) {
+          setFactoryModalError("factory.factoryReceiverPhone", "Receiver phone is required");
+          isValid = false;
+        }
+        if (capacityKg != null && Number.isNaN(capacityKg)) {
+          setFactoryModalError("factory.capacityKg", "Enter a valid capacity");
+          isValid = false;
+        }
+        if (logoUrl && !isValidUrl(logoUrl)) {
+          setFactoryModalError("factory.logoUrl", "Enter a valid logo URL");
+          isValid = false;
+        }
+        if (!isValid) return null;
+
+        return {
+          name,
+          address,
+          acceptedDoshTypes,
+          factoryReceiverName,
+          factoryReceiverPhone,
+          notes: notes || undefined,
+          logoUrl: logoUrl || undefined,
+          capacityKg: capacityKg == null ? undefined : capacityKg,
+          isActive,
+        };
+      }
+
+      async function submitFactoryEditModal() {
+        if (!state.modalFactoryId) return;
+        const currentId = state.modalFactoryId;
+        const payload = validateFactoryModalPayload();
+        if (!payload) return;
+
+        try {
+          const json = await fetchJson(`/admin/factories/${currentId}`, {
+            method: "PATCH",
+            body: JSON.stringify(payload),
+          });
+          closeFactoryEditModal();
+          showBanner("success", getMessage(json, "Factory updated successfully"));
+          await Promise.all([loadFactories(state.meta.page || 1), selectFactory(currentId)]);
+        } catch (error) {
+          showBanner("error", error.message || "Failed to save factory");
+        }
+      }
+
       function updateOverviewCards() {
         const items = state.factories;
         const active = items.filter((item) => item.isActive !== false).length;
@@ -1199,7 +1405,7 @@
         document.getElementById("insightLargestFactory").textContent =
           largest ? `${largest.name || "-"} (${formatNumber(largest.capacityKg)} KG)` : "-";
         document.getElementById("insightDoshCoverage").textContent =
-          `${uniqueAcceptedTypes.size} dosh types represented`;
+          `${uniqueAcceptedTypes.size} Dosht types represented`;
         document.getElementById("insightSelection").textContent = state.selectedFactoryDetail?.name || "No factory selected";
       }
 
@@ -1440,11 +1646,11 @@
 
       async function quickEditFactory(id) {
         await selectFactory(id);
-        if (state.selectedFactoryDetail) fillFactoryForm(state.selectedFactoryDetail);
+        if (state.selectedFactoryDetail) openFactoryEditModal(state.selectedFactoryDetail);
       }
 
       function editSelectedFactory() {
-        if (state.selectedFactoryDetail) fillFactoryForm(state.selectedFactoryDetail);
+        if (state.selectedFactoryDetail) openFactoryEditModal(state.selectedFactoryDetail);
       }
 
       async function toggleSelectedFactoryStatus() {
