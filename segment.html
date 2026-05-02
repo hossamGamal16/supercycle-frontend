@@ -348,6 +348,23 @@
         return item?.doshType?._id || item?.doshType?.id || item?.doshType || "";
       }
 
+      function getEntityId(item) {
+        return item?._id || item?.id || "";
+      }
+
+      function getDestinationLabel(item) {
+        return item?.name || item?.warehouseName || item?.factoryName || getEntityId(item) || "-";
+      }
+
+      function getVehicleLabel(item) {
+        const driverName = item?.driver?.name || item?.driverName || "-";
+        return `${item?.vehicleType || "-"} - ${item?.licensePlate || "-"} | ${driverName} | ${item?.maxLoadKg ?? "-"} KG`;
+      }
+
+      function isObjectId(value) {
+        return typeof value === "string" && /^[0-9a-fA-F]{24}$/.test(value.trim());
+      }
+
       /* ================= LOAD DATA ================= */
       async function loadShipment() {
         try {
@@ -550,9 +567,9 @@
                 <option value="">-- Select Vehicle --</option>
                 ${VEHICLES.map(
                   (v) =>
-                    `<option value="${v._id || v.id}" ${
-                      seg.vehicleId === (v._id || v.id) ? "selected" : ""
-                    }>${v.vehicleType} - ${v.licensePlate} | ${v.driver.name} | ${v.maxLoadKg} KG</option>`,
+                    `<option value="${getEntityId(v)}" ${
+                      seg.vehicleId === getEntityId(v) ? "selected" : ""
+                    }>${getVehicleLabel(v)}</option>`,
                 ).join("")}
               </select>
             </div>
@@ -572,9 +589,9 @@
                 ${(seg.destinationType === "factory" ? FACTORIES : WAREHOUSES)
                   .map(
                     (d) =>
-                      `<option value="${d._id}" ${
-                        seg.destinationId === d._id ? "selected" : ""
-                      }>${d.name || d.warehouseName}</option>`,
+                      `<option value="${getEntityId(d)}" ${
+                        seg.destinationId === getEntityId(d) ? "selected" : ""
+                      }>${getDestinationLabel(d)}</option>`,
                   )
                   .join("")}
               </select>
@@ -620,6 +637,10 @@
               alert(`❌ القطاع ${i + 1} العنصر ${j + 1}: اختر نوع الدوش`);
               return;
             }
+            if (!isObjectId(String(item.doshType))) {
+              alert(`âŒ Segment ${i + 1} item ${j + 1}: select a valid dosh type`);
+              return;
+            }
             if (!item.quantityKg || item.quantityKg <= 0) {
               alert(`❌ القطاع ${i + 1} العنصر ${j + 1}: أدخل وزن صحيح`);
               return;
@@ -631,8 +652,17 @@
             return;
           }
 
+          if (!isObjectId(String(seg.vehicleId))) {
+            alert(`âŒ Segment ${i + 1}: select a valid vehicle`);
+            return;
+          }
+
           if (!seg.destinationId) {
             alert(`❌ القطاع ${i + 1}: اختر وجهة`);
+            return;
+          }
+          if (!isObjectId(String(seg.destinationId))) {
+            alert(`âŒ Segment ${i + 1}: select a valid destination`);
             return;
           }
         }
@@ -674,6 +704,116 @@
 
           segmentSection.classList.add("hidden");
           successMessage.innerText = "✅ تم تقسيم الشحنة والتوجيه بنجاح";
+          successMessage.classList.remove("hidden");
+
+          setTimeout(() => {
+            goBack();
+          }, 2000);
+        } catch (err) {
+          alert(__t("Error: ") + err.message);
+        }
+      }
+
+      function submitSegmentation() {
+        if (segments.length === 0) {
+          alert("Add at least one segment before routing the shipment.");
+          return;
+        }
+
+        for (let i = 0; i < segments.length; i++) {
+          const seg = segments[i];
+
+          if (!seg.items || seg.items.length === 0) {
+            alert(`Segment ${i + 1}: add at least one item.`);
+            return;
+          }
+
+          for (let j = 0; j < seg.items.length; j++) {
+            const item = seg.items[j];
+
+            if (!item.doshType) {
+              alert(`Segment ${i + 1} item ${j + 1}: select a dosh type.`);
+              return;
+            }
+
+            if (!isObjectId(String(item.doshType))) {
+              alert(`Segment ${i + 1} item ${j + 1}: select a valid dosh type.`);
+              return;
+            }
+
+            if (!item.quantityKg || Number(item.quantityKg) <= 0) {
+              alert(`Segment ${i + 1} item ${j + 1}: enter a valid quantity.`);
+              return;
+            }
+          }
+
+          if (!seg.vehicleId) {
+            alert(`Segment ${i + 1}: select a vehicle.`);
+            return;
+          }
+
+          if (!isObjectId(String(seg.vehicleId))) {
+            alert(`Segment ${i + 1}: select a valid vehicle.`);
+            return;
+          }
+
+          if (!seg.destinationId) {
+            alert(`Segment ${i + 1}: select a destination.`);
+            return;
+          }
+
+          if (!isObjectId(String(seg.destinationId))) {
+            alert(`Segment ${i + 1}: select a valid destination.`);
+            return;
+          }
+        }
+
+        safePatch(segments);
+      }
+
+      async function safePatch(segs) {
+        try {
+          const payload = {
+            segments: segs.map((segment) => ({
+              items: segment.items.map((item) => ({
+                ...item,
+                doshType: String(item.doshType).trim(),
+                quantityKg: Number(item.quantityKg),
+              })),
+              vehicleId: String(segment.vehicleId).trim(),
+              destinationType: segment.destinationType,
+              destinationId: String(segment.destinationId).trim(),
+              scheduledFor: segment.scheduledFor
+                ? new Date(segment.scheduledFor).toISOString()
+                : undefined,
+            })),
+          };
+
+          const res = await fetch(
+            `${API_BASE}/admin/shipments/${shipmentId}/segment-and-route`,
+            {
+              method: "PATCH",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: "Bearer " + token,
+              },
+              body: JSON.stringify(payload),
+            },
+          );
+
+          const json = await res.json();
+          if (!res.ok) {
+            const details =
+              json?.errors?.map((item) => item?.message).filter(Boolean).join("\n") ||
+              json?.message ||
+              json?.error ||
+              __t("Failed to segment shipment");
+            alert(details);
+            return;
+          }
+
+          segmentSection.classList.add("hidden");
+          successMessage.innerText = "Shipment segmented and routed successfully.";
           successMessage.classList.remove("hidden");
 
           setTimeout(() => {
