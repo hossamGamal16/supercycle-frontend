@@ -2,2774 +2,408 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>SuperCycle - Warehouse Operations</title>
+    <title>SuperCycle - Warehouses Management</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link
-      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Sora:wght@300;400;500;600;700&display=swap"
-      rel="stylesheet"
-    />
     <style>
-      *,
-      *::before,
-      *::after {
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
-      }
-
+      * { box-sizing: border-box; margin: 0; padding: 0; }
       :root {
-        --bg-base: #08110c;
-        --bg-surface: #0f1913;
-        --bg-elevated: #15231b;
-        --bg-overlay: #1d2e24;
-        --bg-hover: #213729;
-
-        --border-subtle: rgba(255, 255, 255, 0.06);
-        --border-default: rgba(255, 255, 255, 0.1);
-        --border-strong: rgba(255, 255, 255, 0.18);
-
-        --accent: #34d399;
-        --accent-dim: rgba(52, 211, 153, 0.12);
-        --accent-glow: rgba(52, 211, 153, 0.24);
-        --accent-hover: #6ee7b7;
-
-        --red: #f87171;
-        --red-dim: rgba(248, 113, 113, 0.12);
-        --amber: #fbbf24;
-        --amber-dim: rgba(251, 191, 36, 0.12);
-        --blue: #60a5fa;
-        --blue-dim: rgba(96, 165, 250, 0.12);
-
-        --text-primary: #eefaf2;
-        --text-secondary: #8ba39a;
-        --text-muted: #4d675b;
-        --text-accent: #6ee7b7;
-
-        --sidebar-width: 220px;
-        --header-height: 56px;
-
-        --font-ui: "Sora", sans-serif;
-        --font-mono: "IBM Plex Mono", monospace;
-
-        --radius-sm: 6px;
-        --radius-md: 10px;
-        --radius-lg: 14px;
-        --radius-xl: 18px;
-
-        --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.45);
-      }
-
-      html {
-        height: 100%;
-      }
-
-      body {
-        font-family: var(--font-ui);
-        background:
-          radial-gradient(circle at top left, rgba(52, 211, 153, 0.08), transparent 24%),
-          var(--bg-base);
-        color: var(--text-primary);
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-        overflow: hidden;
-      }
-
-      .topbar {
-        height: var(--header-height);
-        background: var(--bg-surface);
-        border-bottom: 1px solid var(--border-subtle);
-        display: flex;
-        align-items: center;
-        padding: 0 20px;
-        gap: 16px;
-        flex-shrink: 0;
-        position: relative;
-        z-index: 100;
-      }
-
-      .topbar-brand {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        width: var(--sidebar-width);
-        flex-shrink: 0;
-      }
-
-      .brand-mark {
-        width: 28px;
-        height: 28px;
-        background: var(--accent);
-        border-radius: 7px;
-        display: grid;
-        place-items: center;
-        flex-shrink: 0;
-      }
-
-      .brand-mark svg {
-        width: 16px;
-        height: 16px;
-      }
-
-      .brand-name {
-        font-size: 14px;
-        font-weight: 700;
-        color: var(--text-primary);
-        letter-spacing: -0.02em;
-      }
-
-      .brand-name span {
-        color: var(--accent);
-      }
-
-      .topbar-breadcrumb {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        font-size: 12px;
-        color: var(--text-secondary);
-        flex: 1;
-      }
-
-      .topbar-breadcrumb .sep {
-        color: var(--text-muted);
-      }
-
-      .topbar-breadcrumb .current {
-        color: var(--text-primary);
-        font-weight: 600;
-      }
-
-      .topbar-actions {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-      }
-
-      .topbar-btn {
-        height: 32px;
-        padding: 0 12px;
-        border-radius: var(--radius-sm);
-        border: 1px solid var(--border-default);
-        background: transparent;
-        color: var(--text-secondary);
-        font-family: var(--font-ui);
-        font-size: 12px;
-        font-weight: 500;
-        cursor: pointer;
-        transition: all 0.15s;
-        display: flex;
-        align-items: center;
-        gap: 6px;
-      }
-
-      .topbar-btn:hover {
-        background: var(--bg-elevated);
-        color: var(--text-primary);
-        border-color: var(--border-strong);
-      }
-
-      .status-dot {
-        width: 6px;
-        height: 6px;
-        background: var(--accent);
-        border-radius: 50%;
-        box-shadow: 0 0 6px var(--accent);
-      }
-
-      .banner {
-        display: none;
-        padding: 11px 28px;
-        font-size: 12px;
-        font-weight: 600;
-        align-items: center;
-        gap: 8px;
-        border-bottom: 1px solid transparent;
-      }
-
-      .banner.show {
-        display: flex;
-      }
-
-      .banner.success {
-        background: rgba(52, 211, 153, 0.06);
-        color: var(--accent);
-        border-color: rgba(52, 211, 153, 0.15);
-      }
-
-      .banner.error {
-        background: rgba(248, 113, 113, 0.06);
-        color: var(--red);
-        border-color: rgba(248, 113, 113, 0.15);
-      }
-
-      .banner svg {
-        width: 14px;
-        height: 14px;
-        flex-shrink: 0;
-      }
-
-      .app-body {
-        display: flex;
-        flex: 1;
-        overflow: hidden;
-      }
-
-      .sidebar {
-        width: var(--sidebar-width);
-        background: var(--bg-surface);
-        border-right: 1px solid var(--border-subtle);
-        display: flex;
-        flex-direction: column;
-        flex-shrink: 0;
-        overflow-y: auto;
-        padding: 12px 8px;
-      }
-
-      .sidebar-section-label {
-        font-size: 10px;
-        font-weight: 600;
-        color: var(--text-muted);
-        letter-spacing: 0.1em;
-        text-transform: uppercase;
-        padding: 8px 8px 4px;
-      }
-
-      .nav-item {
-        display: flex;
-        align-items: center;
-        gap: 9px;
-        padding: 8px 10px;
-        border-radius: var(--radius-sm);
-        cursor: pointer;
-        font-size: 13px;
-        font-weight: 400;
-        color: var(--text-secondary);
-        transition: all 0.12s;
-        border: 1px solid transparent;
-        margin-bottom: 1px;
-        text-decoration: none;
-      }
-
-      .nav-item:hover {
-        background: var(--bg-elevated);
-        color: var(--text-primary);
-      }
-
-      .nav-item.active {
-        background: var(--accent-dim);
-        color: var(--accent);
-        border-color: var(--accent-glow);
-        font-weight: 600;
-      }
-
-      .nav-item svg {
-        width: 15px;
-        height: 15px;
-        flex-shrink: 0;
-      }
-
-      .nav-badge {
-        margin-left: auto;
-        background: var(--bg-overlay);
-        color: var(--text-muted);
-        font-size: 10px;
-        font-family: var(--font-mono);
-        padding: 1px 6px;
-        border-radius: 999px;
-        border: 1px solid var(--border-subtle);
-      }
-
-      .main {
-        flex: 1;
-        overflow-y: auto;
-        display: flex;
-        flex-direction: column;
-        background: var(--bg-base);
-      }
-
-      .page-header {
-        padding: 24px 28px 0;
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-end;
-        gap: 16px;
-      }
-
-      .page-title {
-        font-size: 22px;
-        font-weight: 700;
-        letter-spacing: -0.04em;
-        color: var(--text-primary);
-        margin-bottom: 4px;
-      }
-
-      .page-subtitle {
-        font-size: 12px;
-        color: var(--text-secondary);
-      }
-
-      .stats-row {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 12px;
-        padding: 20px 28px 0;
-      }
-
-      .stat-card {
-        background: var(--bg-surface);
-        border: 1px solid var(--border-subtle);
-        border-radius: var(--radius-lg);
-        padding: 18px 20px;
-        position: relative;
-        overflow: hidden;
-      }
-
-      .stat-card::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 1px;
-        background: linear-gradient(90deg, transparent, var(--accent-glow), transparent);
-        opacity: 0;
-        transition: opacity 0.2s;
-      }
-
-      .stat-card:hover::before {
-        opacity: 1;
-      }
-
-      .stat-label {
-        font-size: 11px;
-        font-weight: 600;
-        color: var(--text-muted);
-        text-transform: uppercase;
-        letter-spacing: 0.08em;
-        margin-bottom: 10px;
-      }
-
-      .stat-value {
-        font-size: 30px;
-        font-weight: 700;
-        letter-spacing: -0.04em;
-        color: var(--text-primary);
-        font-family: var(--font-mono);
-        line-height: 1;
-      }
-
-      .stat-sub {
-        font-size: 11px;
-        color: var(--text-muted);
-        margin-top: 6px;
-      }
-
-      .stat-icon {
-        position: absolute;
-        top: 16px;
-        right: 16px;
-        width: 32px;
-        height: 32px;
-        border-radius: var(--radius-sm);
-        display: grid;
-        place-items: center;
-        background: var(--bg-overlay);
-      }
-
-      .stat-icon svg {
-        width: 16px;
-        height: 16px;
-      }
-
-      .stat-icon.accent {
-        background: var(--accent-dim);
-        color: var(--accent);
-      }
-
-      .stat-icon.blue {
-        background: var(--blue-dim);
-        color: var(--blue);
-      }
-
-      .stat-icon.amber {
-        background: var(--amber-dim);
-        color: var(--amber);
-      }
-
-      .content-area {
-        padding: 20px 28px 32px;
-        display: flex;
-        flex-direction: column;
-        gap: 16px;
-      }
-
-      .tab-strip {
-        display: flex;
-        gap: 2px;
-        background: var(--bg-surface);
-        border: 1px solid var(--border-subtle);
-        border-radius: var(--radius-md);
-        padding: 3px;
-        width: fit-content;
-      }
-
-      .tab-pill {
-        padding: 7px 16px;
-        border-radius: 7px;
-        font-size: 12px;
-        font-weight: 600;
-        color: var(--text-secondary);
-        cursor: pointer;
-        border: none;
-        background: transparent;
-        font-family: var(--font-ui);
-        transition: all 0.15s;
-        display: flex;
-        align-items: center;
-        gap: 7px;
-      }
-
-      .tab-pill:hover {
-        color: var(--text-primary);
-      }
-
-      .tab-pill.active {
-        background: var(--bg-elevated);
-        color: var(--text-primary);
-        border: 1px solid var(--border-default);
-      }
-
-      .tab-pill .count {
-        font-size: 10px;
-        font-family: var(--font-mono);
-        color: var(--text-muted);
-      }
-
-      .tab-pill.active .count {
-        color: var(--accent);
-      }
-
-      .tab-panel {
-        display: none;
-      }
-
-      .tab-panel.active {
-        display: contents;
-      }
-
-      .panel-grid {
-        display: grid;
-        grid-template-columns: 380px 1fr;
-        gap: 16px;
-        align-items: start;
-      }
-
-      .card {
-        background: var(--bg-surface);
-        border: 1px solid var(--border-subtle);
-        border-radius: var(--radius-lg);
-        overflow: hidden;
-      }
-
-      .card-top {
-        padding: 16px 20px;
-        border-bottom: 1px solid var(--border-subtle);
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        gap: 12px;
-      }
-
-      .card-title {
-        font-size: 13px;
-        font-weight: 600;
-        color: var(--text-primary);
-        letter-spacing: -0.01em;
-      }
-
-      .card-hint {
-        font-size: 11px;
-        color: var(--text-muted);
-        margin-top: 2px;
-      }
-
-      .card-body {
-        padding: 20px;
-      }
-
-      .card-body.compact {
-        padding: 16px 20px;
-      }
-
-      .form-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 14px;
-      }
-
-      .field {
-        display: flex;
-        flex-direction: column;
-        gap: 5px;
-      }
-
-      .field.full {
-        grid-column: 1 / -1;
-      }
-
-      .field-label {
-        font-size: 11px;
-        font-weight: 600;
-        color: var(--text-secondary);
-        text-transform: uppercase;
-        letter-spacing: 0.06em;
-      }
-
-      .field input,
-      .field select,
-      .field textarea {
-        width: 100%;
-        background: var(--bg-base);
-        border: 1px solid var(--border-default);
-        border-radius: var(--radius-sm);
-        padding: 9px 11px;
-        font-size: 13px;
-        font-family: var(--font-ui);
-        color: var(--text-primary);
-        transition: border-color 0.15s, box-shadow 0.15s;
-      }
-
-      .field input::placeholder,
-      .field textarea::placeholder {
-        color: var(--text-muted);
-      }
-
-      .field select {
-        appearance: none;
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%234d675b' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
-        background-repeat: no-repeat;
-        background-position: right 10px center;
-        padding-right: 28px;
-        cursor: pointer;
-      }
-
-      .field select option {
-        background: var(--bg-elevated);
-      }
-
-      .field textarea {
-        min-height: 80px;
-        resize: vertical;
-        line-height: 1.5;
-      }
-
-      .field input:focus,
-      .field select:focus,
-      .field textarea:focus,
-      .search-wrap input:focus,
-      .filter-select:focus {
-        outline: none;
-        border-color: var(--accent);
-        box-shadow: 0 0 0 2px var(--accent-dim);
-      }
-
-      .field-err {
-        font-size: 11px;
-        color: var(--red);
-        min-height: 14px;
-      }
-
-      .form-actions {
-        display: flex;
-        gap: 8px;
-        margin-top: 16px;
-        align-items: center;
-        flex-wrap: wrap;
-      }
-
-      .btn {
-        height: 34px;
-        padding: 0 14px;
-        border-radius: var(--radius-sm);
-        font-family: var(--font-ui);
-        font-size: 12px;
-        font-weight: 600;
-        cursor: pointer;
-        border: 1px solid transparent;
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        transition: all 0.15s;
-        white-space: nowrap;
-      }
-
-      .btn-accent {
-        background: var(--accent);
-        color: #04120b;
-        border-color: var(--accent);
-      }
-
-      .btn-accent:hover {
-        background: var(--accent-hover);
-      }
-
-      .btn-ghost {
-        background: transparent;
-        color: var(--text-secondary);
-        border-color: var(--border-default);
-      }
-
-      .btn-ghost:hover {
-        background: var(--bg-elevated);
-        color: var(--text-primary);
-        border-color: var(--border-strong);
-      }
-
-      .btn-danger {
-        background: var(--red-dim);
-        color: var(--red);
-        border-color: rgba(248, 113, 113, 0.2);
-      }
-
-      .btn-danger:hover {
-        background: rgba(248, 113, 113, 0.2);
-      }
-
-      .btn-link {
-        background: transparent;
-        border: none;
-        color: var(--text-accent);
-        font-family: var(--font-ui);
-        font-size: 12px;
-        font-weight: 600;
-        cursor: pointer;
-        padding: 0 4px;
-      }
-
-      .btn-link:hover {
-        color: var(--accent-hover);
-      }
-
-      button:disabled {
-        opacity: 0.4;
-        cursor: not-allowed;
-      }
-
-      .detail-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 8px;
-      }
-
-      .detail-item {
-        background: var(--bg-base);
-        border: 1px solid var(--border-subtle);
-        border-radius: var(--radius-sm);
-        padding: 10px 12px;
-      }
-
-      .detail-item strong {
-        display: block;
-        font-size: 10px;
-        font-weight: 600;
-        color: var(--text-muted);
-        text-transform: uppercase;
-        letter-spacing: 0.08em;
-        margin-bottom: 4px;
-      }
-
-      .detail-item span {
-        font-size: 13px;
-        color: var(--text-primary);
-        font-weight: 400;
-      }
-
-      .toolbar {
-        display: flex;
-        gap: 10px;
-        align-items: center;
-        padding: 14px 20px;
-        border-bottom: 1px solid var(--border-subtle);
-        flex-wrap: wrap;
-      }
-
-      .search-wrap {
-        position: relative;
-        flex: 1;
-        min-width: 220px;
-      }
-
-      .search-wrap svg {
-        position: absolute;
-        left: 10px;
-        top: 50%;
-        transform: translateY(-50%);
-        width: 14px;
-        height: 14px;
-        color: var(--text-muted);
-      }
-
-      .search-wrap input {
-        width: 100%;
-        background: var(--bg-base);
-        border: 1px solid var(--border-default);
-        border-radius: var(--radius-sm);
-        padding: 8px 11px 8px 32px;
-        font-size: 13px;
-        font-family: var(--font-ui);
-        color: var(--text-primary);
-      }
-
-      .search-wrap input::placeholder {
-        color: var(--text-muted);
-      }
-
-      .filter-select {
-        background: var(--bg-base);
-        border: 1px solid var(--border-default);
-        border-radius: var(--radius-sm);
-        padding: 8px 28px 8px 11px;
-        font-size: 12px;
-        font-family: var(--font-ui);
-        color: var(--text-secondary);
-        appearance: none;
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%234d675b' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
-        background-repeat: no-repeat;
-        background-position: right 9px center;
-        cursor: pointer;
-        min-width: 130px;
-      }
-
-      .table-wrap {
-        overflow-x: auto;
-      }
-
-      table {
-        width: 100%;
-        border-collapse: collapse;
-      }
-
-      th {
-        padding: 10px 16px;
-        background: var(--bg-base);
-        border-bottom: 1px solid var(--border-subtle);
-        font-size: 10px;
-        font-weight: 700;
-        color: var(--text-muted);
-        text-align: left;
-        text-transform: uppercase;
-        letter-spacing: 0.08em;
-        white-space: nowrap;
-      }
-
-      td {
-        padding: 12px 16px;
-        border-bottom: 1px solid var(--border-subtle);
-        font-size: 13px;
-        color: var(--text-primary);
-        vertical-align: middle;
-      }
-
-      tbody tr:hover td {
-        background: var(--bg-hover);
-      }
-
-      .cell-main {
-        font-weight: 600;
-        font-size: 13px;
-      }
-
-      .cell-sub {
-        font-size: 11px;
-        color: var(--text-muted);
-        margin-top: 2px;
-        font-family: var(--font-mono);
-      }
-
-      .cell-mono {
-        font-family: var(--font-mono);
-        font-size: 12px;
-      }
-
-      .row-actions {
-        display: flex;
-        gap: 4px;
-        flex-wrap: wrap;
-      }
-
-      .badge {
-        display: inline-flex;
-        align-items: center;
-        gap: 5px;
-        padding: 3px 8px;
-        border-radius: 999px;
-        font-size: 11px;
-        font-weight: 600;
-        font-family: var(--font-mono);
-      }
-
-      .badge.green {
-        background: rgba(52, 211, 153, 0.1);
-        color: var(--accent);
-        border: 1px solid rgba(52, 211, 153, 0.2);
-      }
-
-      .badge.amber {
-        background: var(--amber-dim);
-        color: var(--amber);
-        border: 1px solid rgba(251, 191, 36, 0.2);
-      }
-
-      .badge.red {
-        background: var(--red-dim);
-        color: var(--red);
-        border: 1px solid rgba(248, 113, 113, 0.2);
-      }
-
-      .table-footer {
-        padding: 12px 20px;
-        border-top: 1px solid var(--border-subtle);
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        gap: 12px;
-      }
-
-      .page-info {
-        font-size: 11px;
-        color: var(--text-muted);
-        font-family: var(--font-mono);
-      }
-
-      .pagination {
-        display: flex;
-        gap: 4px;
-        align-items: center;
-      }
-
-      .pager-btn {
-        height: 28px;
-        padding: 0 10px;
-        border-radius: var(--radius-sm);
-        border: 1px solid var(--border-default);
-        background: transparent;
-        color: var(--text-secondary);
-        font-size: 11px;
-        font-family: var(--font-ui);
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.12s;
-      }
-
-      .pager-btn:hover {
-        background: var(--bg-elevated);
-        color: var(--text-primary);
-      }
-
-      .pager-btn:disabled {
-        opacity: 0.3;
-        cursor: not-allowed;
-      }
-
-      .pager-label {
-        font-size: 11px;
-        color: var(--text-secondary);
-        font-family: var(--font-mono);
-        padding: 0 8px;
-      }
-
-      .state-box {
-        padding: 40px 20px;
-        text-align: center;
-        color: var(--text-muted);
-        font-size: 13px;
-      }
-
-      .state-box svg {
-        width: 40px;
-        height: 40px;
-        margin-bottom: 10px;
-        opacity: 0.3;
-      }
-
-      .state-box p {
-        color: var(--text-secondary);
-        font-size: 12px;
-        margin-top: 4px;
-      }
-
-      .modal-backdrop {
-        position: fixed;
-        inset: 0;
-        background: rgba(0, 0, 0, 0.7);
-        backdrop-filter: blur(4px);
-        z-index: 500;
-        display: none;
-        align-items: center;
-        justify-content: center;
-        padding: 24px;
-      }
-
-      .modal-backdrop.open {
-        display: flex;
-      }
-
-      .modal-box {
-        width: min(720px, 100%);
-        max-height: calc(100vh - 48px);
-        overflow-y: auto;
-        background: var(--bg-surface);
-        border: 1px solid var(--border-default);
-        border-radius: var(--radius-xl);
-        box-shadow: var(--shadow-lg);
-      }
-
-      .modal-head {
-        padding: 18px 22px;
-        border-bottom: 1px solid var(--border-subtle);
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        gap: 12px;
-      }
-
-      .modal-title {
-        font-size: 14px;
-        font-weight: 700;
-        letter-spacing: -0.02em;
-      }
-
-      .modal-subtitle {
-        font-size: 11px;
-        color: var(--text-muted);
-        margin-top: 2px;
-      }
-
-      .modal-close {
-        width: 28px;
-        height: 28px;
-        border-radius: var(--radius-sm);
-        border: 1px solid var(--border-default);
-        background: transparent;
-        color: var(--text-muted);
-        font-size: 16px;
-        cursor: pointer;
-        display: grid;
-        place-items: center;
-        transition: all 0.12s;
-      }
-
-      .modal-close:hover {
-        background: var(--bg-elevated);
-        color: var(--text-primary);
-      }
-
-      .modal-body {
-        padding: 22px;
-      }
-
-      .modal-foot {
-        padding: 16px 22px;
-        border-top: 1px solid var(--border-subtle);
-        display: flex;
-        justify-content: flex-end;
-        gap: 8px;
-      }
-
-      ::-webkit-scrollbar {
-        width: 5px;
-        height: 5px;
-      }
-
-      ::-webkit-scrollbar-thumb {
-        background: var(--border-default);
-        border-radius: 99px;
-      }
-
-      @media (max-width: 1100px) {
-        .stats-row {
-          grid-template-columns: 1fr 1fr;
-        }
-
-        .panel-grid {
-          grid-template-columns: 1fr;
-        }
-      }
-
-      @media (max-width: 760px) {
-        .sidebar {
-          display: none;
-        }
-
-        .stats-row,
-        .form-grid,
-        .detail-grid {
-          grid-template-columns: 1fr;
-        }
-
-        .topbar-breadcrumb {
-          display: none;
-        }
-      }
+        --primary: #166534; --primary-light: #22a06b; --gray-50: #f8fafc; --gray-100: #f1f5f9;
+        --gray-200: #e2e8f0; --gray-300: #cbd5e1; --gray-500: #64748b; --gray-700: #334155;
+        --gray-900: #0f172a; --danger: #b91c1c; --danger-soft: #fee2e2; --success: #166534;
+        --success-soft: #dcfce7; --info: #1d4ed8; --white: #ffffff;
+      }
+      body { font-family: "Segoe UI", Tahoma, sans-serif; background: linear-gradient(180deg,#f6faf7 0%,#f4f7fb 100%); color: var(--gray-900); }
+      .header { background: linear-gradient(135deg,#0f5132,#17844e 58%,#1ea768); color:#fff; padding:22px 32px; display:flex; justify-content:space-between; align-items:center; gap:16px; }
+      .header h1 { font-size:28px; font-weight:800; letter-spacing:-0.04em; margin-bottom:6px; }
+      .header p { color: rgba(255,255,255,0.82); font-size:14px; }
+      .header-actions { display:flex; gap:10px; flex-wrap:wrap; }
+      .header-btn { background: rgba(255,255,255,0.14); color:#fff; border:1px solid rgba(255,255,255,0.24); padding:10px 16px; border-radius:12px; cursor:pointer; font-weight:700; }
+      .container { max-width: 1480px; margin: 0 auto; padding: 26px 20px 38px; }
+      .banner { display:none; padding:14px 16px; border-radius:14px; margin-bottom:18px; font-weight:700; }
+      .banner.success { display:block; background: var(--success-soft); color: var(--success); border:1px solid #b8e3c7; }
+      .banner.error { display:block; background: var(--danger-soft); color: var(--danger); border:1px solid #f2b7b7; }
+      .card { background: rgba(255,255,255,0.96); border:1px solid rgba(226,232,240,0.9); border-radius:22px; box-shadow:0 18px 42px rgba(15,23,42,0.07); overflow:hidden; }
+      .card-header { padding:18px 20px; border-bottom:1px solid var(--gray-200); display:flex; justify-content:space-between; align-items:flex-start; gap:14px; }
+      .card-body { padding:20px; }
+      .card-header h2,.card-header h3 { font-size:18px; }
+      .card-hint { font-size:13px; color: var(--gray-500); margin-top:6px; }
+      .hero-grid { display:grid; grid-template-columns:minmax(0,1.5fr) minmax(320px,1fr); gap:18px; margin-bottom:18px; }
+      .stats-grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px; }
+      .stat { background: var(--gray-50); border:1px solid var(--gray-200); border-radius:16px; padding:16px; }
+      .stat strong { display:block; font-size:28px; color:#14532d; margin-bottom:8px; }
+      .stat span { color: var(--gray-500); font-size:12px; text-transform:uppercase; letter-spacing:.05em; font-weight:700; }
+      .layout { display:grid; grid-template-columns:minmax(400px,480px) minmax(0,1fr); gap:18px; align-items:start; }
+      .section-block { display:flex; flex-direction:column; gap:18px; }
+      .tabs { display:flex; gap:12px; flex-wrap:wrap; margin-bottom:18px; }
+      .tab-btn { border:1px solid var(--gray-200); background:#fff; color: var(--gray-700); padding:12px 16px; border-radius:12px; cursor:pointer; font-weight:700; }
+      .tab-btn.active { background: var(--primary); color:#fff; border-color: var(--primary); }
+      .tab-panel { display:none; }
+      .tab-panel.active { display:block; }
+      .form-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+      .field { display:flex; flex-direction:column; gap:6px; }
+      .field.full { grid-column:1 / -1; }
+      .field label { font-size:13px; font-weight:700; color: var(--gray-700); }
+      .field input,.field select,.field textarea { width:100%; border:1px solid var(--gray-300); border-radius:12px; padding:11px 12px; font-size:14px; background:#fff; }
+      .field textarea { min-height:96px; resize:vertical; }
+      .field input:focus,.field select:focus,.field textarea:focus { outline:none; border-color: var(--primary-light); box-shadow:0 0 0 3px rgba(34,160,107,.16); }
+      .field-error { min-height:16px; color: var(--danger); font-size:12px; }
+      .actions,.inline-actions,.row-actions,.pagination { display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+      .actions { margin-top:18px; }
+      button { border:none; border-radius:12px; padding:10px 14px; cursor:pointer; font-weight:700; }
+      .btn-primary { background: var(--primary-light); color:#fff; }
+      .btn-secondary { background: var(--gray-100); color: var(--gray-700); }
+      .btn-link { background:transparent; color: var(--info); padding:0; }
+      .btn-danger { background:#b91c1c; color:#fff; }
+      button:disabled { opacity:.55; cursor:not-allowed; }
+      .filters { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px; margin-bottom:16px; }
+      .table-wrap { overflow-x:auto; }
+      table { width:100%; border-collapse:collapse; }
+      th,td { padding:14px 12px; border-bottom:1px solid var(--gray-200); font-size:13px; text-align:left; vertical-align:top; }
+      th { background: var(--gray-50); color: var(--gray-700); font-size:12px; text-transform:uppercase; }
+      tbody tr:hover { background:#fbfdfc; }
+      .inline-stack { display:flex; flex-direction:column; gap:4px; }
+      .subtle { color: var(--gray-500); font-size:12px; }
+      .loading-state,.empty-state { padding:30px 16px; text-align:center; color: var(--gray-500); font-weight:600; }
+      .pagination { justify-content:flex-end; margin-top:16px; }
+      .detail-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+      .detail-item { background: var(--gray-50); border:1px solid var(--gray-200); border-radius:14px; padding:14px; }
+      .detail-item strong { display:block; font-size:12px; color: var(--gray-500); text-transform:uppercase; margin-bottom:6px; }
+      .status-pill { display:inline-flex; align-items:center; gap:6px; padding:6px 10px; border-radius:999px; font-size:12px; font-weight:700; background:#dbeafe; color:#1d4ed8; }
+      .modal { position:fixed; inset:0; background:rgba(15,23,42,.48); display:none; align-items:center; justify-content:center; padding:24px; z-index:999; }
+      .modal.open { display:flex; }
+      .modal-content { width:min(860px,100%); max-height:calc(100vh - 48px); overflow-y:auto; background:#fff; border-radius:18px; box-shadow:0 18px 40px rgba(15,23,42,.18); }
+      .modal-header,.modal-body,.modal-footer { padding:18px 20px; }
+      .modal-header { border-bottom:1px solid var(--gray-200); display:flex; justify-content:space-between; align-items:center; gap:12px; }
+      .modal-footer { border-top:1px solid var(--gray-200); display:flex; justify-content:flex-end; gap:10px; flex-wrap:wrap; }
+      .inspector-card { background:linear-gradient(180deg,#fcfefc 0%,#f4faf6 100%); border:1px solid rgba(22,101,52,.12); }
+      .inspector-summary { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:16px; }
+      .inspector-pill { background:#fff; border:1px solid var(--gray-200); border-radius:14px; padding:14px; }
+      .inspector-pill strong { display:block; font-size:12px; color:var(--gray-500); text-transform:uppercase; margin-bottom:6px; }
+      .inspector-title { font-size:16px; font-weight:800; color:#14532d; }
+      .inspector-note { color:var(--gray-500); font-size:13px; line-height:1.6; }
+      .profile-hero { display:flex; justify-content:space-between; align-items:flex-start; gap:16px; padding:18px; border-radius:18px; background:linear-gradient(135deg,#0f5132 0%,#17844e 58%,#1ea768 100%); color:#fff; margin-bottom:16px; }
+      .profile-hero h4 { font-size:22px; margin-bottom:6px; }
+      .profile-hero p { color:rgba(255,255,255,.82); font-size:14px; }
+      .profile-badge { display:inline-flex; align-items:center; padding:7px 12px; border-radius:999px; background:rgba(255,255,255,.16); border:1px solid rgba(255,255,255,.22); font-size:12px; font-weight:800; }
+      .modal-detail-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+      @media (max-width:1180px) { .hero-grid,.layout { grid-template-columns:1fr; } .stats-grid,.filters { grid-template-columns:1fr 1fr; } }
+      @media (max-width:760px) { .header { padding:18px; flex-direction:column; align-items:stretch; } .container { padding:18px 14px 28px; } .form-grid,.filters,.detail-grid,.stats-grid,.inspector-summary,.modal-detail-grid { grid-template-columns:1fr; } .card-header,.card-body { padding-left:14px; padding-right:14px; } .profile-hero { flex-direction:column; } }
     </style>
-    <link rel="stylesheet" href="./admin-theme.css" />
   </head>
   <body>
-    <header class="topbar">
-      <div class="topbar-brand">
-        <div class="brand-mark">
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="#000"
-            stroke-width="2.5"
-          >
-            <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
-            <polyline points="9 22 9 12 15 12 15 22" />
-          </svg>
-        </div>
-        <span class="brand-name">Super<span>Cycle</span></span>
+    <div class="header">
+      <div>
+        <h1>Warehouses Management</h1>
+        <p>Manage storage locations and warehouse managers with a clean assignment workflow.</p>
       </div>
-      <div class="topbar-breadcrumb">
-        <span>Operations</span>
-        <span class="sep">›</span>
-        <span class="current">Warehouse Management</span>
+      <div class="header-actions">
+        <button class="header-btn" onclick="goBack()">Back to Dashboard</button>
+        <button class="header-btn" onclick="logout()">Logout</button>
       </div>
-      <div class="topbar-actions">
-        <div class="status-dot"></div>
-        <button class="topbar-btn" onclick="refreshAll()">
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            width="12"
-            height="12"
-          >
-            <path d="M1 4v6h6M23 20v-6h-6" />
-            <path d="M20.49 9A9 9 0 005.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 013.51 15" />
-          </svg>
-          Refresh
-        </button>
-        <button class="topbar-btn" onclick="goBack()">Dashboard</button>
-        <button class="topbar-btn" onclick="logout()">Sign out</button>
-      </div>
-    </header>
-
-    <div id="pageBanner" class="banner">
-      <svg
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2"
-      >
-        <circle cx="12" cy="12" r="10" />
-        <line x1="12" y1="8" x2="12" y2="12" />
-        <line x1="12" y1="16" x2="12.01" y2="16" />
-      </svg>
-      <span id="bannerText"></span>
     </div>
-
-    <div class="app-body">
-      <nav class="sidebar">
-        <div class="sidebar-section-label">Inventory</div>
-        <div class="nav-item active" data-tab-link="managers" onclick="setTab('managers')">
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="1.8"
-          >
-            <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" />
-            <circle cx="9" cy="7" r="4" />
-            <path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" />
-          </svg>
-          Managers
-          <span class="nav-badge" id="sidebarManagerCount">0</span>
-        </div>
-        <div class="nav-item" data-tab-link="warehouses" onclick="setTab('warehouses')">
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="1.8"
-          >
-            <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
-            <polyline points="9 22 9 12 15 12 15 22" />
-          </svg>
-          Warehouses
-          <span class="nav-badge" id="sidebarWarehouseCount">0</span>
-        </div>
-        <div
-          style="height:1px;background:var(--border-subtle);margin:8px 6px;"
-        ></div>
-        <div class="sidebar-section-label">System</div>
-        <div class="nav-item" onclick="goBack()">
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="1.8"
-          >
-            <rect x="3" y="3" width="7" height="7" />
-            <rect x="14" y="3" width="7" height="7" />
-            <rect x="14" y="14" width="7" height="7" />
-            <rect x="3" y="14" width="7" height="7" />
-          </svg>
-          Dashboard
-        </div>
-        <div class="nav-item" onclick="logout()">
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="1.8"
-          >
-            <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4" />
-            <polyline points="16 17 21 12 16 7" />
-            <line x1="21" y1="12" x2="9" y2="12" />
-          </svg>
-          Sign out
-        </div>
-      </nav>
-
-      <main class="main">
-        <div class="page-header">
-          <div>
-            <h1 class="page-title">Warehouse Operations</h1>
-            <p class="page-subtitle">
-              Manage storage locations, capacity, and manager assignments across
-              your network.
-            </p>
-          </div>
-        </div>
-
-        <div class="stats-row">
-          <div class="stat-card">
-            <div class="stat-icon accent">
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-              >
-                <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" />
-                <circle cx="9" cy="7" r="4" />
-              </svg>
+    <div class="container">
+      <div id="pageBanner" class="banner"></div>
+      <section class="hero-grid">
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h2>Storage Network Overview</h2>
+              <p class="card-hint">Keep an eye on managers, warehouses, and total designed capacity from one screen.</p>
             </div>
-            <div class="stat-label">Managers</div>
-            <div class="stat-value" id="managerCount">—</div>
-            <div class="stat-sub">registered profiles</div>
+            <button class="btn-secondary" type="button" onclick="refreshAll()">Refresh All</button>
           </div>
-          <div class="stat-card">
-            <div class="stat-icon blue">
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-              >
-                <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
-              </svg>
-            </div>
-            <div class="stat-label">Warehouses</div>
-            <div class="stat-value" id="warehouseCount">—</div>
-            <div class="stat-sub">active locations</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-icon amber">
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-              >
-                <path d="M22 11.08V12a10 10 0 11-5.93-9.14" />
-                <polyline points="22 4 12 14.01 9 11.01" />
-              </svg>
-            </div>
-            <div class="stat-label">Assigned</div>
-            <div class="stat-value" id="assignedManagersCount">—</div>
-            <div class="stat-sub">managers deployed</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-icon">
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-              >
-                <line x1="12" y1="1" x2="12" y2="23" />
-                <path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6" />
-              </svg>
-            </div>
-            <div class="stat-label">Total Capacity</div>
-            <div class="stat-value" id="totalCapacityCount">—</div>
-            <div class="stat-sub">kilograms total</div>
-          </div>
-        </div>
-
-        <div class="content-area">
-          <div
-            style="display:flex;justify-content:space-between;align-items:center;gap:12px;"
-          >
-            <div class="tab-strip">
-              <button
-                class="tab-pill active"
-                data-tab="managers"
-                onclick="setTab('managers')"
-              >
-                <svg
-                  width="13"
-                  height="13"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                >
-                  <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" />
-                  <circle cx="9" cy="7" r="4" />
-                </svg>
-                Warehouse Managers
-                <span class="count" id="tabManagerCount">0</span>
-              </button>
-              <button
-                class="tab-pill"
-                data-tab="warehouses"
-                onclick="setTab('warehouses')"
-              >
-                <svg
-                  width="13"
-                  height="13"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                >
-                  <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
-                </svg>
-                Warehouses
-                <span class="count" id="tabWarehouseCount">0</span>
-              </button>
+          <div class="card-body">
+            <div class="stats-grid">
+              <div class="stat"><strong id="managerCount">0</strong><span>Managers</span></div>
+              <div class="stat"><strong id="warehouseCount">0</strong><span>Warehouses</span></div>
+              <div class="stat"><strong id="assignedManagersCount">0</strong><span>Assigned Managers</span></div>
+              <div class="stat"><strong id="totalCapacityCount">0</strong><span>Total Capacity KG</span></div>
             </div>
           </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div><h3>Selection Insight</h3><p class="card-hint">Loaded detail follows your latest row selection.</p></div></div>
+          <div class="card-body">
+            <div class="detail-grid">
+              <div class="detail-item"><strong>Current Manager</strong><span id="selectionManager">No manager selected</span></div>
+              <div class="detail-item"><strong>Current Warehouse</strong><span id="selectionWarehouse">No warehouse selected</span></div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <div class="tabs">
+        <button class="tab-btn active" data-tab="managers" onclick="setTab('managers')">Warehouse Managers</button>
+        <button class="tab-btn" data-tab="warehouses" onclick="setTab('warehouses')">Warehouses</button>
+      </div>
 
-          <div id="panel-managers" class="tab-panel active">
-            <div class="panel-grid">
-              <div style="display:flex;flex-direction:column;gap:14px;">
-                <div class="card">
-                  <div class="card-top">
-                    <div>
-                      <div class="card-title" id="managerFormTitle">
-                        New Manager Profile
-                      </div>
-                      <div class="card-hint">
-                        Create a warehouse manager account for assignment.
-                      </div>
-                    </div>
+      <section id="panel-managers" class="tab-panel active">
+        <div class="layout">
+          <div class="section-block">
+            <div class="card">
+              <div class="card-header"><div><h2 id="managerFormTitle">Create Warehouse Manager</h2><p class="card-hint">Create or update the manager profile used in warehouse assignments.</p></div></div>
+              <div class="card-body">
+                <form id="managerForm" onsubmit="submitManagerForm(event)">
+                  <div class="form-grid">
+                    <div class="field"><label for="managerFullName">Full Name</label><input id="managerFullName" /><div class="field-error" data-error-for="manager.fullName"></div></div>
+                    <div class="field"><label for="managerPhone">Phone</label><input id="managerPhone" /><div class="field-error" data-error-for="manager.phone"></div></div>
+                    <div class="field"><label for="managerEmail">Email</label><input id="managerEmail" /><div class="field-error" data-error-for="manager.email"></div></div>
+                    <div class="field"><label for="managerNationalId">National ID</label><input id="managerNationalId" /><div class="field-error" data-error-for="manager.nationalId"></div></div>
+                    <div class="field"><label for="managerPassword">Password</label><input id="managerPassword" type="password" /><div class="field-error" data-error-for="manager.password"></div></div>
+                    <div class="field"><label for="managerPic">Picture URL</label><input id="managerPic" placeholder="https://..." /><div class="field-error" data-error-for="manager.pic"></div></div>
+                    <div class="field full"><label for="managerAddress">Address</label><textarea id="managerAddress"></textarea><div class="field-error" data-error-for="manager.address"></div></div>
                   </div>
-                  <div class="card-body">
-                    <form id="managerForm" onsubmit="submitManagerForm(event)">
-                      <div class="form-grid">
-                        <div class="field">
-                          <label class="field-label">Full Name</label>
-                          <input id="managerFullName" placeholder="John Smith" />
-                          <div class="field-err" data-error-for="manager.fullName"></div>
-                        </div>
-                        <div class="field">
-                          <label class="field-label">Phone</label>
-                          <input id="managerPhone" placeholder="+20 100 000 0000" />
-                          <div class="field-err" data-error-for="manager.phone"></div>
-                        </div>
-                        <div class="field">
-                          <label class="field-label">Email</label>
-                          <input id="managerEmail" placeholder="name@company.com" />
-                          <div class="field-err" data-error-for="manager.email"></div>
-                        </div>
-                        <div class="field">
-                          <label class="field-label">National ID</label>
-                          <input id="managerNationalId" placeholder="30201..." />
-                          <div class="field-err" data-error-for="manager.nationalId"></div>
-                        </div>
-                        <div class="field">
-                          <label class="field-label">Password</label>
-                          <input id="managerPassword" type="password" placeholder="••••••••" />
-                          <div class="field-err" data-error-for="manager.password"></div>
-                        </div>
-                        <div class="field">
-                          <label class="field-label">Picture URL</label>
-                          <input
-                            id="managerPic"
-                            placeholder="https://cdn.example.com/..."
-                          />
-                          <div class="field-err" data-error-for="manager.pic"></div>
-                        </div>
-                        <div class="field full">
-                          <label class="field-label">Address</label>
-                          <textarea id="managerAddress" placeholder="Full address..."></textarea>
-                          <div class="field-err" data-error-for="manager.address"></div>
-                        </div>
-                      </div>
-                      <div class="form-actions">
-                        <button
-                          id="managerSubmitBtn"
-                          class="btn btn-accent"
-                          type="submit"
-                        >
-                          Create Manager
-                        </button>
-                        <button
-                          class="btn btn-ghost"
-                          type="button"
-                          onclick="resetManagerForm()"
-                        >
-                          Reset
-                        </button>
-                      </div>
-                    </form>
+                  <div class="actions">
+                    <button id="managerSubmitBtn" class="btn-primary" type="submit">Create Manager</button>
+                    <button class="btn-secondary" type="button" onclick="resetManagerForm()">Clear</button>
                   </div>
+                </form>
+              </div>
+            </div>
+            <div class="card inspector-card">
+              <div class="card-header"><div><h3>Manager Inspector</h3><p class="card-hint">Enterprise-style quick actions with popup profile view.</p></div></div>
+              <div class="card-body">
+                <div class="inspector-summary">
+                  <div class="inspector-pill"><strong>Current Selection</strong><div id="managerInspectorName" class="inspector-title">No manager selected</div></div>
+                  <div class="inspector-pill"><strong>Next Step</strong><div class="inspector-note">Use View to open a full profile popup, then edit or delete from inside the inspector.</div></div>
                 </div>
-
-                <div class="card">
-                  <div class="card-top">
-                    <div>
-                      <div class="card-title">Manager Detail</div>
-                      <div class="card-hint">
-                        Click any row to inspect the full profile.
-                      </div>
-                    </div>
-                  </div>
-                  <div class="card-body compact">
-                    <div id="managerDetailState" class="state-box">
-                      <svg
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="1.5"
-                      >
-                        <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" />
-                        <circle cx="9" cy="7" r="4" />
-                      </svg>
-                      <div>Select a manager row</div>
-                      <p>Details will appear here.</p>
-                    </div>
-                    <div id="managerDetailWrap" hidden>
-                      <div class="detail-grid">
-                        <div class="detail-item">
-                          <strong>Name</strong><span id="managerDetailName">-</span>
-                        </div>
-                        <div class="detail-item">
-                          <strong>Phone</strong><span id="managerDetailPhone">-</span>
-                        </div>
-                        <div class="detail-item">
-                          <strong>Email</strong><span id="managerDetailEmail">-</span>
-                        </div>
-                        <div class="detail-item">
-                          <strong>National ID</strong
-                          ><span id="managerDetailNationalId">-</span>
-                        </div>
-                        <div class="detail-item">
-                          <strong>Address</strong><span id="managerDetailAddress">-</span>
-                        </div>
-                        <div class="detail-item">
-                          <strong>Record ID</strong
-                          ><span
-                            id="managerDetailId"
-                            style="font-family:var(--font-mono);font-size:11px;"
-                            >-</span
-                          >
-                        </div>
-                      </div>
-                      <div class="form-actions" style="margin-top:14px;">
-                        <button
-                          class="btn btn-accent"
-                          type="button"
-                          onclick="editSelectedManager()"
-                        >
-                          Edit
-                        </button>
-                        <button
-                          class="btn btn-danger"
-                          type="button"
-                          onclick="deleteSelectedManager()"
-                        >
-                          Delete
-                        </button>
-                      </div>
-                    </div>
-                  </div>
+                <div class="actions">
+                  <button class="btn-primary" type="button" onclick="openSelectedManagerView()" id="openManagerInspectorBtn" disabled>Open Manager Profile</button>
+                  <button class="btn-secondary" type="button" onclick="editSelectedManager()" id="editSelectedManagerBtn" disabled>Edit Selected Manager</button>
+                  <button class="btn-danger" type="button" onclick="deleteSelectedManager()" id="deleteSelectedManagerBtn" disabled>Delete Selected Manager</button>
                 </div>
               </div>
-
-              <div class="card" style="min-height:400px;">
-                <div class="card-top">
-                  <div>
-                    <div class="card-title">Managers Directory</div>
-                    <div class="card-hint">
-                      Search by name, phone, email, or national ID.
-                    </div>
-                  </div>
-                  <div style="display:flex;gap:8px;">
-                    <button class="btn btn-ghost" onclick="resetManagerFilters()">
-                      Reset
-                    </button>
-                    <button class="btn btn-accent" onclick="loadManagers(1)">
-                      Search
-                    </button>
-                  </div>
+            </div>
+          </div>
+          <div class="section-block">
+            <div class="card">
+              <div class="card-header"><div><h2>Managers Directory</h2><p class="card-hint">Search by name, phone, email, or national ID.</p></div><div class="inline-actions"><button class="btn-secondary" type="button" onclick="resetManagerFilters()">Reset</button><button class="btn-primary" type="button" onclick="loadManagers(1)">Search</button></div></div>
+              <div class="card-body">
+                <div class="filters">
+                  <div class="field"><label for="managerSearch">Search</label><input id="managerSearch" /></div>
+                  <div class="field"><label for="managerLimit">Page Size</label><select id="managerLimit"><option value="10">10</option><option value="20">20</option><option value="50">50</option></select></div>
                 </div>
-                <div class="toolbar">
-                  <div class="search-wrap">
-                    <svg
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2"
-                    >
-                      <circle cx="11" cy="11" r="8" />
-                      <line x1="21" y1="21" x2="16.65" y2="16.65" />
-                    </svg>
-                    <input id="managerSearch" placeholder="Search managers..." />
-                  </div>
-                  <select class="filter-select" id="managerLimit">
-                    <option value="10">10 / page</option>
-                    <option value="20">20 / page</option>
-                    <option value="50">50 / page</option>
-                  </select>
-                </div>
-                <div id="managersState" class="state-box">
-                  <div>Loading managers…</div>
-                </div>
+                <div id="managersState" class="loading-state">Loading managers...</div>
                 <div class="table-wrap">
                   <table id="managersTable" hidden>
-                    <thead>
-                      <tr>
-                        <th>Manager</th>
-                        <th>Phone</th>
-                        <th>Email</th>
-                        <th>National ID</th>
-                        <th></th>
-                      </tr>
-                    </thead>
+                    <thead><tr><th>Manager</th><th>Phone</th><th>Email</th><th>National ID</th><th>Action</th></tr></thead>
                     <tbody id="managersRows"></tbody>
                   </table>
                 </div>
-                <div class="table-footer">
-                  <div class="page-info" id="managersTotalLabel">— records</div>
-                  <div class="pagination">
-                    <button
-                      class="pager-btn"
-                      id="managersPrevBtn"
-                      onclick="changeManagersPage(-1)"
-                    >
-                      ← Prev
-                    </button>
-                    <span class="pager-label" id="managersPaginationLabel">1 / 1</span>
-                    <button
-                      class="pager-btn"
-                      id="managersNextBtn"
-                      onclick="changeManagersPage(1)"
-                    >
-                      Next →
-                    </button>
-                  </div>
+                <div class="pagination">
+                  <button class="btn-secondary" id="managersPrevBtn" type="button" onclick="changeManagersPage(-1)">Previous</button>
+                  <span id="managersPaginationLabel" class="subtle">Page 1 of 1</span>
+                  <button class="btn-secondary" id="managersNextBtn" type="button" onclick="changeManagersPage(1)">Next</button>
                 </div>
               </div>
             </div>
           </div>
+        </div>
+      </section>
 
-          <div id="panel-warehouses" class="tab-panel">
-            <div class="panel-grid">
-              <div style="display:flex;flex-direction:column;gap:14px;">
-                <div class="card">
-                  <div class="card-top">
-                    <div>
-                      <div class="card-title" id="warehouseFormTitle">
-                        New Warehouse
-                      </div>
-                      <div class="card-hint">
-                        Register a storage location with capacity settings.
-                      </div>
-                    </div>
+      <section id="panel-warehouses" class="tab-panel">
+        <div class="layout">
+          <div class="section-block">
+            <div class="card">
+              <div class="card-header"><div><h2 id="warehouseFormTitle">Create Warehouse</h2><p class="card-hint">Create or update a warehouse with capacity and manager assignment.</p></div></div>
+              <div class="card-body">
+                <form id="warehouseForm" onsubmit="submitWarehouseForm(event)">
+                  <div class="form-grid">
+                    <div class="field"><label for="warehouseName">Warehouse Name</label><input id="warehouseName" /><div class="field-error" data-error-for="warehouse.name"></div></div>
+                    <div class="field"><label for="warehouseManagerId">Manager</label><select id="warehouseManagerId"></select><div class="field-error" data-error-for="warehouse.managerId"></div></div>
+                    <div class="field full"><label for="warehouseLocation">Location</label><input id="warehouseLocation" /><div class="field-error" data-error-for="warehouse.location"></div></div>
+                    <div class="field"><label for="warehouseCapacityKg">Capacity KG</label><input id="warehouseCapacityKg" type="number" min="0" step="0.01" /><div class="field-error" data-error-for="warehouse.capacityKg"></div></div>
+                    <div class="field"><label for="warehouseCurrentStoredKg">Current Stored KG</label><input id="warehouseCurrentStoredKg" type="number" min="0" step="0.01" /><div class="field-error" data-error-for="warehouse.currentStoredKg"></div></div>
                   </div>
-                  <div class="card-body">
-                    <form id="warehouseForm" onsubmit="submitWarehouseForm(event)">
-                      <div class="form-grid">
-                        <div class="field">
-                          <label class="field-label">Warehouse Name</label>
-                          <input id="warehouseName" placeholder="Central Hub A" />
-                          <div class="field-err" data-error-for="warehouse.name"></div>
-                        </div>
-                        <div class="field">
-                          <label class="field-label">Manager</label>
-                          <select id="warehouseManagerId">
-                            <option value="">Select manager</option>
-                          </select>
-                          <div class="field-err" data-error-for="warehouse.managerId"></div>
-                        </div>
-                        <div class="field full">
-                          <label class="field-label">Location</label>
-                          <input
-                            id="warehouseLocation"
-                            placeholder="Cairo, Egypt — Block 5"
-                          />
-                          <div class="field-err" data-error-for="warehouse.location"></div>
-                        </div>
-                        <div class="field">
-                          <label class="field-label">Capacity (KG)</label>
-                          <input
-                            id="warehouseCapacityKg"
-                            type="number"
-                            min="0"
-                            step="0.01"
-                            placeholder="0.00"
-                          />
-                          <div class="field-err" data-error-for="warehouse.capacityKg"></div>
-                        </div>
-                        <div class="field">
-                          <label class="field-label">Stored (KG)</label>
-                          <input
-                            id="warehouseCurrentStoredKg"
-                            type="number"
-                            min="0"
-                            step="0.01"
-                            placeholder="0.00"
-                          />
-                          <div class="field-err" data-error-for="warehouse.currentStoredKg"></div>
-                        </div>
-                      </div>
-                      <div class="form-actions">
-                        <button
-                          id="warehouseSubmitBtn"
-                          class="btn btn-accent"
-                          type="submit"
-                        >
-                          Create Warehouse
-                        </button>
-                        <button
-                          class="btn btn-ghost"
-                          type="button"
-                          onclick="resetWarehouseForm()"
-                        >
-                          Reset
-                        </button>
-                      </div>
-                    </form>
+                  <div class="actions">
+                    <button id="warehouseSubmitBtn" class="btn-primary" type="submit">Create Warehouse</button>
+                    <button class="btn-secondary" type="button" onclick="resetWarehouseForm()">Clear</button>
                   </div>
+                </form>
+              </div>
+            </div>
+            <div class="card inspector-card">
+              <div class="card-header"><div><h3>Warehouse Inspector</h3><p class="card-hint">Focused popup viewing with a cleaner operations workflow.</p></div></div>
+              <div class="card-body">
+                <div class="inspector-summary">
+                  <div class="inspector-pill"><strong>Current Selection</strong><div id="warehouseInspectorName" class="inspector-title">No warehouse selected</div></div>
+                  <div class="inspector-pill"><strong>Next Step</strong><div class="inspector-note">Open the warehouse inspector popup to review manager, location, and storage metrics in one place.</div></div>
                 </div>
-
-                <div class="card">
-                  <div class="card-top">
-                    <div>
-                      <div class="card-title">Warehouse Detail</div>
-                      <div class="card-hint">
-                        Click any row to inspect full storage details.
-                      </div>
-                    </div>
-                  </div>
-                  <div class="card-body compact">
-                    <div id="warehouseDetailState" class="state-box">
-                      <svg
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="1.5"
-                      >
-                        <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
-                      </svg>
-                      <div>Select a warehouse row</div>
-                      <p>Details will appear here.</p>
-                    </div>
-                    <div id="warehouseDetailWrap" hidden>
-                      <div class="detail-grid">
-                        <div class="detail-item">
-                          <strong>Name</strong><span id="warehouseDetailName">-</span>
-                        </div>
-                        <div class="detail-item">
-                          <strong>Manager</strong><span id="warehouseDetailManager">-</span>
-                        </div>
-                        <div class="detail-item">
-                          <strong>Location</strong><span id="warehouseDetailLocation">-</span>
-                        </div>
-                        <div class="detail-item">
-                          <strong>Capacity KG</strong
-                          ><span id="warehouseDetailCapacity">-</span>
-                        </div>
-                        <div class="detail-item">
-                          <strong>Stored KG</strong
-                          ><span id="warehouseDetailStored">-</span>
-                        </div>
-                        <div class="detail-item">
-                          <strong>Record ID</strong
-                          ><span
-                            id="warehouseDetailId"
-                            style="font-family:var(--font-mono);font-size:11px;"
-                            >-</span
-                          >
-                        </div>
-                      </div>
-                      <div class="form-actions" style="margin-top:14px;">
-                        <button
-                          class="btn btn-accent"
-                          type="button"
-                          onclick="editSelectedWarehouse()"
-                        >
-                          Edit
-                        </button>
-                        <button
-                          class="btn btn-danger"
-                          type="button"
-                          onclick="deleteSelectedWarehouse()"
-                        >
-                          Delete
-                        </button>
-                      </div>
-                    </div>
-                  </div>
+                <div class="actions">
+                  <button class="btn-primary" type="button" onclick="openSelectedWarehouseView()" id="openWarehouseInspectorBtn" disabled>Open Warehouse Profile</button>
+                  <button class="btn-secondary" type="button" onclick="editSelectedWarehouse()" id="editSelectedWarehouseBtn" disabled>Edit Selected Warehouse</button>
+                  <button class="btn-danger" type="button" onclick="deleteSelectedWarehouse()" id="deleteSelectedWarehouseBtn" disabled>Delete Selected Warehouse</button>
                 </div>
               </div>
-
-              <div class="card" style="min-height:400px;">
-                <div class="card-top">
-                  <div>
-                    <div class="card-title">Warehouses Directory</div>
-                    <div class="card-hint">
-                      Search by name or location, filter by manager.
-                    </div>
-                  </div>
-                  <div style="display:flex;gap:8px;">
-                    <button class="btn btn-ghost" onclick="resetWarehouseFilters()">
-                      Reset
-                    </button>
-                    <button class="btn btn-accent" onclick="loadWarehouses(1)">
-                      Search
-                    </button>
-                  </div>
+            </div>
+          </div>
+          <div class="section-block">
+            <div class="card">
+              <div class="card-header"><div><h2>Warehouses Directory</h2><p class="card-hint">Search by warehouse name or location, and filter by manager.</p></div><div class="inline-actions"><button class="btn-secondary" type="button" onclick="resetWarehouseFilters()">Reset</button><button class="btn-primary" type="button" onclick="loadWarehouses(1)">Search</button></div></div>
+              <div class="card-body">
+                <div class="filters">
+                  <div class="field"><label for="warehouseSearch">Search</label><input id="warehouseSearch" /></div>
+                  <div class="field"><label for="warehouseFilterManagerId">Manager</label><select id="warehouseFilterManagerId"></select></div>
+                  <div class="field"><label for="warehouseLimit">Page Size</label><select id="warehouseLimit"><option value="10">10</option><option value="20">20</option><option value="50">50</option></select></div>
                 </div>
-                <div class="toolbar">
-                  <div class="search-wrap">
-                    <svg
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2"
-                    >
-                      <circle cx="11" cy="11" r="8" />
-                      <line x1="21" y1="21" x2="16.65" y2="16.65" />
-                    </svg>
-                    <input
-                      id="warehouseSearch"
-                      placeholder="Search warehouses..."
-                    />
-                  </div>
-                  <select class="filter-select" id="warehouseFilterManagerId">
-                    <option value="">All managers</option>
-                  </select>
-                  <select class="filter-select" id="warehouseLimit">
-                    <option value="10">10 / page</option>
-                    <option value="20">20 / page</option>
-                    <option value="50">50 / page</option>
-                  </select>
-                </div>
-                <div id="warehousesState" class="state-box">
-                  <div>Loading warehouses…</div>
-                </div>
+                <div id="warehousesState" class="loading-state">Loading warehouses...</div>
                 <div class="table-wrap">
                   <table id="warehousesTable" hidden>
-                    <thead>
-                      <tr>
-                        <th>Warehouse</th>
-                        <th>Manager</th>
-                        <th>Capacity KG</th>
-                        <th>Stored KG</th>
-                        <th>Utilization</th>
-                        <th></th>
-                      </tr>
-                    </thead>
+                    <thead><tr><th>Warehouse</th><th>Manager</th><th>Capacity</th><th>Stored</th><th>Action</th></tr></thead>
                     <tbody id="warehousesRows"></tbody>
                   </table>
                 </div>
-                <div class="table-footer">
-                  <div class="page-info" id="warehousesTotalLabel">— records</div>
-                  <div class="pagination">
-                    <button
-                      class="pager-btn"
-                      id="warehousesPrevBtn"
-                      onclick="changeWarehousesPage(-1)"
-                    >
-                      ← Prev
-                    </button>
-                    <span class="pager-label" id="warehousesPaginationLabel">1 / 1</span>
-                    <button
-                      class="pager-btn"
-                      id="warehousesNextBtn"
-                      onclick="changeWarehousesPage(1)"
-                    >
-                      Next →
-                    </button>
-                  </div>
+                <div class="pagination">
+                  <button class="btn-secondary" id="warehousesPrevBtn" type="button" onclick="changeWarehousesPage(-1)">Previous</button>
+                  <span id="warehousesPaginationLabel" class="subtle">Page 1 of 1</span>
+                  <button class="btn-secondary" id="warehousesNextBtn" type="button" onclick="changeWarehousesPage(1)">Next</button>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </main>
+      </section>
     </div>
-
-    <div id="managerEditModal" class="modal-backdrop">
-      <div class="modal-box">
-        <div class="modal-head">
-          <div>
-            <div class="modal-title">Edit Manager Profile</div>
-            <div class="modal-subtitle">
-              Update manager details and save changes.
-            </div>
-          </div>
-          <button class="modal-close" onclick="closeManagerEditModal()">✕</button>
-        </div>
-        <div class="modal-body">
-          <div class="form-grid">
-            <div class="field">
-              <label class="field-label">Full Name</label>
-              <input id="modalManagerFullName" />
-              <div
-                class="field-err"
-                data-manager-modal-error-for="manager.fullName"
-              ></div>
-            </div>
-            <div class="field">
-              <label class="field-label">Phone</label>
-              <input id="modalManagerPhone" />
-              <div
-                class="field-err"
-                data-manager-modal-error-for="manager.phone"
-              ></div>
-            </div>
-            <div class="field">
-              <label class="field-label">Email</label>
-              <input id="modalManagerEmail" />
-              <div
-                class="field-err"
-                data-manager-modal-error-for="manager.email"
-              ></div>
-            </div>
-            <div class="field">
-              <label class="field-label">National ID</label>
-              <input id="modalManagerNationalId" />
-              <div
-                class="field-err"
-                data-manager-modal-error-for="manager.nationalId"
-              ></div>
-            </div>
-            <div class="field full">
-              <label class="field-label">Picture URL</label>
-              <input id="modalManagerPic" placeholder="https://..." />
-              <div
-                class="field-err"
-                data-manager-modal-error-for="manager.pic"
-              ></div>
-            </div>
-            <div class="field full">
-              <label class="field-label">Address</label>
-              <textarea id="modalManagerAddress"></textarea>
-              <div
-                class="field-err"
-                data-manager-modal-error-for="manager.address"
-              ></div>
-            </div>
-          </div>
-        </div>
-        <div class="modal-foot">
-          <button class="btn btn-ghost" onclick="closeManagerEditModal()">
-            Cancel
-          </button>
-          <button class="btn btn-accent" onclick="submitManagerEditModal()">
-            Save Changes
-          </button>
-        </div>
+    <div id="managerEditModal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header"><div><h3>Edit Warehouse Manager</h3><p class="card-hint">Update manager details in a popup instead of scrolling the page.</p></div><button class="btn-secondary" type="button" onclick="closeManagerEditModal()">Close</button></div>
+        <div class="modal-body"><div class="form-grid">
+          <div class="field"><label for="modalManagerFullName">Full Name</label><input id="modalManagerFullName" /><div class="field-error" data-manager-modal-error-for="manager.fullName"></div></div>
+          <div class="field"><label for="modalManagerPhone">Phone</label><input id="modalManagerPhone" /><div class="field-error" data-manager-modal-error-for="manager.phone"></div></div>
+          <div class="field"><label for="modalManagerEmail">Email</label><input id="modalManagerEmail" /><div class="field-error" data-manager-modal-error-for="manager.email"></div></div>
+          <div class="field"><label for="modalManagerNationalId">National ID</label><input id="modalManagerNationalId" /><div class="field-error" data-manager-modal-error-for="manager.nationalId"></div></div>
+          <div class="field"><label for="modalManagerPic">Picture URL</label><input id="modalManagerPic" placeholder="https://..." /><div class="field-error" data-manager-modal-error-for="manager.pic"></div></div>
+          <div class="field full"><label for="modalManagerAddress">Address</label><textarea id="modalManagerAddress"></textarea><div class="field-error" data-manager-modal-error-for="manager.address"></div></div>
+        </div></div>
+        <div class="modal-footer"><button class="btn-secondary" type="button" onclick="closeManagerEditModal()">Cancel</button><button class="btn-primary" type="button" onclick="submitManagerEditModal()">Save Changes</button></div>
       </div>
     </div>
-
-    <div id="warehouseEditModal" class="modal-backdrop">
-      <div class="modal-box">
-        <div class="modal-head">
-          <div>
-            <div class="modal-title">Edit Warehouse</div>
-            <div class="modal-subtitle">
-              Update warehouse settings and capacity configuration.
-            </div>
-          </div>
-          <button class="modal-close" onclick="closeWarehouseEditModal()">✕</button>
-        </div>
-        <div class="modal-body">
-          <div class="form-grid">
-            <div class="field">
-              <label class="field-label">Warehouse Name</label>
-              <input id="modalWarehouseName" />
-              <div
-                class="field-err"
-                data-warehouse-modal-error-for="warehouse.name"
-              ></div>
-            </div>
-            <div class="field">
-              <label class="field-label">Manager</label>
-              <select id="modalWarehouseManagerId"></select>
-              <div
-                class="field-err"
-                data-warehouse-modal-error-for="warehouse.managerId"
-              ></div>
-            </div>
-            <div class="field full">
-              <label class="field-label">Location</label>
-              <input id="modalWarehouseLocation" />
-              <div
-                class="field-err"
-                data-warehouse-modal-error-for="warehouse.location"
-              ></div>
-            </div>
-            <div class="field">
-              <label class="field-label">Capacity KG</label>
-              <input id="modalWarehouseCapacityKg" type="number" min="0" step="0.01" />
-              <div
-                class="field-err"
-                data-warehouse-modal-error-for="warehouse.capacityKg"
-              ></div>
-            </div>
-            <div class="field">
-              <label class="field-label">Stored KG</label>
-              <input
-                id="modalWarehouseCurrentStoredKg"
-                type="number"
-                min="0"
-                step="0.01"
-              />
-              <div
-                class="field-err"
-                data-warehouse-modal-error-for="warehouse.currentStoredKg"
-              ></div>
-            </div>
-          </div>
-        </div>
-        <div class="modal-foot">
-          <button class="btn btn-ghost" onclick="closeWarehouseEditModal()">
-            Cancel
-          </button>
-          <button class="btn btn-accent" onclick="submitWarehouseEditModal()">
-            Save Changes
-          </button>
-        </div>
+    <div id="warehouseEditModal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header"><div><h3>Edit Warehouse</h3><p class="card-hint">Update warehouse details in a focused popup.</p></div><button class="btn-secondary" type="button" onclick="closeWarehouseEditModal()">Close</button></div>
+        <div class="modal-body"><div class="form-grid">
+          <div class="field"><label for="modalWarehouseName">Warehouse Name</label><input id="modalWarehouseName" /><div class="field-error" data-warehouse-modal-error-for="warehouse.name"></div></div>
+          <div class="field"><label for="modalWarehouseManagerId">Manager</label><select id="modalWarehouseManagerId"></select><div class="field-error" data-warehouse-modal-error-for="warehouse.managerId"></div></div>
+          <div class="field full"><label for="modalWarehouseLocation">Location</label><input id="modalWarehouseLocation" /><div class="field-error" data-warehouse-modal-error-for="warehouse.location"></div></div>
+          <div class="field"><label for="modalWarehouseCapacityKg">Capacity KG</label><input id="modalWarehouseCapacityKg" type="number" min="0" step="0.01" /><div class="field-error" data-warehouse-modal-error-for="warehouse.capacityKg"></div></div>
+          <div class="field"><label for="modalWarehouseCurrentStoredKg">Current Stored KG</label><input id="modalWarehouseCurrentStoredKg" type="number" min="0" step="0.01" /><div class="field-error" data-warehouse-modal-error-for="warehouse.currentStoredKg"></div></div>
+        </div></div>
+        <div class="modal-footer"><button class="btn-secondary" type="button" onclick="closeWarehouseEditModal()">Cancel</button><button class="btn-primary" type="button" onclick="submitWarehouseEditModal()">Save Changes</button></div>
       </div>
     </div>
-
+    <div id="managerViewModal" class="modal" onclick="closeManagerViewModal(event)">
+      <div class="modal-content" onclick="event.stopPropagation()">
+        <div class="modal-header"><div><h3>Manager Profile</h3><p class="card-hint">Profile inspector with fast management actions.</p></div><button class="btn-secondary" type="button" onclick="closeManagerViewModal()">Close</button></div>
+        <div class="modal-body">
+          <div class="profile-hero">
+            <div>
+              <h4 id="managerViewName">-</h4>
+              <p id="managerViewAddress">-</p>
+            </div>
+            <span class="profile-badge">Warehouse Manager</span>
+          </div>
+          <div class="modal-detail-grid">
+            <div class="detail-item"><strong>Phone</strong><span id="managerViewPhone">-</span></div>
+            <div class="detail-item"><strong>Email</strong><span id="managerViewEmail">-</span></div>
+            <div class="detail-item"><strong>National ID</strong><span id="managerViewNationalId">-</span></div>
+            <div class="detail-item"><strong>ID</strong><span id="managerViewId">-</span></div>
+          </div>
+        </div>
+        <div class="modal-footer"><button class="btn-secondary" type="button" onclick="editSelectedManager()">Edit</button><button class="btn-danger" type="button" onclick="deleteSelectedManager()">Delete</button></div>
+      </div>
+    </div>
+    <div id="warehouseViewModal" class="modal" onclick="closeWarehouseViewModal(event)">
+      <div class="modal-content" onclick="event.stopPropagation()">
+        <div class="modal-header"><div><h3>Warehouse Profile</h3><p class="card-hint">Operational inspector with core storage metrics.</p></div><button class="btn-secondary" type="button" onclick="closeWarehouseViewModal()">Close</button></div>
+        <div class="modal-body">
+          <div class="profile-hero">
+            <div>
+              <h4 id="warehouseViewName">-</h4>
+              <p id="warehouseViewLocation">-</p>
+            </div>
+            <span class="profile-badge">Warehouse</span>
+          </div>
+          <div class="modal-detail-grid">
+            <div class="detail-item"><strong>Manager</strong><span id="warehouseViewManager">-</span></div>
+            <div class="detail-item"><strong>Capacity KG</strong><span id="warehouseViewCapacity">-</span></div>
+            <div class="detail-item"><strong>Current Stored KG</strong><span id="warehouseViewStored">-</span></div>
+            <div class="detail-item"><strong>ID</strong><span id="warehouseViewId">-</span></div>
+          </div>
+        </div>
+        <div class="modal-footer"><button class="btn-secondary" type="button" onclick="editSelectedWarehouse()">Edit</button><button class="btn-danger" type="button" onclick="deleteSelectedWarehouse()">Delete</button></div>
+      </div>
+    </div>
     <script>
       const API_BASE = "https://supercycle-api-855015056699.europe-west1.run.app";
       const token = localStorage.getItem("token");
       if (!token) location.href = "index.html";
-
-      const state = {
-        activeTab: "managers",
-        managers: [],
-        warehouses: [],
-        managerMeta: { page: 1, totalPages: 1, total: 0 },
-        warehouseMeta: { page: 1, totalPages: 1, total: 0 },
-        editingManagerId: null,
-        editingWarehouseId: null,
-        selectedManagerId: null,
-        selectedWarehouseId: null,
-        selectedManager: null,
-        selectedWarehouse: null,
-        modalManagerId: null,
-        modalWarehouseId: null,
-      };
-
-      function goBack() {
-        location.href = "dashboard.html";
-      }
-
-      function logout() {
-        localStorage.removeItem("token");
-        location.href = "index.html";
-      }
-
-      function getMessage(json, fallback) {
-        return (
-          json?.message ||
-          json?.error ||
-          json?.data?.message ||
-          json?.errors?.[0]?.message ||
-          fallback
-        );
-      }
-
-      function getId(item) {
-        return item?._id || item?.id || item?.managerId || item?.warehouseId;
-      }
-
-      function extractCollection(json) {
-        if (Array.isArray(json)) return json;
-        if (Array.isArray(json?.data)) return json.data;
-        if (Array.isArray(json?.data?.data)) return json.data.data;
-        if (Array.isArray(json?.items)) return json.items;
-        if (Array.isArray(json?.results)) return json.results;
-        return [];
-      }
-
-      function escapeHtml(v) {
-        return String(v ?? "—")
-          .replace(/&/g, "&amp;")
-          .replace(/</g, "&lt;")
-          .replace(/>/g, "&gt;")
-          .replace(/"/g, "&quot;")
-          .replace(/'/g, "&#39;");
-      }
-
-      function isValidUrl(v) {
-        if (!v) return true;
-        try {
-          new URL(v);
-          return true;
-        } catch (_) {
-          return false;
-        }
-      }
-
-      function toNumber(v) {
-        if (v === "" || v == null) return null;
-        const n = Number(v);
-        return Number.isFinite(n) ? n : NaN;
-      }
-
-      function formatNumber(v) {
-        if (v == null || v === "" || Number.isNaN(Number(v))) return "—";
-        return Number(v).toLocaleString("en-US");
-      }
-
-      function showBanner(type, message) {
-        const el = document.getElementById("pageBanner");
-        if (!message) {
-          el.classList.remove("show");
-          return;
-        }
-        el.className = `banner show ${type}`;
-        document.getElementById("bannerText").textContent = message;
-        if (type === "success") {
-          setTimeout(() => el.classList.remove("show"), 4000);
-        }
-      }
-
-      function clearErrors(scope) {
-        document
-          .querySelectorAll(`[data-error-for^="${scope}."]`)
-          .forEach((el) => (el.textContent = ""));
-      }
-
-      function setFieldError(key, msg) {
-        const el = document.querySelector(`[data-error-for="${key}"]`);
-        if (el) el.textContent = msg;
-      }
-
-      function clearManagerModalErrors() {
-        document
-          .querySelectorAll("[data-manager-modal-error-for]")
-          .forEach((el) => (el.textContent = ""));
-      }
-
-      function setManagerModalError(key, msg) {
-        const el = document.querySelector(
-          `[data-manager-modal-error-for="${key}"]`,
-        );
-        if (el) el.textContent = msg;
-      }
-
-      function clearWarehouseModalErrors() {
-        document
-          .querySelectorAll("[data-warehouse-modal-error-for]")
-          .forEach((el) => (el.textContent = ""));
-      }
-
-      function setWarehouseModalError(key, msg) {
-        const el = document.querySelector(
-          `[data-warehouse-modal-error-for="${key}"]`,
-        );
-        if (el) el.textContent = msg;
-      }
-
-      function setTab(tab) {
-        state.activeTab = tab;
-        document
-          .querySelectorAll(".tab-pill")
-          .forEach((b) => b.classList.toggle("active", b.dataset.tab === tab));
-        document
-          .querySelectorAll(".tab-panel")
-          .forEach((p) => p.classList.toggle("active", p.id === `panel-${tab}`));
-        document.querySelectorAll("[data-tab-link]").forEach((item) => {
-          item.classList.toggle("active", item.dataset.tabLink === tab);
-        });
-      }
-
-      async function fetchJson(path, options = {}) {
-        const res = await fetch(`${API_BASE}${path}`, {
-          ...options,
-          headers: {
-            Authorization: `Bearer ${token}`,
-            ...(options.body ? { "Content-Type": "application/json" } : {}),
-            ...(options.headers || {}),
-          },
-        });
-        const text = await res.text();
-        let json = null;
-        try {
-          json = text ? JSON.parse(text) : null;
-        } catch (_) {
-          json = null;
-        }
-        if (!res.ok) {
-          throw {
-            status: res.status,
-            json,
-            message: getMessage(json, text || "Request failed"),
-          };
-        }
-        return json;
-      }
-
-      function setTableState(section, message) {
-        const stateEl = document.getElementById(`${section}State`);
-        const table = document.getElementById(`${section}Table`);
-        stateEl.style.display = "block";
-        stateEl.innerHTML = `<div>${message}</div>`;
-        table.hidden = true;
-      }
-
-      function showTable(section) {
-        document.getElementById(`${section}State`).style.display = "none";
-        document.getElementById(`${section}Table`).hidden = false;
-      }
-
-      function updateOverview() {
-        const assignedIds = new Set(
-          state.warehouses
-            .map((i) => i.managerId || i.manager?._id || i.manager?.id)
-            .filter(Boolean),
-        );
-        const totalCap = state.warehouses.reduce(
-          (s, i) => s + Number(i.capacityKg || 0),
-          0,
-        );
-        const mTotal = state.managerMeta.total || state.managers.length;
-        const wTotal = state.warehouseMeta.total || state.warehouses.length;
-        document.getElementById("managerCount").textContent = formatNumber(mTotal);
-        document.getElementById("warehouseCount").textContent = formatNumber(wTotal);
-        document.getElementById("assignedManagersCount").textContent =
-          formatNumber(assignedIds.size);
-        document.getElementById("totalCapacityCount").textContent =
-          formatNumber(totalCap);
-        document.getElementById("sidebarManagerCount").textContent = mTotal;
-        document.getElementById("sidebarWarehouseCount").textContent = wTotal;
-        document.getElementById("tabManagerCount").textContent = mTotal;
-        document.getElementById("tabWarehouseCount").textContent = wTotal;
-      }
-
-      function populateManagerSelects() {
-        const opts = ['<option value="">Select manager</option>'].concat(
-          state.managers.map(
-            (m) =>
-              `<option value="${getId(m)}">${escapeHtml(m.fullName || m.name || getId(m))}</option>`,
-          ),
-        );
-        document.getElementById("warehouseManagerId").innerHTML = opts.join("");
-        document.getElementById("modalWarehouseManagerId").innerHTML =
-          opts.join("");
-        document.getElementById("warehouseFilterManagerId").innerHTML = [
-          '<option value="">All managers</option>',
-        ]
-          .concat(
-            state.managers.map(
-              (m) =>
-                `<option value="${getId(m)}">${escapeHtml(m.fullName || m.name || getId(m))}</option>`,
-            ),
-          )
-          .join("");
-      }
-
-      function managerQuery(page = 1) {
-        const p = new URLSearchParams({
-          page: String(page),
-          limit: document.getElementById("managerLimit").value || "10",
-        });
-        const s = document.getElementById("managerSearch").value.trim();
-        if (s) p.set("search", s);
-        return `?${p.toString()}`;
-      }
-
-      function warehouseQuery(page = 1) {
-        const p = new URLSearchParams({
-          page: String(page),
-          limit: document.getElementById("warehouseLimit").value || "10",
-        });
-        const s = document.getElementById("warehouseSearch").value.trim();
-        const m = document.getElementById("warehouseFilterManagerId").value;
-        if (s) p.set("search", s);
-        if (m) p.set("managerId", m);
-        return `?${p.toString()}`;
-      }
-
-      async function loadManagers(page = 1) {
-        setTableState("managers", "Loading managers…");
-        try {
-          const json = await fetchJson(
-            `/admin/warehouse-managers${managerQuery(page)}`,
-          );
-          state.managers = extractCollection(json);
-          state.managerMeta = {
-            page: json?.page || json?.data?.page || page,
-            totalPages: json?.totalPages || json?.data?.totalPages || 1,
-            total: json?.total || json?.data?.total || state.managers.length,
-          };
-          renderManagers();
-          populateManagerSelects();
-          updateOverview();
-        } catch (e) {
-          state.managers = [];
-          setTableState("managers", e.message || "Failed to load managers");
-        }
-      }
-
-      function renderManagers() {
-        if (!state.managers.length) {
-          setTableState("managers", "No managers found");
-          updateManagersPagination();
-          return;
-        }
-        document.getElementById("managersRows").innerHTML = state.managers
-          .map(
-            (item) => `
-      <tr>
-        <td>
-          <div class="cell-main">${escapeHtml(item.fullName || "—")}</div>
-          <div class="cell-sub">${escapeHtml(item.address || "—")}</div>
-        </td>
-        <td class="cell-mono">${escapeHtml(item.phone || "—")}</td>
-        <td>${escapeHtml(item.email || "—")}</td>
-        <td class="cell-mono">${escapeHtml(item.nationalId || "—")}</td>
-        <td>
-          <div class="row-actions">
-            <button class="btn-link" onclick="selectManager('${getId(item)}')">View</button>
-            <button class="btn-link" onclick="quickEditManager('${getId(item)}')">Edit</button>
-          </div>
-        </td>
-      </tr>`,
-          )
-          .join("");
-        showTable("managers");
-        updateManagersPagination();
-      }
-
-      function updateManagersPagination() {
-        const p = state.managerMeta.page || 1;
-        const tp = state.managerMeta.totalPages || 1;
-        const t = state.managerMeta.total || 0;
-        document.getElementById("managersPaginationLabel").textContent =
-          `${p} / ${tp}`;
-        document.getElementById("managersTotalLabel").textContent = `${t} records`;
-        document.getElementById("managersPrevBtn").disabled = p <= 1;
-        document.getElementById("managersNextBtn").disabled = p >= tp;
-      }
-
-      async function selectManager(id) {
-        state.selectedManagerId = id;
-        document.getElementById("managerDetailState").style.display = "block";
-        document.getElementById("managerDetailState").innerHTML =
-          "<div>Loading…</div>";
-        document.getElementById("managerDetailWrap").hidden = true;
-        try {
-          const json = await fetchJson(`/admin/warehouse-managers/${id}`);
-          state.selectedManager = json?.data || json || null;
-          renderSelectedManager();
-          updateOverview();
-        } catch (e) {
-          state.selectedManager = null;
-          document.getElementById("managerDetailState").innerHTML = `<div>${e.message || "Failed to load"}</div>`;
-        }
-      }
-
-      function renderSelectedManager() {
-        const item = state.selectedManager;
-        if (!item) {
-          document.getElementById("managerDetailWrap").hidden = true;
-          document.getElementById("managerDetailState").style.display = "block";
-          return;
-        }
-        document.getElementById("managerDetailState").style.display = "none";
-        document.getElementById("managerDetailWrap").hidden = false;
-        document.getElementById("managerDetailName").textContent =
-          item.fullName || "—";
-        document.getElementById("managerDetailPhone").textContent =
-          item.phone || "—";
-        document.getElementById("managerDetailEmail").textContent =
-          item.email || "—";
-        document.getElementById("managerDetailNationalId").textContent =
-          item.nationalId || "—";
-        document.getElementById("managerDetailAddress").textContent =
-          item.address || "—";
-        document.getElementById("managerDetailId").textContent =
-          getId(item) || "—";
-      }
-
-      function resetManagerForm() {
-        state.editingManagerId = null;
-        clearErrors("manager");
-        document.getElementById("managerFormTitle").textContent =
-          "New Manager Profile";
-        document.getElementById("managerSubmitBtn").textContent =
-          "Create Manager";
-        document.getElementById("managerForm").reset();
-      }
-
-      function openManagerEditModal(item) {
-        state.modalManagerId = getId(item);
-        clearManagerModalErrors();
-        document.getElementById("modalManagerFullName").value =
-          item.fullName || "";
-        document.getElementById("modalManagerPhone").value = item.phone || "";
-        document.getElementById("modalManagerEmail").value = item.email || "";
-        document.getElementById("modalManagerNationalId").value =
-          item.nationalId || "";
-        document.getElementById("modalManagerPic").value = item.pic || "";
-        document.getElementById("modalManagerAddress").value =
-          item.address || "";
-        document.getElementById("managerEditModal").classList.add("open");
-      }
-
-      function closeManagerEditModal() {
-        state.modalManagerId = null;
-        document.getElementById("managerEditModal").classList.remove("open");
-      }
-
-      function validateManagerForm() {
-        clearErrors("manager");
-        const fn = document.getElementById("managerFullName").value.trim();
-        const ph = document.getElementById("managerPhone").value.trim();
-        const em = document.getElementById("managerEmail").value.trim();
-        const ni = document.getElementById("managerNationalId").value.trim();
-        const pw = document.getElementById("managerPassword").value.trim();
-        const ad = document.getElementById("managerAddress").value.trim();
-        const pi = document.getElementById("managerPic").value.trim();
-        let ok = true;
-        if (!fn) {
-          setFieldError("manager.fullName", "Required");
-          ok = false;
-        }
-        if (!ph) {
-          setFieldError("manager.phone", "Required");
-          ok = false;
-        }
-        if (!em) {
-          setFieldError("manager.email", "Required");
-          ok = false;
-        }
-        if (!ni) {
-          setFieldError("manager.nationalId", "Required");
-          ok = false;
-        }
-        if (pi && !isValidUrl(pi)) {
-          setFieldError("manager.pic", "Invalid URL");
-          ok = false;
-        }
-        if (!ok) return null;
-        return {
-          fullName: fn,
-          phone: ph,
-          email: em,
-          nationalId: ni,
-          password: pw || undefined,
-          address: ad || undefined,
-          pic: pi || undefined,
-        };
-      }
-
-      function validateManagerModalForm() {
-        clearManagerModalErrors();
-        const fn = document.getElementById("modalManagerFullName").value.trim();
-        const ph = document.getElementById("modalManagerPhone").value.trim();
-        const em = document.getElementById("modalManagerEmail").value.trim();
-        const ni = document.getElementById("modalManagerNationalId").value.trim();
-        const ad = document.getElementById("modalManagerAddress").value.trim();
-        const pi = document.getElementById("modalManagerPic").value.trim();
-        let ok = true;
-        if (!fn) {
-          setManagerModalError("manager.fullName", "Required");
-          ok = false;
-        }
-        if (!ph) {
-          setManagerModalError("manager.phone", "Required");
-          ok = false;
-        }
-        if (!em) {
-          setManagerModalError("manager.email", "Required");
-          ok = false;
-        }
-        if (!ni) {
-          setManagerModalError("manager.nationalId", "Required");
-          ok = false;
-        }
-        if (pi && !isValidUrl(pi)) {
-          setManagerModalError("manager.pic", "Invalid URL");
-          ok = false;
-        }
-        if (!ok) return null;
-        return {
-          fullName: fn,
-          phone: ph,
-          email: em,
-          nationalId: ni,
-          address: ad || undefined,
-          pic: pi || undefined,
-        };
-      }
-
-      async function submitManagerEditModal() {
-        if (!state.modalManagerId) return;
-        const id = state.modalManagerId;
-        const payload = validateManagerModalForm();
-        if (!payload) return;
-        try {
-          const json = await fetchJson(`/admin/warehouse-managers/${id}`, {
-            method: "PATCH",
-            body: JSON.stringify(payload),
-          });
-          closeManagerEditModal();
-          showBanner("success", getMessage(json, "Manager updated successfully"));
-          await Promise.all([
-            loadManagers(state.managerMeta.page || 1),
-            loadWarehouses(state.warehouseMeta.page || 1),
-            selectManager(id),
-          ]);
-        } catch (e) {
-          showBanner("error", e.message || "Failed to save");
-        }
-      }
-
-      async function submitManagerForm(event) {
-        event.preventDefault();
-        const payload = validateManagerForm();
-        if (!payload) return;
-        const isEdit = Boolean(state.editingManagerId);
-        try {
-          const json = await fetchJson(
-            isEdit
-              ? `/admin/warehouse-managers/${state.editingManagerId}`
-              : "/admin/warehouse-managers",
-            {
-              method: isEdit ? "PATCH" : "POST",
-              body: JSON.stringify(payload),
-            },
-          );
-          resetManagerForm();
-          showBanner(
-            "success",
-            getMessage(json, isEdit ? "Manager updated" : "Manager created"),
-          );
-          await loadManagers(isEdit ? state.managerMeta.page || 1 : 1);
-        } catch (e) {
-          showBanner("error", e.message || "Failed to save");
-        }
-      }
-
-      async function quickEditManager(id) {
-        await selectManager(id);
-        if (state.selectedManager) openManagerEditModal(state.selectedManager);
-      }
-
-      function editSelectedManager() {
-        if (state.selectedManager) openManagerEditModal(state.selectedManager);
-      }
-
-      async function deleteSelectedManager() {
-        if (!state.selectedManager) return;
-        try {
-          const json = await fetchJson(
-            `/admin/warehouse-managers/${getId(state.selectedManager)}`,
-            { method: "DELETE" },
-          );
-          showBanner("success", getMessage(json, "Manager deleted"));
-          state.selectedManager = null;
-          state.selectedManagerId = null;
-          renderSelectedManager();
-          await Promise.all([
-            loadManagers(state.managerMeta.page || 1),
-            loadWarehouses(state.warehouseMeta.page || 1),
-          ]);
-        } catch (e) {
-          showBanner("error", e.message || "Failed to delete");
-        }
-      }
-
-      async function loadWarehouses(page = 1) {
-        setTableState("warehouses", "Loading warehouses…");
-        try {
-          const json = await fetchJson(`/admin/warehouses${warehouseQuery(page)}`);
-          state.warehouses = extractCollection(json);
-          state.warehouseMeta = {
-            page: json?.page || json?.data?.page || page,
-            totalPages: json?.totalPages || json?.data?.totalPages || 1,
-            total:
-              json?.total || json?.data?.total || state.warehouses.length,
-          };
-          renderWarehouses();
-          updateOverview();
-        } catch (e) {
-          state.warehouses = [];
-          setTableState("warehouses", e.message || "Failed to load warehouses");
-        }
-      }
-
-      function findManagerName(managerId, fallback) {
-        if (fallback?.fullName) return fallback.fullName;
-        const m = state.managers.find((x) => getId(x) === managerId);
-        return m?.fullName || managerId || "—";
-      }
-
-      function utilizationBadge(stored, capacity) {
-        const storedNum = Number(stored || 0);
-        const capacityNum = Number(capacity || 0);
-        if (!capacityNum || capacityNum <= 0) {
-          return `<span class="badge">N/A</span>`;
-        }
-        const pct = Math.min(100, Math.round((storedNum / capacityNum) * 100));
-        const cls = pct >= 90 ? "red" : pct >= 70 ? "amber" : "green";
-        return `<span class="badge ${cls}">${pct}%</span>`;
-      }
-
-      function renderWarehouses() {
-        if (!state.warehouses.length) {
-          setTableState("warehouses", "No warehouses found");
-          updateWarehousesPagination();
-          return;
-        }
-        document.getElementById("warehousesRows").innerHTML = state.warehouses
-          .map(
-            (item) => `
-      <tr>
-        <td>
-          <div class="cell-main">${escapeHtml(item.name || "—")}</div>
-          <div class="cell-sub">${escapeHtml(item.location || "—")}</div>
-        </td>
-        <td>${escapeHtml(findManagerName(item.managerId || item.manager?._id || item.manager?.id, item.manager))}</td>
-        <td class="cell-mono">${formatNumber(item.capacityKg)}</td>
-        <td class="cell-mono">${formatNumber(item.currentStoredKg)}</td>
-        <td>${utilizationBadge(item.currentStoredKg, item.capacityKg)}</td>
-        <td>
-          <div class="row-actions">
-            <button class="btn-link" onclick="selectWarehouse('${getId(item)}')">View</button>
-            <button class="btn-link" onclick="quickEditWarehouse('${getId(item)}')">Edit</button>
-          </div>
-        </td>
-      </tr>`,
-          )
-          .join("");
-        showTable("warehouses");
-        updateWarehousesPagination();
-      }
-
-      function updateWarehousesPagination() {
-        const p = state.warehouseMeta.page || 1;
-        const tp = state.warehouseMeta.totalPages || 1;
-        const t = state.warehouseMeta.total || 0;
-        document.getElementById("warehousesPaginationLabel").textContent =
-          `${p} / ${tp}`;
-        document.getElementById("warehousesTotalLabel").textContent =
-          `${t} records`;
-        document.getElementById("warehousesPrevBtn").disabled = p <= 1;
-        document.getElementById("warehousesNextBtn").disabled = p >= tp;
-      }
-
-      async function selectWarehouse(id) {
-        state.selectedWarehouseId = id;
-        document.getElementById("warehouseDetailState").style.display = "block";
-        document.getElementById("warehouseDetailState").innerHTML =
-          "<div>Loading…</div>";
-        document.getElementById("warehouseDetailWrap").hidden = true;
-        try {
-          const json = await fetchJson(`/admin/warehouses/${id}`);
-          state.selectedWarehouse = json?.data || json || null;
-          renderSelectedWarehouse();
-          updateOverview();
-        } catch (e) {
-          state.selectedWarehouse = null;
-          document.getElementById("warehouseDetailState").innerHTML = `<div>${e.message || "Failed to load"}</div>`;
-        }
-      }
-
-      function renderSelectedWarehouse() {
-        const item = state.selectedWarehouse;
-        if (!item) {
-          document.getElementById("warehouseDetailWrap").hidden = true;
-          document.getElementById("warehouseDetailState").style.display = "block";
-          return;
-        }
-        document.getElementById("warehouseDetailState").style.display = "none";
-        document.getElementById("warehouseDetailWrap").hidden = false;
-        document.getElementById("warehouseDetailName").textContent =
-          item.name || "—";
-        document.getElementById("warehouseDetailManager").textContent =
-          findManagerName(
-            item.managerId || item.manager?._id || item.manager?.id,
-            item.manager,
-          );
-        document.getElementById("warehouseDetailLocation").textContent =
-          item.location || "—";
-        document.getElementById("warehouseDetailCapacity").textContent =
-          formatNumber(item.capacityKg);
-        document.getElementById("warehouseDetailStored").textContent =
-          formatNumber(item.currentStoredKg);
-        document.getElementById("warehouseDetailId").textContent =
-          getId(item) || "—";
-      }
-
-      function resetWarehouseForm() {
-        state.editingWarehouseId = null;
-        clearErrors("warehouse");
-        document.getElementById("warehouseFormTitle").textContent =
-          "New Warehouse";
-        document.getElementById("warehouseSubmitBtn").textContent =
-          "Create Warehouse";
-        document.getElementById("warehouseForm").reset();
-        document.getElementById("warehouseManagerId").value = "";
-      }
-
-      function openWarehouseEditModal(item) {
-        state.modalWarehouseId = getId(item);
-        clearWarehouseModalErrors();
-        document.getElementById("modalWarehouseName").value = item.name || "";
-        document.getElementById("modalWarehouseLocation").value =
-          item.location || "";
-        document.getElementById("modalWarehouseCapacityKg").value =
-          item.capacityKg ?? "";
-        document.getElementById("modalWarehouseCurrentStoredKg").value =
-          item.currentStoredKg ?? "";
-        document.getElementById("modalWarehouseManagerId").value =
-          item.managerId || item.manager?._id || item.manager?.id || "";
-        document.getElementById("warehouseEditModal").classList.add("open");
-      }
-
-      function closeWarehouseEditModal() {
-        state.modalWarehouseId = null;
-        document.getElementById("warehouseEditModal").classList.remove("open");
-      }
-
-      function validateWarehouseForm() {
-        clearErrors("warehouse");
-        const nm = document.getElementById("warehouseName").value.trim();
-        const lo = document.getElementById("warehouseLocation").value.trim();
-        const ck = toNumber(document.getElementById("warehouseCapacityKg").value);
-        const sk = toNumber(
-          document.getElementById("warehouseCurrentStoredKg").value,
-        );
-        const mid = document.getElementById("warehouseManagerId").value;
-        let ok = true;
-        if (!nm) {
-          setFieldError("warehouse.name", "Required");
-          ok = false;
-        }
-        if (!lo) {
-          setFieldError("warehouse.location", "Required");
-          ok = false;
-        }
-        if (ck == null || Number.isNaN(ck)) {
-          setFieldError("warehouse.capacityKg", "Required");
-          ok = false;
-        }
-        if (!mid) {
-          setFieldError("warehouse.managerId", "Required");
-          ok = false;
-        }
-        if (sk != null && Number.isNaN(sk)) {
-          setFieldError("warehouse.currentStoredKg", "Invalid amount");
-          ok = false;
-        }
-        if (!ok) return null;
-        return {
-          name: nm,
-          location: lo,
-          capacityKg: ck,
-          currentStoredKg: sk == null ? undefined : sk,
-          managerId: mid,
-        };
-      }
-
-      function validateWarehouseModalForm() {
-        clearWarehouseModalErrors();
-        const nm = document.getElementById("modalWarehouseName").value.trim();
-        const lo = document.getElementById("modalWarehouseLocation").value.trim();
-        const ck = toNumber(
-          document.getElementById("modalWarehouseCapacityKg").value,
-        );
-        const sk = toNumber(
-          document.getElementById("modalWarehouseCurrentStoredKg").value,
-        );
-        const mid = document.getElementById("modalWarehouseManagerId").value;
-        let ok = true;
-        if (!nm) {
-          setWarehouseModalError("warehouse.name", "Required");
-          ok = false;
-        }
-        if (!lo) {
-          setWarehouseModalError("warehouse.location", "Required");
-          ok = false;
-        }
-        if (ck == null || Number.isNaN(ck)) {
-          setWarehouseModalError("warehouse.capacityKg", "Required");
-          ok = false;
-        }
-        if (!mid) {
-          setWarehouseModalError("warehouse.managerId", "Required");
-          ok = false;
-        }
-        if (sk != null && Number.isNaN(sk)) {
-          setWarehouseModalError("warehouse.currentStoredKg", "Invalid amount");
-          ok = false;
-        }
-        if (!ok) return null;
-        return {
-          name: nm,
-          location: lo,
-          capacityKg: ck,
-          currentStoredKg: sk == null ? undefined : sk,
-          managerId: mid,
-        };
-      }
-
-      async function submitWarehouseEditModal() {
-        if (!state.modalWarehouseId) return;
-        const id = state.modalWarehouseId;
-        const payload = validateWarehouseModalForm();
-        if (!payload) return;
-        try {
-          const json = await fetchJson(`/admin/warehouses/${id}`, {
-            method: "PATCH",
-            body: JSON.stringify(payload),
-          });
-          closeWarehouseEditModal();
-          showBanner("success", getMessage(json, "Warehouse updated"));
-          await Promise.all([
-            loadWarehouses(state.warehouseMeta.page || 1),
-            selectWarehouse(id),
-          ]);
-        } catch (e) {
-          showBanner("error", e.message || "Failed to save");
-        }
-      }
-
-      async function submitWarehouseForm(event) {
-        event.preventDefault();
-        const payload = validateWarehouseForm();
-        if (!payload) return;
-        const isEdit = Boolean(state.editingWarehouseId);
-        try {
-          const json = await fetchJson(
-            isEdit
-              ? `/admin/warehouses/${state.editingWarehouseId}`
-              : "/admin/warehouses",
-            {
-              method: isEdit ? "PATCH" : "POST",
-              body: JSON.stringify(payload),
-            },
-          );
-          resetWarehouseForm();
-          showBanner(
-            "success",
-            getMessage(
-              json,
-              isEdit ? "Warehouse updated" : "Warehouse created",
-            ),
-          );
-          await loadWarehouses(isEdit ? state.warehouseMeta.page || 1 : 1);
-        } catch (e) {
-          showBanner("error", e.message || "Failed to save");
-        }
-      }
-
-      async function quickEditWarehouse(id) {
-        await selectWarehouse(id);
-        if (state.selectedWarehouse) {
-          openWarehouseEditModal(state.selectedWarehouse);
-        }
-      }
-
-      function editSelectedWarehouse() {
-        if (state.selectedWarehouse) {
-          openWarehouseEditModal(state.selectedWarehouse);
-        }
-      }
-
-      async function deleteSelectedWarehouse() {
-        if (!state.selectedWarehouse) return;
-        try {
-          const json = await fetchJson(
-            `/admin/warehouses/${getId(state.selectedWarehouse)}`,
-            { method: "DELETE" },
-          );
-          showBanner("success", getMessage(json, "Warehouse deleted"));
-          state.selectedWarehouse = null;
-          state.selectedWarehouseId = null;
-          renderSelectedWarehouse();
-          await loadWarehouses(state.warehouseMeta.page || 1);
-        } catch (e) {
-          showBanner("error", e.message || "Failed to delete");
-        }
-      }
-
-      function resetManagerFilters() {
-        document.getElementById("managerSearch").value = "";
-        document.getElementById("managerLimit").value = "10";
-        loadManagers(1);
-      }
-
-      function resetWarehouseFilters() {
-        document.getElementById("warehouseSearch").value = "";
-        document.getElementById("warehouseFilterManagerId").value = "";
-        document.getElementById("warehouseLimit").value = "10";
-        loadWarehouses(1);
-      }
-
-      function changeManagersPage(d) {
-        const n = (state.managerMeta.page || 1) + d;
-        if (n < 1 || n > (state.managerMeta.totalPages || 1)) return;
-        loadManagers(n);
-      }
-
-      function changeWarehousesPage(d) {
-        const n = (state.warehouseMeta.page || 1) + d;
-        if (n < 1 || n > (state.warehouseMeta.totalPages || 1)) return;
-        loadWarehouses(n);
-      }
-
-      async function refreshAll() {
-        showBanner("", "");
-        await Promise.all([
-          loadManagers(state.managerMeta.page || 1),
-          loadWarehouses(state.warehouseMeta.page || 1),
-        ]);
-        if (state.selectedManagerId) await selectManager(state.selectedManagerId);
-        if (state.selectedWarehouseId) {
-          await selectWarehouse(state.selectedWarehouseId);
-        }
-      }
-
-      async function init() {
-        try {
-          await Promise.all([loadManagers(1), loadWarehouses(1)]);
-        } catch (e) {
-          showBanner("error", e.message || "Initialization failed");
-        }
-      }
-
+      const state = { activeTab: "managers", managers: [], warehouses: [], managerMeta: { page:1, totalPages:1, total:0 }, warehouseMeta: { page:1, totalPages:1, total:0 }, editingManagerId: null, editingWarehouseId: null, selectedManagerId: null, selectedWarehouseId: null, selectedManager: null, selectedWarehouse: null, modalManagerId: null, modalWarehouseId: null };
+      function goBack(){ location.href = "dashboard.html"; } function logout(){ localStorage.removeItem("token"); location.href = "index.html"; }
+      function getMessage(json,fallback){ return json?.message || json?.error || json?.data?.message || json?.errors?.[0]?.message || fallback; }
+      function getId(item){ return item?._id || item?.id || item?.managerId || item?.warehouseId; }
+      function extractCollection(json){ if(Array.isArray(json)) return json; if(Array.isArray(json?.data)) return json.data; if(Array.isArray(json?.data?.data)) return json.data.data; if(Array.isArray(json?.items)) return json.items; if(Array.isArray(json?.results)) return json.results; return []; }
+      function escapeHtml(value){ return String(value ?? "-").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#39;"); }
+      function isValidUrl(value){ if(!value) return true; try { new URL(value); return true; } catch(_) { return false; } }
+      function toNumber(value){ if(value === "" || value == null) return null; const n = Number(value); return Number.isFinite(n) ? n : NaN; }
+      function formatNumber(value){ if(value == null || value === "" || Number.isNaN(Number(value))) return "-"; return Number(value).toLocaleString("en-US"); }
+      function showBanner(type,message){ const el = document.getElementById("pageBanner"); if(!message){ el.className = "banner"; el.textContent = ""; return; } el.className = `banner ${type}`; el.textContent = message; }
+      function clearErrors(scope){ document.querySelectorAll(`[data-error-for^="${scope}."]`).forEach((el) => el.textContent = ""); }
+      function setFieldError(key, message){ const el = document.querySelector(`[data-error-for="${key}"]`); if(el) el.textContent = message; }
+      function clearManagerModalErrors(){ document.querySelectorAll("[data-manager-modal-error-for]").forEach((el) => el.textContent = ""); } function setManagerModalError(key,message){ const el = document.querySelector(`[data-manager-modal-error-for="${key}"]`); if(el) el.textContent = message; }
+      function clearWarehouseModalErrors(){ document.querySelectorAll("[data-warehouse-modal-error-for]").forEach((el) => el.textContent = ""); } function setWarehouseModalError(key,message){ const el = document.querySelector(`[data-warehouse-modal-error-for="${key}"]`); if(el) el.textContent = message; }
+      function setTab(tab){ state.activeTab = tab; document.querySelectorAll(".tab-btn").forEach((b)=>b.classList.toggle("active", b.dataset.tab === tab)); document.querySelectorAll(".tab-panel").forEach((p)=>p.classList.toggle("active", p.id === `panel-${tab}`)); }
+      async function fetchJson(path, options = {}){ const response = await fetch(`${API_BASE}${path}`, { ...options, headers: { Authorization: `Bearer ${token}`, ...(options.body ? { "Content-Type": "application/json" } : {}), ...(options.headers || {}) } }); const text = await response.text(); let json = null; try { json = text ? JSON.parse(text) : null; } catch(_) { json = null; } if(!response.ok) throw { status: response.status, json, message: getMessage(json, text || "Request failed") }; return json; }
+      function setState(section, type, message, showTable = false){ const stateEl = document.getElementById(`${section}State`); const table = document.getElementById(`${section}Table`); stateEl.className = type; stateEl.textContent = message; stateEl.hidden = false; table.hidden = !showTable; }
+      function updateOverview(){ const assignedManagerIds = new Set(state.warehouses.map((item) => item.managerId || item.manager?._id || item.manager?.id).filter(Boolean)); const totalCapacity = state.warehouses.reduce((sum, item) => sum + Number(item.capacityKg || 0), 0); document.getElementById("managerCount").textContent = formatNumber(state.managerMeta.total || state.managers.length); document.getElementById("warehouseCount").textContent = formatNumber(state.warehouseMeta.total || state.warehouses.length); document.getElementById("assignedManagersCount").textContent = formatNumber(assignedManagerIds.size); document.getElementById("totalCapacityCount").textContent = formatNumber(totalCapacity); document.getElementById("selectionManager").textContent = state.selectedManager?.fullName || "No manager selected"; document.getElementById("selectionWarehouse").textContent = state.selectedWarehouse?.name || "No warehouse selected"; }
+      function populateManagerSelects(){ const options = ['<option value="">Select manager</option>'].concat(state.managers.map((item) => `<option value="${getId(item)}">${escapeHtml(item.fullName || item.name || getId(item))}</option>`)); document.getElementById("warehouseManagerId").innerHTML = options.join(""); document.getElementById("modalWarehouseManagerId").innerHTML = options.join(""); document.getElementById("warehouseFilterManagerId").innerHTML = ['<option value="">All managers</option>'].concat(state.managers.map((item) => `<option value="${getId(item)}">${escapeHtml(item.fullName || item.name || getId(item))}</option>`)).join(""); }
+      function managerQuery(page = 1){ const params = new URLSearchParams(); params.set("page", String(page)); params.set("limit", document.getElementById("managerLimit").value || "10"); const search = document.getElementById("managerSearch").value.trim(); if(search) params.set("search", search); return `?${params.toString()}`; }
+      function warehouseQuery(page = 1){ const params = new URLSearchParams(); params.set("page", String(page)); params.set("limit", document.getElementById("warehouseLimit").value || "10"); const search = document.getElementById("warehouseSearch").value.trim(); const managerId = document.getElementById("warehouseFilterManagerId").value; if(search) params.set("search", search); if(managerId) params.set("managerId", managerId); return `?${params.toString()}`; }
+      async function loadManagers(page = 1){ setState("managers","loading-state","Loading managers..."); try { const json = await fetchJson(`/admin/warehouse-managers${managerQuery(page)}`); state.managers = extractCollection(json); state.managerMeta = { page: json?.page || json?.data?.page || page, totalPages: json?.totalPages || json?.data?.totalPages || 1, total: json?.total || json?.data?.total || state.managers.length }; renderManagers(); populateManagerSelects(); updateOverview(); } catch(error){ state.managers = []; setState("managers","empty-state", error.message || "Failed to load managers"); } }
+      function renderManagers(){ if(!state.managers.length){ setState("managers","empty-state","No managers found"); updateManagersPagination(); return; } document.getElementById("managersRows").innerHTML = state.managers.map((item) => `<tr><td><div class="inline-stack"><strong>${escapeHtml(item.fullName || "-")}</strong><span class="subtle">${escapeHtml(item.address || "-")}</span></div></td><td>${escapeHtml(item.phone || "-")}</td><td>${escapeHtml(item.email || "-")}</td><td>${escapeHtml(item.nationalId || "-")}</td><td><div class="row-actions"><button class="btn-link" type="button" onclick="selectManager('${getId(item)}', true)">View</button><button class="btn-link" type="button" onclick="quickEditManager('${getId(item)}')">Edit</button></div></td></tr>`).join(""); document.getElementById("managersState").hidden = true; document.getElementById("managersTable").hidden = false; updateManagersPagination(); }
+      function updateManagersPagination(){ const page = state.managerMeta.page || 1; const totalPages = state.managerMeta.totalPages || 1; document.getElementById("managersPaginationLabel").textContent = `Page ${page} of ${totalPages}`; document.getElementById("managersPrevBtn").disabled = page <= 1; document.getElementById("managersNextBtn").disabled = page >= totalPages; }
+      async function selectManager(id, openModal = false){ state.selectedManagerId = id; try { const json = await fetchJson(`/admin/warehouse-managers/${id}`); state.selectedManager = json?.data || json || null; renderSelectedManager(); updateOverview(); if(openModal && state.selectedManager) openManagerViewModal(state.selectedManager); } catch(error){ state.selectedManager = null; renderSelectedManager(); showBanner("error", error.message || "Failed to load manager details"); } }
+      function renderSelectedManager(){ const item = state.selectedManager; document.getElementById("managerInspectorName").textContent = item?.fullName || "No manager selected"; document.getElementById("openManagerInspectorBtn").disabled = !item; document.getElementById("editSelectedManagerBtn").disabled = !item; document.getElementById("deleteSelectedManagerBtn").disabled = !item; if(!item) return; document.getElementById("managerViewName").textContent = item.fullName || "-"; document.getElementById("managerViewAddress").textContent = item.address || "-"; document.getElementById("managerViewPhone").textContent = item.phone || "-"; document.getElementById("managerViewEmail").textContent = item.email || "-"; document.getElementById("managerViewNationalId").textContent = item.nationalId || "-"; document.getElementById("managerViewId").textContent = getId(item) || "-"; }
+      function openManagerViewModal(item){ renderSelectedManager(); document.getElementById("managerViewModal").classList.add("open"); }
+      function closeManagerViewModal(event){ if(event && event.target !== event.currentTarget) return; document.getElementById("managerViewModal").classList.remove("open"); }
+      function openSelectedManagerView(){ if(state.selectedManager) openManagerViewModal(state.selectedManager); }
+      function resetManagerForm(){ state.editingManagerId = null; clearErrors("manager"); document.getElementById("managerFormTitle").textContent = "Create Warehouse Manager"; document.getElementById("managerSubmitBtn").textContent = "Create Manager"; document.getElementById("managerForm").reset(); }
+      function fillManagerForm(item){ state.editingManagerId = getId(item); document.getElementById("managerFormTitle").textContent = "Edit Warehouse Manager"; document.getElementById("managerSubmitBtn").textContent = "Save Changes"; document.getElementById("managerFullName").value = item.fullName || ""; document.getElementById("managerPhone").value = item.phone || ""; document.getElementById("managerEmail").value = item.email || ""; document.getElementById("managerNationalId").value = item.nationalId || ""; document.getElementById("managerPassword").value = ""; document.getElementById("managerPic").value = item.pic || ""; document.getElementById("managerAddress").value = item.address || ""; }
+      function openManagerEditModal(item){ state.modalManagerId = getId(item); clearManagerModalErrors(); document.getElementById("modalManagerFullName").value = item.fullName || ""; document.getElementById("modalManagerPhone").value = item.phone || ""; document.getElementById("modalManagerEmail").value = item.email || ""; document.getElementById("modalManagerNationalId").value = item.nationalId || ""; document.getElementById("modalManagerPic").value = item.pic || ""; document.getElementById("modalManagerAddress").value = item.address || ""; document.getElementById("managerEditModal").classList.add("open"); }
+      function closeManagerEditModal(){ state.modalManagerId = null; document.getElementById("managerEditModal").classList.remove("open"); }
+      function validateManagerForm(){ clearErrors("manager"); const fullName = document.getElementById("managerFullName").value.trim(); const phone = document.getElementById("managerPhone").value.trim(); const email = document.getElementById("managerEmail").value.trim(); const nationalId = document.getElementById("managerNationalId").value.trim(); const password = document.getElementById("managerPassword").value.trim(); const address = document.getElementById("managerAddress").value.trim(); const pic = document.getElementById("managerPic").value.trim(); let ok = true; if(!fullName){ setFieldError("manager.fullName","Full name is required"); ok = false; } if(!phone){ setFieldError("manager.phone","Phone is required"); ok = false; } if(!email){ setFieldError("manager.email","Email is required"); ok = false; } if(!nationalId){ setFieldError("manager.nationalId","National ID is required"); ok = false; } if(pic && !isValidUrl(pic)){ setFieldError("manager.pic","Enter a valid image URL"); ok = false; } if(!ok) return null; return { fullName, phone, email, nationalId, password: password || undefined, address: address || undefined, pic: pic || undefined }; }
+      function validateManagerModalForm(){ clearManagerModalErrors(); const fullName = document.getElementById("modalManagerFullName").value.trim(); const phone = document.getElementById("modalManagerPhone").value.trim(); const email = document.getElementById("modalManagerEmail").value.trim(); const nationalId = document.getElementById("modalManagerNationalId").value.trim(); const address = document.getElementById("modalManagerAddress").value.trim(); const pic = document.getElementById("modalManagerPic").value.trim(); let ok = true; if(!fullName){ setManagerModalError("manager.fullName","Full name is required"); ok = false; } if(!phone){ setManagerModalError("manager.phone","Phone is required"); ok = false; } if(!email){ setManagerModalError("manager.email","Email is required"); ok = false; } if(!nationalId){ setManagerModalError("manager.nationalId","National ID is required"); ok = false; } if(pic && !isValidUrl(pic)){ setManagerModalError("manager.pic","Enter a valid image URL"); ok = false; } if(!ok) return null; return { fullName, phone, email, nationalId, address: address || undefined, pic: pic || undefined }; }
+      async function submitManagerEditModal(){ if(!state.modalManagerId) return; const currentId = state.modalManagerId; const payload = validateManagerModalForm(); if(!payload) return; try { const json = await fetchJson(`/admin/warehouse-managers/${currentId}`, { method:"PATCH", body: JSON.stringify(payload) }); closeManagerEditModal(); showBanner("success", getMessage(json, "Warehouse manager updated successfully")); await Promise.all([loadManagers(state.managerMeta.page || 1), loadWarehouses(state.warehouseMeta.page || 1), selectManager(currentId)]); } catch(error){ showBanner("error", error.message || "Failed to save warehouse manager"); } }
+      async function submitManagerForm(event){ event.preventDefault(); const payload = validateManagerForm(); if(!payload) return; const isEditing = Boolean(state.editingManagerId); try { const json = await fetchJson(isEditing ? `/admin/warehouse-managers/${state.editingManagerId}` : "/admin/warehouse-managers", { method: isEditing ? "PATCH" : "POST", body: JSON.stringify(payload) }); resetManagerForm(); showBanner("success", getMessage(json, isEditing ? "Warehouse manager updated successfully" : "Warehouse manager created successfully")); await loadManagers(isEditing ? state.managerMeta.page || 1 : 1); } catch(error){ showBanner("error", error.message || "Failed to save warehouse manager"); } }
+      async function quickEditManager(id){ await selectManager(id); if(state.selectedManager) openManagerEditModal(state.selectedManager); }
+      function editSelectedManager(){ if(state.selectedManager){ closeManagerViewModal(); openManagerEditModal(state.selectedManager); } }
+      async function deleteSelectedManager(){ if(!state.selectedManager) return; try { const json = await fetchJson(`/admin/warehouse-managers/${getId(state.selectedManager)}`, { method: "DELETE" }); closeManagerViewModal(); showBanner("success", getMessage(json, "Warehouse manager deleted successfully")); state.selectedManager = null; state.selectedManagerId = null; renderSelectedManager(); await Promise.all([loadManagers(state.managerMeta.page || 1), loadWarehouses(state.warehouseMeta.page || 1)]); } catch(error){ showBanner("error", error.message || "Failed to delete warehouse manager"); } }
+      async function loadWarehouses(page = 1){ setState("warehouses","loading-state","Loading warehouses..."); try { const json = await fetchJson(`/admin/warehouses${warehouseQuery(page)}`); state.warehouses = extractCollection(json); state.warehouseMeta = { page: json?.page || json?.data?.page || page, totalPages: json?.totalPages || json?.data?.totalPages || 1, total: json?.total || json?.data?.total || state.warehouses.length }; renderWarehouses(); updateOverview(); } catch(error){ state.warehouses = []; setState("warehouses","empty-state", error.message || "Failed to load warehouses"); } }
+      function findManagerName(managerId, fallbackManager){ if(fallbackManager?.fullName) return fallbackManager.fullName; const item = state.managers.find((manager) => getId(manager) === managerId); return item?.fullName || managerId || "-"; }
+      function renderWarehouses(){ if(!state.warehouses.length){ setState("warehouses","empty-state","No warehouses found"); updateWarehousesPagination(); return; } document.getElementById("warehousesRows").innerHTML = state.warehouses.map((item) => `<tr><td><div class="inline-stack"><strong>${escapeHtml(item.name || "-")}</strong><span class="subtle">${escapeHtml(item.location || "-")}</span></div></td><td>${escapeHtml(findManagerName(item.managerId || item.manager?._id || item.manager?.id, item.manager))}</td><td>${formatNumber(item.capacityKg)}</td><td>${formatNumber(item.currentStoredKg)}</td><td><div class="row-actions"><button class="btn-link" type="button" onclick="selectWarehouse('${getId(item)}', true)">View</button><button class="btn-link" type="button" onclick="quickEditWarehouse('${getId(item)}')">Edit</button></div></td></tr>`).join(""); document.getElementById("warehousesState").hidden = true; document.getElementById("warehousesTable").hidden = false; updateWarehousesPagination(); }
+      function updateWarehousesPagination(){ const page = state.warehouseMeta.page || 1; const totalPages = state.warehouseMeta.totalPages || 1; document.getElementById("warehousesPaginationLabel").textContent = `Page ${page} of ${totalPages}`; document.getElementById("warehousesPrevBtn").disabled = page <= 1; document.getElementById("warehousesNextBtn").disabled = page >= totalPages; }
+      async function selectWarehouse(id, openModal = false){ state.selectedWarehouseId = id; try { const json = await fetchJson(`/admin/warehouses/${id}`); state.selectedWarehouse = json?.data || json || null; renderSelectedWarehouse(); updateOverview(); if(openModal && state.selectedWarehouse) openWarehouseViewModal(state.selectedWarehouse); } catch(error){ state.selectedWarehouse = null; renderSelectedWarehouse(); showBanner("error", error.message || "Failed to load warehouse details"); } }
+      function renderSelectedWarehouse(){ const item = state.selectedWarehouse; document.getElementById("warehouseInspectorName").textContent = item?.name || "No warehouse selected"; document.getElementById("openWarehouseInspectorBtn").disabled = !item; document.getElementById("editSelectedWarehouseBtn").disabled = !item; document.getElementById("deleteSelectedWarehouseBtn").disabled = !item; if(!item) return; document.getElementById("warehouseViewName").textContent = item.name || "-"; document.getElementById("warehouseViewLocation").textContent = item.location || "-"; document.getElementById("warehouseViewManager").textContent = findManagerName(item.managerId || item.manager?._id || item.manager?.id, item.manager); document.getElementById("warehouseViewCapacity").textContent = formatNumber(item.capacityKg); document.getElementById("warehouseViewStored").textContent = formatNumber(item.currentStoredKg); document.getElementById("warehouseViewId").textContent = getId(item) || "-"; }
+      function openWarehouseViewModal(item){ renderSelectedWarehouse(); document.getElementById("warehouseViewModal").classList.add("open"); }
+      function closeWarehouseViewModal(event){ if(event && event.target !== event.currentTarget) return; document.getElementById("warehouseViewModal").classList.remove("open"); }
+      function openSelectedWarehouseView(){ if(state.selectedWarehouse) openWarehouseViewModal(state.selectedWarehouse); }
+      function resetWarehouseForm(){ state.editingWarehouseId = null; clearErrors("warehouse"); document.getElementById("warehouseFormTitle").textContent = "Create Warehouse"; document.getElementById("warehouseSubmitBtn").textContent = "Create Warehouse"; document.getElementById("warehouseForm").reset(); document.getElementById("warehouseManagerId").value = ""; }
+      function fillWarehouseForm(item){ state.editingWarehouseId = getId(item); document.getElementById("warehouseFormTitle").textContent = "Edit Warehouse"; document.getElementById("warehouseSubmitBtn").textContent = "Save Changes"; document.getElementById("warehouseName").value = item.name || ""; document.getElementById("warehouseLocation").value = item.location || ""; document.getElementById("warehouseCapacityKg").value = item.capacityKg ?? ""; document.getElementById("warehouseCurrentStoredKg").value = item.currentStoredKg ?? ""; document.getElementById("warehouseManagerId").value = item.managerId || item.manager?._id || item.manager?.id || ""; }
+      function openWarehouseEditModal(item){ state.modalWarehouseId = getId(item); clearWarehouseModalErrors(); document.getElementById("modalWarehouseName").value = item.name || ""; document.getElementById("modalWarehouseLocation").value = item.location || ""; document.getElementById("modalWarehouseCapacityKg").value = item.capacityKg ?? ""; document.getElementById("modalWarehouseCurrentStoredKg").value = item.currentStoredKg ?? ""; document.getElementById("modalWarehouseManagerId").value = item.managerId || item.manager?._id || item.manager?.id || ""; document.getElementById("warehouseEditModal").classList.add("open"); }
+      function closeWarehouseEditModal(){ state.modalWarehouseId = null; document.getElementById("warehouseEditModal").classList.remove("open"); }
+      function validateWarehouseForm(){ clearErrors("warehouse"); const name = document.getElementById("warehouseName").value.trim(); const location = document.getElementById("warehouseLocation").value.trim(); const capacityKg = toNumber(document.getElementById("warehouseCapacityKg").value); const currentStoredKg = toNumber(document.getElementById("warehouseCurrentStoredKg").value); const managerId = document.getElementById("warehouseManagerId").value; let ok = true; if(!name){ setFieldError("warehouse.name","Warehouse name is required"); ok = false; } if(!location){ setFieldError("warehouse.location","Location is required"); ok = false; } if(capacityKg == null || Number.isNaN(capacityKg)){ setFieldError("warehouse.capacityKg","Capacity is required"); ok = false; } if(!managerId){ setFieldError("warehouse.managerId","Manager is required"); ok = false; } if(currentStoredKg != null && Number.isNaN(currentStoredKg)){ setFieldError("warehouse.currentStoredKg","Enter a valid stored amount"); ok = false; } if(!ok) return null; return { name, location, capacityKg, currentStoredKg: currentStoredKg == null ? undefined : currentStoredKg, managerId }; }
+      function validateWarehouseModalForm(){ clearWarehouseModalErrors(); const name = document.getElementById("modalWarehouseName").value.trim(); const location = document.getElementById("modalWarehouseLocation").value.trim(); const capacityKg = toNumber(document.getElementById("modalWarehouseCapacityKg").value); const currentStoredKg = toNumber(document.getElementById("modalWarehouseCurrentStoredKg").value); const managerId = document.getElementById("modalWarehouseManagerId").value; let ok = true; if(!name){ setWarehouseModalError("warehouse.name","Warehouse name is required"); ok = false; } if(!location){ setWarehouseModalError("warehouse.location","Location is required"); ok = false; } if(capacityKg == null || Number.isNaN(capacityKg)){ setWarehouseModalError("warehouse.capacityKg","Capacity is required"); ok = false; } if(!managerId){ setWarehouseModalError("warehouse.managerId","Manager is required"); ok = false; } if(currentStoredKg != null && Number.isNaN(currentStoredKg)){ setWarehouseModalError("warehouse.currentStoredKg","Enter a valid stored amount"); ok = false; } if(!ok) return null; return { name, location, capacityKg, currentStoredKg: currentStoredKg == null ? undefined : currentStoredKg, managerId }; }
+      async function submitWarehouseEditModal(){ if(!state.modalWarehouseId) return; const currentId = state.modalWarehouseId; const payload = validateWarehouseModalForm(); if(!payload) return; try { const json = await fetchJson(`/admin/warehouses/${currentId}`, { method:"PATCH", body: JSON.stringify(payload) }); closeWarehouseEditModal(); showBanner("success", getMessage(json, "Warehouse updated successfully")); await Promise.all([loadWarehouses(state.warehouseMeta.page || 1), selectWarehouse(currentId)]); } catch(error){ showBanner("error", error.message || "Failed to save warehouse"); } }
+      async function submitWarehouseForm(event){ event.preventDefault(); const payload = validateWarehouseForm(); if(!payload) return; const isEditing = Boolean(state.editingWarehouseId); try { const json = await fetchJson(isEditing ? `/admin/warehouses/${state.editingWarehouseId}` : "/admin/warehouses", { method: isEditing ? "PATCH" : "POST", body: JSON.stringify(payload) }); resetWarehouseForm(); showBanner("success", getMessage(json, isEditing ? "Warehouse updated successfully" : "Warehouse created successfully")); await loadWarehouses(isEditing ? state.warehouseMeta.page || 1 : 1); } catch(error){ showBanner("error", error.message || "Failed to save warehouse"); } }
+      async function quickEditWarehouse(id){ await selectWarehouse(id); if(state.selectedWarehouse) openWarehouseEditModal(state.selectedWarehouse); }
+      function editSelectedWarehouse(){ if(state.selectedWarehouse){ closeWarehouseViewModal(); openWarehouseEditModal(state.selectedWarehouse); } }
+      async function deleteSelectedWarehouse(){ if(!state.selectedWarehouse) return; try { const json = await fetchJson(`/admin/warehouses/${getId(state.selectedWarehouse)}`, { method: "DELETE" }); closeWarehouseViewModal(); showBanner("success", getMessage(json, "Warehouse deleted successfully")); state.selectedWarehouse = null; state.selectedWarehouseId = null; renderSelectedWarehouse(); await loadWarehouses(state.warehouseMeta.page || 1); } catch(error){ showBanner("error", error.message || "Failed to delete warehouse"); } }
+      function resetManagerFilters(){ document.getElementById("managerSearch").value = ""; document.getElementById("managerLimit").value = "10"; loadManagers(1); }
+      function resetWarehouseFilters(){ document.getElementById("warehouseSearch").value = ""; document.getElementById("warehouseFilterManagerId").value = ""; document.getElementById("warehouseLimit").value = "10"; loadWarehouses(1); }
+      function changeManagersPage(delta){ const next = (state.managerMeta.page || 1) + delta; if(next < 1 || next > (state.managerMeta.totalPages || 1)) return; loadManagers(next); }
+      function changeWarehousesPage(delta){ const next = (state.warehouseMeta.page || 1) + delta; if(next < 1 || next > (state.warehouseMeta.totalPages || 1)) return; loadWarehouses(next); }
+      async function refreshAll(){ showBanner("", ""); await Promise.all([loadManagers(state.managerMeta.page || 1), loadWarehouses(state.warehouseMeta.page || 1)]); if(state.selectedManagerId) await selectManager(state.selectedManagerId); if(state.selectedWarehouseId) await selectWarehouse(state.selectedWarehouseId); }
+      async function init(){ try { await Promise.all([loadManagers(1), loadWarehouses(1)]); } catch(error) { showBanner("error", error.message || "Failed to initialize warehouses management"); } }
       init();
     </script>
-    <script src="./site-i18n.js" onerror="void 0"></script>
+    <script src="./site-i18n.js"></script>
   </body>
 </html>
