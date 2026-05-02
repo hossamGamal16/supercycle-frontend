@@ -1,0 +1,375 @@
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Sora:wght@300;400;500;600;700&display=swap");
+
+:root {
+  --theme-bg-base: #08110c;
+  --theme-bg-surface: #0f1913;
+  --theme-bg-elevated: #15231b;
+  --theme-bg-overlay: #1d2e24;
+  --theme-bg-hover: #22382a;
+  --theme-border-subtle: rgba(255, 255, 255, 0.06);
+  --theme-border-default: rgba(255, 255, 255, 0.1);
+  --theme-border-strong: rgba(255, 255, 255, 0.18);
+  --theme-accent: #34d399;
+  --theme-accent-dim: rgba(52, 211, 153, 0.12);
+  --theme-accent-glow: rgba(52, 211, 153, 0.24);
+  --theme-accent-hover: #6ee7b7;
+  --theme-red: #f87171;
+  --theme-red-dim: rgba(248, 113, 113, 0.12);
+  --theme-amber: #fbbf24;
+  --theme-amber-dim: rgba(251, 191, 36, 0.12);
+  --theme-blue: #60a5fa;
+  --theme-blue-dim: rgba(96, 165, 250, 0.12);
+  --theme-text-primary: #eefaf2;
+  --theme-text-secondary: #8ba39a;
+  --theme-text-muted: #4d675b;
+  --theme-shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.45);
+  --theme-font-ui: "Sora", sans-serif;
+  --theme-font-mono: "IBM Plex Mono", monospace;
+}
+
+html,
+body {
+  scrollbar-color: var(--theme-border-default) transparent;
+}
+
+body {
+  font-family: var(--theme-font-ui) !important;
+  background:
+    radial-gradient(circle at top left, rgba(52, 211, 153, 0.08), transparent 24%),
+    var(--theme-bg-base) !important;
+  color: var(--theme-text-primary) !important;
+}
+
+body:not(:has(.topbar)) {
+  min-height: 100vh;
+}
+
+.header,
+.topbar {
+  background: var(--theme-bg-surface) !important;
+  border-bottom: 1px solid var(--theme-border-subtle) !important;
+  box-shadow: none !important;
+}
+
+.header,
+.topbar,
+.header * ,
+.topbar * {
+  color: var(--theme-text-primary);
+}
+
+.header p,
+.page-intro,
+.muted,
+.card-hint,
+.page-subtitle,
+.header-copy p,
+.topbar-breadcrumb,
+.topbar-breadcrumb .sep,
+.topbar-breadcrumb .current {
+  color: var(--theme-text-secondary) !important;
+}
+
+.container,
+.main,
+.app-body {
+  background: transparent !important;
+}
+
+.card,
+.section,
+.form-section,
+.hero-panel,
+.hero-aside,
+.summary-tile,
+.stat,
+.stat-card,
+.detail-item,
+.info-row,
+.aside-item,
+.modal-content,
+.modal-box,
+.login-container,
+.login-form,
+.login-visual,
+pre {
+  background: var(--theme-bg-surface) !important;
+  color: var(--theme-text-primary) !important;
+  border: 1px solid var(--theme-border-subtle) !important;
+  box-shadow: var(--theme-shadow-lg) !important;
+}
+
+.hero-aside,
+.summary-tile,
+.stat,
+.detail-item,
+.info-row,
+.aside-item,
+.field input,
+.field select,
+.field textarea,
+.search-wrap input,
+.filter-select,
+.form-group input,
+select,
+input,
+textarea {
+  background: var(--theme-bg-base) !important;
+  color: var(--theme-text-primary) !important;
+  border-color: var(--theme-border-default) !important;
+}
+
+.card-header,
+.card-top,
+.section-header,
+.modal-header,
+.modal-head,
+.modal-footer,
+.modal-foot,
+.toolbar,
+.table-footer {
+  background: transparent !important;
+  border-color: var(--theme-border-subtle) !important;
+}
+
+.section-header.approval,
+.section.approval .section-header,
+.section.segmentation .section-header {
+  background: var(--theme-bg-surface) !important;
+}
+
+.header-btn,
+.logout-btn,
+.topbar-btn,
+.btn-secondary,
+.btn-ghost,
+.btn-cancel,
+.back-btn,
+.pager-btn {
+  background: transparent !important;
+  color: var(--theme-text-secondary) !important;
+  border: 1px solid var(--theme-border-default) !important;
+}
+
+.header-btn:hover,
+.logout-btn:hover,
+.topbar-btn:hover,
+.btn-secondary:hover,
+.btn-ghost:hover,
+.btn-cancel:hover,
+.back-btn:hover,
+.pager-btn:hover {
+  background: var(--theme-bg-elevated) !important;
+  color: var(--theme-text-primary) !important;
+  border-color: var(--theme-border-strong) !important;
+}
+
+.btn-primary,
+.btn-accent,
+.btn-submit,
+.btn-add-item,
+.btn-add-segment,
+.login-button {
+  background: var(--theme-accent) !important;
+  color: #04120b !important;
+  border: 1px solid var(--theme-accent) !important;
+}
+
+.btn-primary:hover,
+.btn-accent:hover,
+.btn-submit:hover,
+.btn-add-item:hover,
+.btn-add-segment:hover,
+.login-button:hover {
+  background: var(--theme-accent-hover) !important;
+}
+
+.btn-danger {
+  background: var(--theme-red-dim) !important;
+  color: var(--theme-red) !important;
+  border: 1px solid rgba(248, 113, 113, 0.2) !important;
+}
+
+.btn-link {
+  color: var(--theme-accent-hover) !important;
+}
+
+table,
+th,
+td {
+  color: var(--theme-text-primary) !important;
+  border-color: var(--theme-border-subtle) !important;
+}
+
+th {
+  background: var(--theme-bg-base) !important;
+  color: var(--theme-text-muted) !important;
+}
+
+tbody tr:hover,
+tbody tr:hover td {
+  background: var(--theme-bg-hover) !important;
+}
+
+.cell-sub,
+.subtle,
+.field label,
+.field-label,
+.state-box,
+.empty-message,
+.loading,
+.loading-state,
+.empty-state,
+.info-row b,
+.detail-item strong,
+.stat-label,
+.stat-sub,
+.page-info,
+.pager-label,
+.nav-badge {
+  color: var(--theme-text-muted) !important;
+}
+
+.cell-main,
+.card-title,
+.modal-title,
+.page-title,
+.header h1,
+.header h2,
+.header h3,
+.login-form h2,
+.login-visual h1,
+.brand-name {
+  color: var(--theme-text-primary) !important;
+}
+
+.brand-name span,
+.inspector-title,
+.tab-pill.active .count,
+.status-dot {
+  color: var(--theme-accent) !important;
+}
+
+.brand-mark,
+.status-dot,
+.badge.green,
+.status-pill.available,
+.status-pill.replied,
+.status-pill.active,
+.status-pill.success {
+  background: var(--theme-accent-dim) !important;
+  color: var(--theme-accent) !important;
+  border-color: rgba(52, 211, 153, 0.2) !important;
+}
+
+.badge.amber,
+.status-pill.closed,
+.status-pending,
+.status-pending_admin_review,
+.status-pill.maintenance,
+.status-pill.warning {
+  background: var(--theme-amber-dim) !important;
+  color: var(--theme-amber) !important;
+  border-color: rgba(251, 191, 36, 0.2) !important;
+}
+
+.badge.red,
+.status-pill.inactive,
+.status-pill.error {
+  background: var(--theme-red-dim) !important;
+  color: var(--theme-red) !important;
+  border-color: rgba(248, 113, 113, 0.2) !important;
+}
+
+.status-pill.assigned,
+.status-pill.new,
+.status-pill.in_transit,
+.status-pill.info {
+  background: var(--theme-blue-dim) !important;
+  color: var(--theme-blue) !important;
+  border-color: rgba(96, 165, 250, 0.2) !important;
+}
+
+.banner.success {
+  background: rgba(52, 211, 153, 0.06) !important;
+  color: var(--theme-accent) !important;
+  border-color: rgba(52, 211, 153, 0.15) !important;
+}
+
+.banner.error {
+  background: rgba(248, 113, 113, 0.06) !important;
+  color: var(--theme-red) !important;
+  border-color: rgba(248, 113, 113, 0.15) !important;
+}
+
+.tab-strip,
+.tabs {
+  background: transparent !important;
+}
+
+.tab-pill,
+.tab-btn {
+  background: transparent !important;
+  color: var(--theme-text-secondary) !important;
+  border: 1px solid var(--theme-border-default) !important;
+}
+
+.tab-pill.active,
+.tab-btn.active {
+  background: var(--theme-bg-elevated) !important;
+  color: var(--theme-text-primary) !important;
+  border-color: var(--theme-border-strong) !important;
+}
+
+.nav-item.active {
+  background: var(--theme-accent-dim) !important;
+  color: var(--theme-accent) !important;
+  border-color: var(--theme-accent-glow) !important;
+}
+
+.sidebar {
+  background: var(--theme-bg-surface) !important;
+  border-right: 1px solid var(--theme-border-subtle) !important;
+}
+
+.main {
+  background: transparent !important;
+}
+
+.profile-hero,
+.login-visual {
+  background:
+    radial-gradient(circle at top left, rgba(110, 231, 183, 0.16), transparent 25%),
+    linear-gradient(135deg, #0d1711 0%, #122018 100%) !important;
+  color: var(--theme-text-primary) !important;
+}
+
+.login-container {
+  border-radius: 18px !important;
+  overflow: hidden;
+}
+
+.login-form,
+.login-visual {
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.logo,
+.brand-mark {
+  box-shadow: 0 0 24px rgba(52, 211, 153, 0.2);
+}
+
+.form-group label,
+.login-form > p,
+.login-visual p {
+  color: var(--theme-text-secondary) !important;
+}
+
+.image-preview {
+  background: rgba(0, 0, 0, 0.82) !important;
+}
+
+.hidden {
+  display: none !important;
+}
