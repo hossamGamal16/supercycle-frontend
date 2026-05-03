@@ -1,145 +1,1686 @@
 <!doctype html>
-<html lang="en">
+<html lang="ar" dir="rtl">
   <head>
     <meta charset="UTF-8" />
-    <title>SuperCycle - Vehicles Management</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SuperCycle - إدارة العربيات</title>
     <style>
-      * { box-sizing:border-box; margin:0; padding:0; }
-      :root { --primary:#166534; --primary-light:#22a06b; --gray-50:#f8fafc; --gray-100:#f1f5f9; --gray-200:#e2e8f0; --gray-300:#cbd5e1; --gray-500:#64748b; --gray-700:#334155; --gray-900:#0f172a; --danger:#b91c1c; --danger-soft:#fee2e2; --success:#166534; --success-soft:#dcfce7; --info:#1d4ed8; }
-      body { font-family:"Segoe UI",Tahoma,sans-serif; background:linear-gradient(180deg,#f6faf7 0%,#f4f7fb 100%); color:var(--gray-900); }
-      .header { background:linear-gradient(135deg,#0f5132,#17844e 58%,#1ea768); color:#fff; padding:22px 32px; display:flex; justify-content:space-between; align-items:center; gap:16px; }
-      .header h1 { font-size:28px; font-weight:800; letter-spacing:-0.04em; margin-bottom:6px; } .header p { color:rgba(255,255,255,.82); font-size:14px; }
-      .header-actions { display:flex; gap:10px; flex-wrap:wrap; } .header-btn { background:rgba(255,255,255,.14); color:#fff; border:1px solid rgba(255,255,255,.24); padding:10px 16px; border-radius:12px; cursor:pointer; font-weight:700; }
-      .container { max-width:1480px; margin:0 auto; padding:26px 20px 38px; } .banner { display:none; padding:14px 16px; border-radius:14px; margin-bottom:18px; font-weight:700; } .banner.success { display:block; background:var(--success-soft); color:var(--success); border:1px solid #b8e3c7; } .banner.error { display:block; background:var(--danger-soft); color:var(--danger); border:1px solid #f2b7b7; }
-      .card { background:rgba(255,255,255,.96); border:1px solid rgba(226,232,240,.9); border-radius:22px; box-shadow:0 18px 42px rgba(15,23,42,.07); overflow:hidden; } .card-header { padding:18px 20px; border-bottom:1px solid var(--gray-200); display:flex; justify-content:space-between; align-items:flex-start; gap:14px; } .card-body { padding:20px; } .card-header h2,.card-header h3 { font-size:18px; } .card-hint { font-size:13px; color:var(--gray-500); margin-top:6px; }
-      .hero-grid { display:grid; grid-template-columns:minmax(0,1.55fr) minmax(320px,1fr); gap:18px; margin-bottom:18px; } .stats-grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px; } .stat { background:var(--gray-50); border:1px solid var(--gray-200); border-radius:16px; padding:16px; } .stat strong { display:block; font-size:28px; color:#14532d; margin-bottom:8px; } .stat span { color:var(--gray-500); font-size:12px; text-transform:uppercase; letter-spacing:.05em; font-weight:700; }
-      .layout { display:grid; grid-template-columns:minmax(420px,500px) minmax(0,1fr); gap:18px; align-items:start; } .section-block { display:flex; flex-direction:column; gap:18px; }
-      .form-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; } .field { display:flex; flex-direction:column; gap:6px; } .field.full { grid-column:1 / -1; } .field label { font-size:13px; font-weight:700; color:var(--gray-700); }
-      .field input,.field select,.field textarea { width:100%; border:1px solid var(--gray-300); border-radius:12px; padding:11px 12px; font-size:14px; background:#fff; } .field textarea { min-height:96px; resize:vertical; } .field input:focus,.field select:focus,.field textarea:focus { outline:none; border-color:var(--primary-light); box-shadow:0 0 0 3px rgba(34,160,107,.16); } .field-error { min-height:16px; color:var(--danger); font-size:12px; }
-      .filters { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:12px; margin-bottom:16px; } .actions,.inline-actions,.row-actions,.pagination { display:flex; gap:10px; flex-wrap:wrap; align-items:center; } .actions { margin-top:18px; }
-      button { border:none; border-radius:12px; padding:10px 14px; cursor:pointer; font-weight:700; } .btn-primary { background:var(--primary-light); color:#fff; } .btn-secondary { background:var(--gray-100); color:var(--gray-700); } .btn-link { background:transparent; color:var(--info); padding:0; } .btn-danger { background:#b91c1c; color:#fff; } button:disabled { opacity:.55; cursor:not-allowed; }
-      .table-wrap { overflow-x:auto; } table { width:100%; border-collapse:collapse; } th,td { padding:14px 12px; border-bottom:1px solid var(--gray-200); font-size:13px; text-align:left; vertical-align:top; } th { background:var(--gray-50); color:var(--gray-700); font-size:12px; text-transform:uppercase; } tbody tr:hover { background:#fbfdfc; }
-      .inline-stack { display:flex; flex-direction:column; gap:4px; } .subtle { color:var(--gray-500); font-size:12px; } .status-pill { display:inline-flex; align-items:center; gap:6px; padding:6px 10px; border-radius:999px; font-size:12px; font-weight:700; } .status-pill.available { background:#dcfce7; color:#166534; } .status-pill.assigned { background:#dbeafe; color:#1d4ed8; } .status-pill.in_transit { background:#ede9fe; color:#6d28d9; } .status-pill.maintenance { background:#fef3c7; color:#b45309; } .status-pill.inactive { background:#fee2e2; color:#b91c1c; }
-      .loading-state,.empty-state { padding:30px 16px; text-align:center; color:var(--gray-500); font-weight:600; } .pagination { justify-content:flex-end; margin-top:16px; } .detail-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; } .detail-item { background:var(--gray-50); border:1px solid var(--gray-200); border-radius:14px; padding:14px; } .detail-item strong { display:block; font-size:12px; color:var(--gray-500); text-transform:uppercase; margin-bottom:6px; }
-      .modal { position:fixed; inset:0; background:rgba(15,23,42,.48); display:none; align-items:center; justify-content:center; padding:24px; z-index:999; } .modal.open { display:flex; } .modal-content { width:min(860px,100%); max-height:calc(100vh - 48px); overflow-y:auto; background:#fff; border-radius:18px; box-shadow:0 18px 40px rgba(15,23,42,.18); } .modal-header,.modal-body,.modal-footer { padding:18px 20px; } .modal-header { border-bottom:1px solid var(--gray-200); display:flex; justify-content:space-between; align-items:center; gap:12px; } .modal-footer { border-top:1px solid var(--gray-200); display:flex; justify-content:flex-end; gap:10px; flex-wrap:wrap; }
-      .inspector-card { background:linear-gradient(180deg,#fcfefc 0%,#f4faf6 100%); border:1px solid rgba(22,101,52,.12); } .inspector-summary { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:16px; } .inspector-pill { background:#fff; border:1px solid var(--gray-200); border-radius:14px; padding:14px; } .inspector-pill strong { display:block; font-size:12px; color:var(--gray-500); text-transform:uppercase; margin-bottom:6px; } .inspector-title { font-size:16px; font-weight:800; color:#14532d; } .inspector-note { color:var(--gray-500); font-size:13px; line-height:1.6; }
-      @media (max-width:1180px) { .hero-grid,.layout { grid-template-columns:1fr; } .stats-grid,.filters,.inspector-summary { grid-template-columns:1fr 1fr; } }
-      @media (max-width:760px) { .header { padding:18px; flex-direction:column; align-items:stretch; } .container { padding:18px 14px 28px; } .form-grid,.filters,.detail-grid,.stats-grid,.inspector-summary { grid-template-columns:1fr; } .card-header,.card-body { padding-left:14px; padding-right:14px; } }
+      :root {
+        --bg: #f3f7f2;
+        --surface: rgba(255, 255, 255, 0.95);
+        --surface-strong: #ffffff;
+        --surface-soft: #f8fcf8;
+        --primary: #217346;
+        --primary-2: #2ea05b;
+        --primary-soft: #e7f5eb;
+        --primary-border: #cfe7d5;
+        --warning: #f59e0b;
+        --warning-soft: #fff4d9;
+        --info: #2563eb;
+        --info-soft: #e8f0ff;
+        --violet: #7c3aed;
+        --violet-soft: #f1eafe;
+        --danger: #d43f58;
+        --danger-soft: #fdecef;
+        --text: #162418;
+        --text-soft: #5b7160;
+        --text-muted: #829486;
+        --border: #dce9de;
+        --shadow: 0 20px 45px rgba(24, 49, 31, 0.08);
+        --shadow-soft: 0 10px 25px rgba(24, 49, 31, 0.06);
+        --radius-xl: 26px;
+        --radius-lg: 20px;
+        --radius-md: 16px;
+        --radius-sm: 12px;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        min-height: 100vh;
+        font-family: "Segoe UI", Tahoma, Arial, sans-serif;
+        background:
+          radial-gradient(
+            circle at top right,
+            rgba(46, 160, 91, 0.12),
+            transparent 24%
+          ),
+          radial-gradient(
+            circle at bottom left,
+            rgba(15, 155, 168, 0.08),
+            transparent 26%
+          ),
+          linear-gradient(180deg, #f8fbf8 0%, var(--bg) 100%);
+        color: var(--text);
+      }
+
+      button,
+      input,
+      select,
+      textarea {
+        font: inherit;
+      }
+
+      button {
+        border: 0;
+        cursor: pointer;
+      }
+
+      .page {
+        max-width: 1440px;
+        margin: 0 auto;
+        padding: 22px;
+      }
+
+      .topbar {
+        background: rgba(255, 255, 255, 0.78);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(220, 233, 222, 0.9);
+        box-shadow: var(--shadow-soft);
+        border-radius: var(--radius-xl);
+        padding: 20px 22px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 18px;
+        margin-bottom: 18px;
+      }
+
+      .topbar-title h1 {
+        font-size: 28px;
+        letter-spacing: -0.04em;
+        margin-bottom: 6px;
+      }
+
+      .topbar-title p {
+        color: var(--text-soft);
+        font-size: 14px;
+      }
+
+      .topbar-actions {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+
+      .pill,
+      .icon-button,
+      .ghost-btn,
+      .primary-btn {
+        border-radius: 15px;
+        border: 1px solid var(--border);
+        background: var(--surface-strong);
+        box-shadow: var(--shadow-soft);
+      }
+
+      .pill {
+        padding: 11px 16px;
+        color: var(--text);
+        font-weight: 700;
+      }
+
+      .icon-button {
+        width: 46px;
+        height: 46px;
+        display: grid;
+        place-items: center;
+        color: var(--text-soft);
+        font-weight: 900;
+      }
+
+      .ghost-btn,
+      .primary-btn {
+        padding: 12px 18px;
+        font-weight: 800;
+      }
+
+      .primary-btn {
+        color: #fff;
+        background: linear-gradient(135deg, var(--primary), var(--primary-2));
+        border: 0;
+      }
+
+      .hero,
+      .panel {
+        background: var(--surface);
+        border: 1px solid rgba(220, 233, 222, 0.92);
+        border-radius: var(--radius-xl);
+        box-shadow: var(--shadow);
+      }
+
+      .hero {
+        padding: 26px;
+        margin-bottom: 18px;
+        background:
+          radial-gradient(
+            circle at top right,
+            rgba(46, 160, 91, 0.18),
+            transparent 26%
+          ),
+          linear-gradient(135deg, #ffffff 0%, #f6fbf6 100%);
+      }
+
+      .hero-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 18px;
+        margin-bottom: 20px;
+      }
+
+      .hero-note {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 12px;
+        border-radius: 999px;
+        background: var(--primary-soft);
+        color: var(--primary);
+        font-size: 12px;
+        font-weight: 800;
+      }
+
+      .hero h2 {
+        margin-top: 14px;
+        font-size: 25px;
+        letter-spacing: -0.04em;
+      }
+
+      .hero p {
+        margin-top: 8px;
+        color: var(--text-soft);
+        max-width: 760px;
+      }
+
+      .hero-actions {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+
+      .summary-strip {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+
+      .summary-card,
+      .selection-card {
+        border-radius: var(--radius-lg);
+        border: 1px solid var(--border);
+        background: rgba(255, 255, 255, 0.86);
+        padding: 18px;
+      }
+
+      .summary-card strong,
+      .selection-card strong {
+        display: block;
+        font-size: 12px;
+        color: var(--text-muted);
+        margin-bottom: 8px;
+      }
+
+      .summary-value {
+        font-size: 22px;
+        font-weight: 900;
+        color: var(--text);
+      }
+
+      .summary-caption {
+        margin-top: 6px;
+        color: var(--text-soft);
+        font-size: 13px;
+      }
+
+      .selection-actions {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-top: 14px;
+      }
+
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 12px;
+        margin-bottom: 18px;
+      }
+
+      .stat-card {
+        border-radius: var(--radius-lg);
+        padding: 16px;
+        border: 1px solid var(--border);
+        background: var(--surface-strong);
+        transition:
+          transform 0.22s ease,
+          box-shadow 0.22s ease;
+      }
+
+      .stat-card:hover {
+        transform: translateY(-3px);
+        box-shadow: var(--shadow-soft);
+      }
+
+      .stat-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 12px;
+        margin-bottom: 12px;
+      }
+
+      .stat-icon {
+        width: 46px;
+        height: 46px;
+        border-radius: 15px;
+        display: grid;
+        place-items: center;
+        font-size: 14px;
+        font-weight: 900;
+      }
+
+      .stat-tag {
+        border-radius: 999px;
+        padding: 6px 10px;
+        font-size: 11px;
+        font-weight: 800;
+      }
+
+      .stat-value {
+        font-size: 30px;
+        font-weight: 900;
+        line-height: 1;
+        letter-spacing: -0.04em;
+      }
+
+      .stat-label {
+        margin-top: 8px;
+        color: var(--text-soft);
+        font-size: 13px;
+        font-weight: 700;
+      }
+
+      .stat-foot {
+        margin-top: 6px;
+        color: var(--text-muted);
+        font-size: 12px;
+        font-weight: 700;
+      }
+
+      .banner {
+        display: none;
+        margin-bottom: 18px;
+        padding: 14px 16px;
+        border-radius: 16px;
+        font-size: 13px;
+        font-weight: 700;
+      }
+
+      .banner.success {
+        display: block;
+        background: #effaf1;
+        border: 1px solid #cbe7d0;
+        color: #1f7a45;
+      }
+
+      .banner.error {
+        display: block;
+        background: #fff5f7;
+        border: 1px solid #f7d2d9;
+        color: #a73c51;
+      }
+
+      .panel {
+        padding: 20px;
+      }
+
+      .panel-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 16px;
+      }
+
+      .panel-header h3 {
+        font-size: 19px;
+        letter-spacing: -0.03em;
+      }
+
+      .panel-header p {
+        color: var(--text-soft);
+        font-size: 13px;
+        margin-top: 4px;
+      }
+
+      .panel-actions,
+      .filter-grid,
+      .row-actions,
+      .pagination,
+      .modal-actions {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        align-items: center;
+      }
+
+      .filter-grid {
+        display: grid;
+        grid-template-columns: 1.3fr repeat(4, minmax(0, 1fr));
+        gap: 12px;
+        margin-bottom: 16px;
+      }
+
+      .field {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+
+      .field.full {
+        grid-column: 1 / -1;
+      }
+
+      .field label {
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--text-soft);
+      }
+
+      .field input,
+      .field select,
+      .field textarea {
+        width: 100%;
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 12px 13px;
+        font-size: 14px;
+        color: var(--text);
+        background: #fff;
+      }
+
+      .field textarea {
+        min-height: 100px;
+        resize: vertical;
+      }
+
+      .field input:focus,
+      .field select:focus,
+      .field textarea:focus {
+        outline: none;
+        border-color: var(--primary-2);
+        box-shadow: 0 0 0 4px rgba(46, 160, 91, 0.12);
+      }
+
+      .field-error {
+        min-height: 16px;
+        color: var(--danger);
+        font-size: 12px;
+      }
+
+      .table-shell {
+        overflow-x: auto;
+        border: 1px solid var(--border);
+        border-radius: var(--radius-lg);
+        background: linear-gradient(180deg, #ffffff 0%, #f8fbf8 100%);
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      th,
+      td {
+        padding: 14px 12px;
+        text-align: right;
+        border-bottom: 1px solid var(--border);
+        white-space: nowrap;
+        font-size: 13px;
+        vertical-align: top;
+      }
+
+      th {
+        color: var(--text-muted);
+        font-size: 11px;
+        font-weight: 800;
+        background: #fbfdfb;
+      }
+
+      tbody tr:hover td {
+        background: rgba(46, 160, 91, 0.03);
+      }
+
+      tbody tr:last-child td {
+        border-bottom: 0;
+      }
+
+      .vehicle-cell,
+      .driver-cell {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+      }
+
+      .vehicle-title {
+        color: var(--primary);
+        font-weight: 900;
+      }
+
+      .subtle {
+        color: var(--text-muted);
+        font-size: 12px;
+      }
+
+      .status-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        border-radius: 999px;
+        padding: 7px 12px;
+        font-size: 11px;
+        font-weight: 800;
+      }
+
+      .status-pill::before {
+        content: "";
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: currentColor;
+      }
+
+      .status-pill.available {
+        background: var(--primary-soft);
+        color: var(--primary);
+      }
+
+      .status-pill.assigned {
+        background: var(--info-soft);
+        color: var(--info);
+      }
+
+      .status-pill.in_transit {
+        background: var(--violet-soft);
+        color: var(--violet);
+      }
+
+      .status-pill.maintenance {
+        background: var(--warning-soft);
+        color: #a16207;
+      }
+
+      .status-pill.inactive {
+        background: var(--danger-soft);
+        color: var(--danger);
+      }
+
+      .table-link {
+        background: transparent;
+        color: var(--primary);
+        padding: 0;
+        font-weight: 800;
+      }
+
+      .loading-state,
+      .empty-state {
+        padding: 28px 16px;
+        text-align: center;
+        color: var(--text-muted);
+        font-size: 13px;
+        font-weight: 700;
+      }
+
+      .pagination {
+        justify-content: space-between;
+        margin-top: 16px;
+      }
+
+      .modal {
+        position: fixed;
+        inset: 0;
+        background: rgba(15, 36, 22, 0.45);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: 24px;
+        z-index: 999;
+      }
+
+      .modal.open {
+        display: flex;
+      }
+
+      .modal-content {
+        width: min(900px, 100%);
+        max-height: calc(100vh - 48px);
+        overflow-y: auto;
+        background: #fff;
+        border-radius: 24px;
+        border: 1px solid rgba(220, 233, 222, 0.92);
+        box-shadow: 0 24px 60px rgba(15, 36, 22, 0.18);
+      }
+
+      .modal-header,
+      .modal-body,
+      .modal-footer {
+        padding: 20px;
+      }
+
+      .modal-header,
+      .modal-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .modal-header {
+        border-bottom: 1px solid var(--border);
+      }
+
+      .modal-footer {
+        border-top: 1px solid var(--border);
+        justify-content: flex-end;
+      }
+
+      .form-grid,
+      .detail-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+      }
+
+      .detail-item {
+        background: linear-gradient(135deg, #fbfdfb 0%, #f0f8f2 100%);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 14px;
+      }
+
+      .detail-item strong {
+        display: block;
+        color: var(--text-muted);
+        font-size: 12px;
+        margin-bottom: 6px;
+      }
+
+      .section-hidden {
+        display: none;
+      }
+
+      @media (max-width: 1180px) {
+        .stats-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .summary-strip {
+          grid-template-columns: 1fr;
+        }
+
+        .filter-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+
+      @media (max-width: 820px) {
+        .page {
+          padding: 14px;
+        }
+
+        .topbar,
+        .hero-top,
+        .panel-header {
+          flex-direction: column;
+          align-items: stretch;
+        }
+
+        .topbar-actions,
+        .hero-actions,
+        .panel-actions {
+          justify-content: flex-start;
+        }
+
+        .stats-grid,
+        .filter-grid,
+        .form-grid,
+        .detail-grid {
+          grid-template-columns: 1fr;
+        }
+      }
     </style>
   </head>
   <body>
-    <div class="header"><div><h1>Vehicles Management</h1><p>Manage fleet records, driver identity, and live operational status from one admin workspace.</p></div><div class="header-actions"><button class="header-btn" onclick="goBack()">Back to Dashboard</button><button class="header-btn" onclick="logout()">Logout</button></div></div>
-    <div class="container">
+    <div class="page">
+      <header class="topbar">
+        <div class="topbar-title">
+          <h1>إدارة العربيات</h1>
+          <p>لوحة أسطول مبسطة لعرض الإحصائيات ومتابعة العربيات وإدخال عربية جديدة عند الحاجة.</p>
+        </div>
+        <div class="topbar-actions">
+          <div class="pill" id="todayLabel">-</div>
+          <button class="icon-button" type="button" onclick="refreshAll()">↻</button>
+          <button class="ghost-btn" type="button" onclick="goBack()">الرجوع للرئيسية</button>
+          <button class="primary-btn" type="button" onclick="logout()">تسجيل الخروج</button>
+        </div>
+      </header>
+
       <div id="pageBanner" class="banner"></div>
-      <section class="hero-grid">
-        <div class="card"><div class="card-header"><div><h2>Fleet Overview</h2><p class="card-hint">A compact control layer for fleet size, capacity, and state distribution.</p></div><button class="btn-secondary" type="button" onclick="refreshAll()">Refresh All</button></div><div class="card-body"><div class="stats-grid"><div class="stat"><strong id="vehiclesTotal">0</strong><span>Total Vehicles</span></div><div class="stat"><strong id="vehiclesAvailable">0</strong><span>Available</span></div><div class="stat"><strong id="vehiclesActive">0</strong><span>Active Fleet</span></div><div class="stat"><strong id="vehiclesLoad">0</strong><span>Total Load KG</span></div></div></div></div>
-        <div class="card"><div class="card-header"><div><h3>Selection Insight</h3><p class="card-hint">Latest selected vehicle is always visible here.</p></div></div><div class="card-body"><div class="detail-grid"><div class="detail-item"><strong>Selected Vehicle</strong><span id="selectionVehicle">No vehicle selected</span></div><div class="detail-item"><strong>Selected Status</strong><span id="selectionVehicleStatus">-</span></div></div></div></div>
+
+      <section class="hero">
+        <div class="hero-top">
+          <div>
+            <div class="hero-note">الأسطول التشغيلي</div>
+            <h2>إدارة العربيات</h2>
+            <p>متابعة الأسطول وعرض العربيات الحالية وإدارة بياناتها التشغيلية.</p>
+          </div>
+          <div class="hero-actions">
+            <button class="primary-btn" type="button" onclick="openCreateVehicleModal()">
+              إدخال عربية
+            </button>
+            <button class="ghost-btn" type="button" id="openVehicleInspectorBtn" onclick="openSelectedVehicleView()" disabled>
+              عرض التفاصيل
+            </button>
+            <button class="ghost-btn" type="button" id="editSelectedVehicleBtn" onclick="editSelectedVehicle()" disabled>
+              تعديل العربية
+            </button>
+          </div>
+        </div>
+
+        <div class="summary-strip">
+          <div class="selection-card">
+            <strong>وضع المتابعة</strong>
+            <div class="summary-value" id="selectionVehicleCount">-</div>
+            <div class="summary-caption">عدد العربيات الظاهر حاليًا في الصفحة الحالية بعد الفلاتر.</div>
+          </div>
+        </div>
       </section>
-      <div class="layout">
-        <div class="section-block">
-          <div class="card"><div class="card-header"><div><h2 id="vehicleFormTitle">Create Vehicle</h2><p class="card-hint">Create or update a vehicle with full driver identity and operational setup.</p></div></div><div class="card-body"><form id="vehicleForm" onsubmit="submitVehicleForm(event)"><div class="form-grid">
-            <div class="field"><label for="vehicleType">Vehicle Type</label><input id="vehicleType" /><div class="field-error" data-error-for="vehicle.vehicleType"></div></div>
-            <div class="field"><label for="licensePlate">License Plate</label><input id="licensePlate" /><div class="field-error" data-error-for="vehicle.licensePlate"></div></div>
-            <div class="field"><label for="maxLoadKg">Max Load KG</label><input id="maxLoadKg" type="number" min="0" step="0.01" /><div class="field-error" data-error-for="vehicle.maxLoadKg"></div></div>
-            <div class="field"><label for="vehicleStatus">Status</label><select id="vehicleStatus"><option value="available">available</option><option value="assigned">assigned</option><option value="in_transit">in_transit</option><option value="maintenance">maintenance</option><option value="inactive">inactive</option></select><div class="field-error" data-error-for="vehicle.status"></div></div>
-            <div class="field"><label for="driverName">Driver Name</label><input id="driverName" /><div class="field-error" data-error-for="vehicle.driverName"></div></div>
-            <div class="field"><label for="driverPhone">Driver Phone</label><input id="driverPhone" /><div class="field-error" data-error-for="vehicle.driverPhone"></div></div>
-            <div class="field"><label for="driverNationalId">Driver National ID</label><input id="driverNationalId" /><div class="field-error" data-error-for="vehicle.driverNationalId"></div></div>
-            <div class="field"><label for="driverNationalIdPic">National ID Picture URL</label><input id="driverNationalIdPic" placeholder="https://..." /><div class="field-error" data-error-for="vehicle.driverNationalIdPic"></div></div>
-            <div class="field full"><label for="driverAddress">Driver Address</label><textarea id="driverAddress"></textarea><div class="field-error" data-error-for="vehicle.driverAddress"></div></div>
-          </div><div class="actions"><button id="vehicleSubmitBtn" class="btn-primary" type="submit">Create Vehicle</button><button class="btn-secondary" type="button" onclick="resetVehicleForm()">Clear</button></div></form></div></div>
-          <div class="card inspector-card"><div class="card-header"><div><h3>Vehicle Inspector</h3><p class="card-hint">Open the fleet profile popup for view and live status updates.</p></div></div><div class="card-body"><div class="inspector-summary"><div class="inspector-pill"><strong>Current Selection</strong><div id="vehicleInspectorName" class="inspector-title">No vehicle selected</div></div><div class="inspector-pill"><strong>Next Step</strong><div class="inspector-note">Use View to open a focused popup with driver profile, status controls, and edit actions.</div></div></div><div class="actions"><button class="btn-primary" id="openVehicleInspectorBtn" type="button" onclick="openSelectedVehicleView()" disabled>Open Vehicle Profile</button><button class="btn-secondary" id="editSelectedVehicleBtn" type="button" onclick="editSelectedVehicle()" disabled>Edit Selected Vehicle</button></div></div></div>
+
+      <section class="stats-grid">
+        <article class="stat-card">
+          <div class="stat-top">
+            <div class="stat-icon" style="background: var(--primary-soft); color: var(--primary)">VH</div>
+            <div class="stat-tag" style="background: var(--primary-soft); color: var(--primary)">الأسطول</div>
+          </div>
+          <div class="stat-value" id="vehiclesTotal">0</div>
+          <div class="stat-label">إجمالي العربيات</div>
+          <div class="stat-foot">كل السجلات المتاحة في النظام</div>
+        </article>
+
+        <article class="stat-card">
+          <div class="stat-top">
+            <div class="stat-icon" style="background: var(--info-soft); color: var(--info)">OK</div>
+            <div class="stat-tag" style="background: var(--info-soft); color: var(--info)">جاهز</div>
+          </div>
+          <div class="stat-value" id="vehiclesAvailable">0</div>
+          <div class="stat-label">متاحة الآن</div>
+          <div class="stat-foot">جاهزة للإسناد أو التشغيل</div>
+        </article>
+
+        <article class="stat-card">
+          <div class="stat-top">
+            <div class="stat-icon" style="background: var(--violet-soft); color: var(--violet)">GO</div>
+            <div class="stat-tag" style="background: var(--violet-soft); color: var(--violet)">حركة</div>
+          </div>
+          <div class="stat-value" id="vehiclesActive">0</div>
+          <div class="stat-label">نشطة تشغيليًا</div>
+          <div class="stat-foot">كل ما هو غير معطل أو متوقف</div>
+        </article>
+
+        <article class="stat-card">
+          <div class="stat-top">
+            <div class="stat-icon" style="background: var(--warning-soft); color: #a16207">KG</div>
+            <div class="stat-tag" style="background: var(--warning-soft); color: #a16207">حمولة</div>
+          </div>
+          <div class="stat-value" id="vehiclesLoad">0</div>
+          <div class="stat-label">إجمالي الحمولة</div>
+          <div class="stat-foot">مجموع السعات بالكيلو جرام</div>
+        </article>
+      </section>
+
+      <section class="panel">
+        <div class="panel-header">
+          <div>
+            <h3>جدول العربيات</h3>
+            <p>ابحث وفلتر ثم افتح العربية التي تحتاج مراجعة أو تحديث.</p>
+          </div>
+          <div class="panel-actions">
+            <button class="ghost-btn" type="button" onclick="resetFilters()">إعادة ضبط</button>
+            <button class="primary-btn" type="button" onclick="loadVehicles(1)">تحديث النتائج</button>
+          </div>
         </div>
-        <div class="section-block">
-          <div class="card"><div class="card-header"><div><h2>Vehicles Directory</h2><p class="card-hint">Search by plate, driver, phone, or type, and filter by status, type, and load.</p></div><div class="inline-actions"><button class="btn-secondary" type="button" onclick="resetFilters()">Reset</button><button class="btn-primary" type="button" onclick="loadVehicles(1)">Search</button></div></div><div class="card-body">
-            <div class="filters">
-              <div class="field"><label for="vehicleSearch">Search</label><input id="vehicleSearch" /></div>
-              <div class="field"><label for="filterStatus">Status</label><select id="filterStatus"><option value="">All</option><option value="available">available</option><option value="assigned">assigned</option><option value="in_transit">in_transit</option><option value="maintenance">maintenance</option><option value="inactive">inactive</option></select></div>
-              <div class="field"><label for="filterVehicleType">Vehicle Type</label><input id="filterVehicleType" /></div>
-              <div class="field"><label for="filterMinLoadKg">Min Load KG</label><input id="filterMinLoadKg" type="number" min="0" step="0.01" /></div>
-              <div class="field"><label for="filterLimit">Page Size</label><select id="filterLimit"><option value="10">10</option><option value="20">20</option><option value="50">50</option></select></div>
+
+        <div class="filter-grid">
+          <div class="field">
+            <label for="vehicleSearch">بحث</label>
+            <input id="vehicleSearch" placeholder="رقم اللوحة، السائق، الهاتف، النوع" />
+          </div>
+          <div class="field">
+            <label for="filterStatus">الحالة</label>
+            <select id="filterStatus">
+              <option value="">الكل</option>
+              <option value="available">متاحة</option>
+              <option value="assigned">مسندة</option>
+              <option value="in_transit">في الطريق</option>
+              <option value="maintenance">صيانة</option>
+              <option value="inactive">غير نشطة</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="filterVehicleType">نوع العربية</label>
+            <input id="filterVehicleType" placeholder="مثال: دبابة، نقل" />
+          </div>
+          <div class="field">
+            <label for="filterMinLoadKg">أقل حمولة</label>
+            <input id="filterMinLoadKg" type="number" min="0" step="0.01" placeholder="0" />
+          </div>
+          <div class="field">
+            <label for="filterLimit">حجم الصفحة</label>
+            <select id="filterLimit">
+              <option value="10">10</option>
+              <option value="20">20</option>
+              <option value="50">50</option>
+            </select>
+          </div>
+        </div>
+
+        <div id="vehiclesState" class="loading-state">جاري تحميل العربيات...</div>
+
+        <div class="table-shell">
+          <table id="vehiclesTable" hidden>
+            <thead>
+              <tr>
+                <th>العربية</th>
+                <th>السائق</th>
+                <th>الحمولة</th>
+                <th>الحالة</th>
+                <th>بيانات سريعة</th>
+                <th>الإجراءات</th>
+              </tr>
+            </thead>
+            <tbody id="vehiclesRows"></tbody>
+          </table>
+        </div>
+
+        <div class="pagination">
+          <div class="subtle" id="paginationLabel">صفحة 1 من 1</div>
+          <div class="row-actions">
+            <button class="ghost-btn" id="prevPageBtn" type="button" onclick="changePage(-1)">السابق</button>
+            <button class="ghost-btn" id="nextPageBtn" type="button" onclick="changePage(1)">التالي</button>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <div id="createVehicleModal" class="modal" onclick="closeCreateVehicleModal(event)">
+      <div class="modal-content" onclick="event.stopPropagation()">
+        <div class="modal-header">
+          <div>
+            <h3 id="vehicleFormTitle">إدخال عربية جديدة</h3>
+            <p class="subtle">أدخل بيانات العربية والسائق مرة واحدة من خلال نموذج واضح ومركز.</p>
+          </div>
+          <button class="ghost-btn" type="button" onclick="closeCreateVehicleModal()">إغلاق</button>
+        </div>
+        <div class="modal-body">
+          <form id="vehicleForm" onsubmit="submitVehicleForm(event)">
+            <div class="form-grid">
+              <div class="field">
+                <label for="vehicleType">نوع العربية</label>
+                <input id="vehicleType" />
+                <div class="field-error" data-error-for="vehicle.vehicleType"></div>
+              </div>
+              <div class="field">
+                <label for="licensePlate">رقم اللوحة</label>
+                <input id="licensePlate" />
+                <div class="field-error" data-error-for="vehicle.licensePlate"></div>
+              </div>
+              <div class="field">
+                <label for="maxLoadKg">أقصى حمولة بالكيلو</label>
+                <input id="maxLoadKg" type="number" min="0" step="0.01" />
+                <div class="field-error" data-error-for="vehicle.maxLoadKg"></div>
+              </div>
+              <div class="field">
+                <label for="vehicleStatus">الحالة</label>
+                <select id="vehicleStatus">
+                  <option value="available">متاحة</option>
+                  <option value="assigned">مسندة</option>
+                  <option value="in_transit">في الطريق</option>
+                  <option value="maintenance">صيانة</option>
+                  <option value="inactive">غير نشطة</option>
+                </select>
+                <div class="field-error" data-error-for="vehicle.status"></div>
+              </div>
+              <div class="field">
+                <label for="driverName">اسم السائق</label>
+                <input id="driverName" />
+                <div class="field-error" data-error-for="vehicle.driverName"></div>
+              </div>
+              <div class="field">
+                <label for="driverPhone">رقم السائق</label>
+                <input id="driverPhone" />
+                <div class="field-error" data-error-for="vehicle.driverPhone"></div>
+              </div>
+              <div class="field">
+                <label for="driverNationalId">الرقم القومي</label>
+                <input id="driverNationalId" />
+                <div class="field-error" data-error-for="vehicle.driverNationalId"></div>
+              </div>
+              <div class="field">
+                <label for="driverNationalIdPic">رابط صورة البطاقة</label>
+                <input id="driverNationalIdPic" placeholder="https://..." />
+                <div class="field-error" data-error-for="vehicle.driverNationalIdPic"></div>
+              </div>
+              <div class="field full">
+                <label for="driverAddress">العنوان</label>
+                <textarea id="driverAddress"></textarea>
+                <div class="field-error" data-error-for="vehicle.driverAddress"></div>
+              </div>
             </div>
-            <div id="vehiclesState" class="loading-state">Loading vehicles...</div>
-            <div class="table-wrap"><table id="vehiclesTable" hidden><thead><tr><th>Vehicle</th><th>Driver</th><th>Load</th><th>Status</th><th>Action</th></tr></thead><tbody id="vehiclesRows"></tbody></table></div>
-            <div class="pagination"><button class="btn-secondary" id="prevPageBtn" type="button" onclick="changePage(-1)">Previous</button><span id="paginationLabel" class="subtle">Page 1 of 1</span><button class="btn-secondary" id="nextPageBtn" type="button" onclick="changePage(1)">Next</button></div>
-          </div></div>
+            <div class="modal-footer">
+              <button class="ghost-btn" type="button" onclick="resetVehicleForm()">مسح البيانات</button>
+              <button class="primary-btn" id="vehicleSubmitBtn" type="submit">حفظ العربية</button>
+            </div>
+          </form>
         </div>
       </div>
     </div>
-    <div id="vehicleEditModal" class="modal">
-      <div class="modal-content">
-        <div class="modal-header"><div><h3>Edit Vehicle</h3><p class="card-hint">Update vehicle and driver details in a focused popup.</p></div><button class="btn-secondary" type="button" onclick="closeVehicleEditModal()">Close</button></div>
-        <div class="modal-body"><div class="form-grid">
-          <div class="field"><label for="modalVehicleType">Vehicle Type</label><input id="modalVehicleType" /><div class="field-error" data-modal-error-for="vehicle.vehicleType"></div></div>
-          <div class="field"><label for="modalLicensePlate">License Plate</label><input id="modalLicensePlate" /><div class="field-error" data-modal-error-for="vehicle.licensePlate"></div></div>
-          <div class="field"><label for="modalMaxLoadKg">Max Load KG</label><input id="modalMaxLoadKg" type="number" min="0" step="0.01" /><div class="field-error" data-modal-error-for="vehicle.maxLoadKg"></div></div>
-          <div class="field"><label for="modalVehicleStatus">Status</label><select id="modalVehicleStatus"><option value="available">available</option><option value="assigned">assigned</option><option value="in_transit">in_transit</option><option value="maintenance">maintenance</option><option value="inactive">inactive</option></select><div class="field-error" data-modal-error-for="vehicle.status"></div></div>
-          <div class="field"><label for="modalDriverName">Driver Name</label><input id="modalDriverName" /><div class="field-error" data-modal-error-for="vehicle.driverName"></div></div>
-          <div class="field"><label for="modalDriverPhone">Driver Phone</label><input id="modalDriverPhone" /><div class="field-error" data-modal-error-for="vehicle.driverPhone"></div></div>
-          <div class="field"><label for="modalDriverNationalId">Driver National ID</label><input id="modalDriverNationalId" /><div class="field-error" data-modal-error-for="vehicle.driverNationalId"></div></div>
-          <div class="field"><label for="modalDriverNationalIdPic">National ID Picture URL</label><input id="modalDriverNationalIdPic" placeholder="https://..." /><div class="field-error" data-modal-error-for="vehicle.driverNationalIdPic"></div></div>
-          <div class="field full"><label for="modalDriverAddress">Driver Address</label><textarea id="modalDriverAddress"></textarea><div class="field-error" data-modal-error-for="vehicle.driverAddress"></div></div>
-        </div></div>
-        <div class="modal-footer"><button class="btn-secondary" type="button" onclick="closeVehicleEditModal()">Cancel</button><button class="btn-primary" type="button" onclick="submitVehicleEditModal()">Save Changes</button></div>
+
+    <div id="vehicleEditModal" class="modal" onclick="closeVehicleEditModal(event)">
+      <div class="modal-content" onclick="event.stopPropagation()">
+        <div class="modal-header">
+          <div>
+            <h3>تعديل بيانات العربية</h3>
+            <p class="subtle">حدث بيانات العربية والسائق من نافذة مركزة بدون مغادرة الصفحة.</p>
+          </div>
+          <button class="ghost-btn" type="button" onclick="closeVehicleEditModal()">إغلاق</button>
+        </div>
+        <div class="modal-body">
+          <div class="form-grid">
+            <div class="field">
+              <label for="modalVehicleType">نوع العربية</label>
+              <input id="modalVehicleType" />
+              <div class="field-error" data-modal-error-for="vehicle.vehicleType"></div>
+            </div>
+            <div class="field">
+              <label for="modalLicensePlate">رقم اللوحة</label>
+              <input id="modalLicensePlate" />
+              <div class="field-error" data-modal-error-for="vehicle.licensePlate"></div>
+            </div>
+            <div class="field">
+              <label for="modalMaxLoadKg">أقصى حمولة بالكيلو</label>
+              <input id="modalMaxLoadKg" type="number" min="0" step="0.01" />
+              <div class="field-error" data-modal-error-for="vehicle.maxLoadKg"></div>
+            </div>
+            <div class="field">
+              <label for="modalVehicleStatus">الحالة</label>
+              <select id="modalVehicleStatus">
+                <option value="available">متاحة</option>
+                <option value="assigned">مسندة</option>
+                <option value="in_transit">في الطريق</option>
+                <option value="maintenance">صيانة</option>
+                <option value="inactive">غير نشطة</option>
+              </select>
+              <div class="field-error" data-modal-error-for="vehicle.status"></div>
+            </div>
+            <div class="field">
+              <label for="modalDriverName">اسم السائق</label>
+              <input id="modalDriverName" />
+              <div class="field-error" data-modal-error-for="vehicle.driverName"></div>
+            </div>
+            <div class="field">
+              <label for="modalDriverPhone">رقم السائق</label>
+              <input id="modalDriverPhone" />
+              <div class="field-error" data-modal-error-for="vehicle.driverPhone"></div>
+            </div>
+            <div class="field">
+              <label for="modalDriverNationalId">الرقم القومي</label>
+              <input id="modalDriverNationalId" />
+              <div class="field-error" data-modal-error-for="vehicle.driverNationalId"></div>
+            </div>
+            <div class="field">
+              <label for="modalDriverNationalIdPic">رابط صورة البطاقة</label>
+              <input id="modalDriverNationalIdPic" placeholder="https://..." />
+              <div class="field-error" data-modal-error-for="vehicle.driverNationalIdPic"></div>
+            </div>
+            <div class="field full">
+              <label for="modalDriverAddress">العنوان</label>
+              <textarea id="modalDriverAddress"></textarea>
+              <div class="field-error" data-modal-error-for="vehicle.driverAddress"></div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="ghost-btn" type="button" onclick="closeVehicleEditModal()">إلغاء</button>
+          <button class="primary-btn" type="button" onclick="submitVehicleEditModal()">حفظ التعديلات</button>
+        </div>
       </div>
     </div>
+
     <div id="vehicleViewModal" class="modal" onclick="closeVehicleViewModal(event)">
       <div class="modal-content" onclick="event.stopPropagation()">
-        <div class="modal-header"><div><h3>Vehicle Profile</h3><p class="card-hint">Fleet inspector with operational controls.</p></div><button class="btn-secondary" type="button" onclick="closeVehicleViewModal()">Close</button></div>
+        <div class="modal-header">
+          <div>
+            <h3>ملف العربية</h3>
+            <p class="subtle">عرض مركزي لبيانات العربية مع التحكم في حالتها التشغيلية.</p>
+          </div>
+          <button class="ghost-btn" type="button" onclick="closeVehicleViewModal()">إغلاق</button>
+        </div>
         <div class="modal-body">
           <div class="detail-grid">
-            <div class="detail-item"><strong>Vehicle</strong><span id="vehicleViewVehicle">-</span></div>
-            <div class="detail-item"><strong>Status</strong><span id="vehicleViewStatus">-</span></div>
-            <div class="detail-item"><strong>Driver</strong><span id="vehicleViewDriver">-</span></div>
-            <div class="detail-item"><strong>Phone</strong><span id="vehicleViewPhone">-</span></div>
-            <div class="detail-item"><strong>National ID</strong><span id="vehicleViewNationalId">-</span></div>
-            <div class="detail-item"><strong>Load KG</strong><span id="vehicleViewLoad">-</span></div>
-            <div class="detail-item"><strong>Address</strong><span id="vehicleViewAddress">-</span></div>
-            <div class="detail-item"><strong>ID</strong><span id="vehicleViewId">-</span></div>
+            <div class="detail-item"><strong>العربية</strong><span id="vehicleViewVehicle">-</span></div>
+            <div class="detail-item"><strong>الحالة</strong><span id="vehicleViewStatus">-</span></div>
+            <div class="detail-item"><strong>السائق</strong><span id="vehicleViewDriver">-</span></div>
+            <div class="detail-item"><strong>الهاتف</strong><span id="vehicleViewPhone">-</span></div>
+            <div class="detail-item"><strong>الرقم القومي</strong><span id="vehicleViewNationalId">-</span></div>
+            <div class="detail-item"><strong>الحمولة</strong><span id="vehicleViewLoad">-</span></div>
+            <div class="detail-item"><strong>العنوان</strong><span id="vehicleViewAddress">-</span></div>
+            <div class="detail-item"><strong>المعرف</strong><span id="vehicleViewId">-</span></div>
           </div>
-          <div class="actions"><button class="btn-primary" type="button" onclick="editSelectedVehicle()">Edit Selected Vehicle</button><button class="btn-secondary" type="button" onclick="activateSelectedVehicle()">Activate</button><button class="btn-secondary" type="button" onclick="deactivateSelectedVehicle()">Deactivate</button></div>
-          <div class="actions"><select id="selectedVehicleStatus"><option value="available">available</option><option value="assigned">assigned</option><option value="in_transit">in_transit</option><option value="maintenance">maintenance</option><option value="inactive">inactive</option></select><button class="btn-secondary" type="button" onclick="updateSelectedVehicleStatus()">Update Status</button></div>
+          <div class="modal-actions" style="margin-top: 18px">
+            <button class="primary-btn" type="button" onclick="editSelectedVehicle()">تعديل العربية</button>
+            <button class="ghost-btn" type="button" onclick="activateSelectedVehicle()">تفعيل</button>
+            <button class="ghost-btn" type="button" onclick="deactivateSelectedVehicle()">إيقاف</button>
+          </div>
+          <div class="modal-actions" style="margin-top: 12px">
+            <select id="selectedVehicleStatus">
+              <option value="available">متاحة</option>
+              <option value="assigned">مسندة</option>
+              <option value="in_transit">في الطريق</option>
+              <option value="maintenance">صيانة</option>
+              <option value="inactive">غير نشطة</option>
+            </select>
+            <button class="ghost-btn" type="button" onclick="updateSelectedVehicleStatus()">تحديث الحالة</button>
+          </div>
         </div>
       </div>
     </div>
+
     <script>
-      const API_BASE = "https://supercycle-api-855015056699.europe-west1.run.app"; const token = localStorage.getItem("token"); if(!token) location.href = "index.html";
-      const state = { vehicles: [], meta: { page:1, totalPages:1, total:0 }, editingVehicleId: null, selectedVehicleId: null, selectedVehicle: null, modalVehicleId: null };
-      function goBack(){ location.href = "dashboard.html"; } function logout(){ localStorage.removeItem("token"); location.href = "index.html"; }
-      function getMessage(json,fallback){ return json?.message || json?.error || json?.data?.message || json?.errors?.[0]?.message || fallback; } function getId(item){ return item?._id || item?.id || item?.vehicleId; } function extractCollection(json){ if(Array.isArray(json)) return json; if(Array.isArray(json?.data)) return json.data; if(Array.isArray(json?.data?.data)) return json.data.data; if(Array.isArray(json?.items)) return json.items; if(Array.isArray(json?.results)) return json.results; return []; }
-      function escapeHtml(value){ return String(value ?? "-").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#39;"); } function isValidUrl(value){ if(!value) return true; try { new URL(value); return true; } catch(_) { return false; } } function toNumber(value){ if(value === "" || value == null) return null; const n = Number(value); return Number.isFinite(n) ? n : NaN; } function formatNumber(value){ if(value == null || value === "" || Number.isNaN(Number(value))) return "-"; return Number(value).toLocaleString("en-US"); }
-      function showBanner(type,message){ const el = document.getElementById("pageBanner"); if(!message){ el.className = "banner"; el.textContent = ""; return; } el.className = `banner ${type}`; el.textContent = message; }
-      function clearErrors(scope){ document.querySelectorAll(`[data-error-for^="${scope}."]`).forEach((el) => el.textContent = ""); } function setFieldError(key,message){ const el = document.querySelector(`[data-error-for="${key}"]`); if(el) el.textContent = message; }
-      function clearVehicleModalErrors(){ document.querySelectorAll("[data-modal-error-for]").forEach((el) => el.textContent = ""); } function setVehicleModalError(key,message){ const el = document.querySelector(`[data-modal-error-for="${key}"]`); if(el) el.textContent = message; }
-      async function fetchJson(path, options = {}){ const response = await fetch(`${API_BASE}${path}`, { ...options, headers: { Authorization: `Bearer ${token}`, ...(options.body ? { "Content-Type":"application/json" } : {}), ...(options.headers || {}) } }); const text = await response.text(); let json = null; try { json = text ? JSON.parse(text) : null; } catch(_) { json = null; } if(!response.ok) throw { status: response.status, json, message: getMessage(json, text || "Request failed") }; return json; }
-      function statusPill(status){ return `<span class="status-pill ${status || "inactive"}">${escapeHtml(status || "-")}</span>`; }
-      function vehicleQuery(page = 1){ const params = new URLSearchParams(); params.set("page", String(page)); params.set("limit", document.getElementById("filterLimit").value || "10"); const search = document.getElementById("vehicleSearch").value.trim(); const status = document.getElementById("filterStatus").value; const vehicleType = document.getElementById("filterVehicleType").value.trim(); const minLoadKg = document.getElementById("filterMinLoadKg").value.trim(); if(search) params.set("search", search); if(status) params.set("status", status); if(vehicleType) params.set("vehicleType", vehicleType); if(minLoadKg) params.set("minLoadKg", minLoadKg); return `?${params.toString()}`; }
-      function updateOverview(){ const totalLoad = state.vehicles.reduce((sum,item) => sum + Number(item.maxLoadKg || 0), 0); const available = state.vehicles.filter((item) => item.status === "available").length; const active = state.vehicles.filter((item) => item.status !== "inactive").length; document.getElementById("vehiclesTotal").textContent = formatNumber(state.meta.total || state.vehicles.length); document.getElementById("vehiclesAvailable").textContent = formatNumber(available); document.getElementById("vehiclesActive").textContent = formatNumber(active); document.getElementById("vehiclesLoad").textContent = formatNumber(totalLoad); document.getElementById("selectionVehicle").textContent = state.selectedVehicle ? `${state.selectedVehicle.vehicleType || "-"} • ${state.selectedVehicle.licensePlate || "-"}` : "No vehicle selected"; document.getElementById("selectionVehicleStatus").innerHTML = state.selectedVehicle ? statusPill(state.selectedVehicle.status) : "-"; }
-      async function loadVehicles(page = 1){ document.getElementById("vehiclesState").className = "loading-state"; document.getElementById("vehiclesState").textContent = "Loading vehicles..."; document.getElementById("vehiclesState").hidden = false; document.getElementById("vehiclesTable").hidden = true; try { const json = await fetchJson(`/admin/vehicles${vehicleQuery(page)}`); state.vehicles = extractCollection(json); state.meta = { page: json?.page || json?.data?.page || page, totalPages: json?.totalPages || json?.data?.totalPages || 1, total: json?.total || json?.data?.total || state.vehicles.length }; renderVehicles(); updateOverview(); } catch(error){ state.vehicles = []; document.getElementById("vehiclesState").className = "empty-state"; document.getElementById("vehiclesState").textContent = error.message || "Failed to load vehicles"; } }
-      function renderVehicles(){ if(!state.vehicles.length){ document.getElementById("vehiclesState").className = "empty-state"; document.getElementById("vehiclesState").textContent = "No vehicles found"; updatePagination(); return; } document.getElementById("vehiclesRows").innerHTML = state.vehicles.map((item) => `<tr><td><div class="inline-stack"><strong>${escapeHtml(item.vehicleType || "-")}</strong><span class="subtle">${escapeHtml(item.licensePlate || "-")}</span></div></td><td><div class="inline-stack"><strong>${escapeHtml(item.driverName || "-")}</strong><span class="subtle">${escapeHtml(item.driverPhone || "-")}</span></div></td><td>${formatNumber(item.maxLoadKg)}</td><td>${statusPill(item.status)}</td><td><div class="row-actions"><button class="btn-link" type="button" onclick="selectVehicle('${getId(item)}', true)">View</button><button class="btn-link" type="button" onclick="quickEditVehicle('${getId(item)}')">Edit</button></div></td></tr>`).join(""); document.getElementById("vehiclesState").hidden = true; document.getElementById("vehiclesTable").hidden = false; updatePagination(); }
-      function updatePagination(){ const page = state.meta.page || 1; const totalPages = state.meta.totalPages || 1; document.getElementById("paginationLabel").textContent = `Page ${page} of ${totalPages}`; document.getElementById("prevPageBtn").disabled = page <= 1; document.getElementById("nextPageBtn").disabled = page >= totalPages; }
-      async function selectVehicle(id, openModal = false){ state.selectedVehicleId = id; try { const json = await fetchJson(`/admin/vehicles/${id}`); state.selectedVehicle = json?.data || json || null; renderSelectedVehicle(); updateOverview(); if(openModal && state.selectedVehicle) openVehicleViewModal(); } catch(error){ state.selectedVehicle = null; renderSelectedVehicle(); showBanner("error", error.message || "Failed to load vehicle details"); } }
-      function renderSelectedVehicle(){ const item = state.selectedVehicle; document.getElementById("vehicleInspectorName").textContent = item ? `${item.vehicleType || "-"} • ${item.licensePlate || "-"}` : "No vehicle selected"; document.getElementById("openVehicleInspectorBtn").disabled = !item; document.getElementById("editSelectedVehicleBtn").disabled = !item; if(!item) return; document.getElementById("vehicleViewVehicle").textContent = `${item.vehicleType || "-"} • ${item.licensePlate || "-"}`; document.getElementById("vehicleViewStatus").innerHTML = statusPill(item.status); document.getElementById("vehicleViewDriver").textContent = item.driverName || "-"; document.getElementById("vehicleViewPhone").textContent = item.driverPhone || "-"; document.getElementById("vehicleViewNationalId").textContent = item.driverNationalId || "-"; document.getElementById("vehicleViewLoad").textContent = formatNumber(item.maxLoadKg); document.getElementById("vehicleViewAddress").textContent = item.driverAddress || "-"; document.getElementById("vehicleViewId").textContent = getId(item) || "-"; document.getElementById("selectedVehicleStatus").value = item.status || "available"; }
-      function openVehicleViewModal(){ if(state.selectedVehicle) document.getElementById("vehicleViewModal").classList.add("open"); }
-      function closeVehicleViewModal(event){ if(event && event.target !== event.currentTarget) return; document.getElementById("vehicleViewModal").classList.remove("open"); }
-      function openSelectedVehicleView(){ openVehicleViewModal(); }
-      function resetVehicleForm(){ state.editingVehicleId = null; clearErrors("vehicle"); document.getElementById("vehicleFormTitle").textContent = "Create Vehicle"; document.getElementById("vehicleSubmitBtn").textContent = "Create Vehicle"; document.getElementById("vehicleForm").reset(); document.getElementById("vehicleStatus").value = "available"; }
-      function openVehicleEditModal(item){ state.modalVehicleId = getId(item); clearVehicleModalErrors(); document.getElementById("modalVehicleType").value = item.vehicleType || ""; document.getElementById("modalLicensePlate").value = item.licensePlate || ""; document.getElementById("modalMaxLoadKg").value = item.maxLoadKg ?? ""; document.getElementById("modalVehicleStatus").value = item.status || "available"; document.getElementById("modalDriverName").value = item.driverName || ""; document.getElementById("modalDriverPhone").value = item.driverPhone || ""; document.getElementById("modalDriverNationalId").value = item.driverNationalId || ""; document.getElementById("modalDriverNationalIdPic").value = item.driverNationalIdPic || ""; document.getElementById("modalDriverAddress").value = item.driverAddress || ""; document.getElementById("vehicleEditModal").classList.add("open"); }
-      function closeVehicleEditModal(){ state.modalVehicleId = null; document.getElementById("vehicleEditModal").classList.remove("open"); }
-      function validateVehicleForm(){ clearErrors("vehicle"); const vehicleType = document.getElementById("vehicleType").value.trim(); const licensePlate = document.getElementById("licensePlate").value.trim(); const maxLoadKg = toNumber(document.getElementById("maxLoadKg").value); const status = document.getElementById("vehicleStatus").value; const driverName = document.getElementById("driverName").value.trim(); const driverPhone = document.getElementById("driverPhone").value.trim(); const driverNationalId = document.getElementById("driverNationalId").value.trim(); const driverNationalIdPic = document.getElementById("driverNationalIdPic").value.trim(); const driverAddress = document.getElementById("driverAddress").value.trim(); let ok = true; if(!vehicleType){ setFieldError("vehicle.vehicleType","Vehicle type is required"); ok = false; } if(!licensePlate){ setFieldError("vehicle.licensePlate","License plate is required"); ok = false; } if(maxLoadKg == null || Number.isNaN(maxLoadKg)){ setFieldError("vehicle.maxLoadKg","Max load is required"); ok = false; } if(!driverName){ setFieldError("vehicle.driverName","Driver name is required"); ok = false; } if(!driverPhone){ setFieldError("vehicle.driverPhone","Driver phone is required"); ok = false; } if(!driverNationalId){ setFieldError("vehicle.driverNationalId","Driver national ID is required"); ok = false; } if(driverNationalIdPic && !isValidUrl(driverNationalIdPic)){ setFieldError("vehicle.driverNationalIdPic","Enter a valid image URL"); ok = false; } if(!ok) return null; return { vehicleType, licensePlate, maxLoadKg, status, driverName, driverAddress: driverAddress || undefined, driverPhone, driverNationalId, driverNationalIdPic: driverNationalIdPic || undefined }; }
-      function validateVehicleModalForm(){ clearVehicleModalErrors(); const vehicleType = document.getElementById("modalVehicleType").value.trim(); const licensePlate = document.getElementById("modalLicensePlate").value.trim(); const maxLoadKg = toNumber(document.getElementById("modalMaxLoadKg").value); const status = document.getElementById("modalVehicleStatus").value; const driverName = document.getElementById("modalDriverName").value.trim(); const driverPhone = document.getElementById("modalDriverPhone").value.trim(); const driverNationalId = document.getElementById("modalDriverNationalId").value.trim(); const driverNationalIdPic = document.getElementById("modalDriverNationalIdPic").value.trim(); const driverAddress = document.getElementById("modalDriverAddress").value.trim(); let ok = true; if(!vehicleType){ setVehicleModalError("vehicle.vehicleType","Vehicle type is required"); ok = false; } if(!licensePlate){ setVehicleModalError("vehicle.licensePlate","License plate is required"); ok = false; } if(maxLoadKg == null || Number.isNaN(maxLoadKg)){ setVehicleModalError("vehicle.maxLoadKg","Max load is required"); ok = false; } if(!driverName){ setVehicleModalError("vehicle.driverName","Driver name is required"); ok = false; } if(!driverPhone){ setVehicleModalError("vehicle.driverPhone","Driver phone is required"); ok = false; } if(!driverNationalId){ setVehicleModalError("vehicle.driverNationalId","Driver national ID is required"); ok = false; } if(driverNationalIdPic && !isValidUrl(driverNationalIdPic)){ setVehicleModalError("vehicle.driverNationalIdPic","Enter a valid image URL"); ok = false; } if(!ok) return null; return { vehicleType, licensePlate, maxLoadKg, status, driverName, driverAddress: driverAddress || undefined, driverPhone, driverNationalId, driverNationalIdPic: driverNationalIdPic || undefined }; }
-      async function submitVehicleEditModal(){ if(!state.modalVehicleId) return; const currentId = state.modalVehicleId; const payload = validateVehicleModalForm(); if(!payload) return; try { const json = await fetchJson(`/admin/vehicles/${currentId}`, { method:"PATCH", body: JSON.stringify(payload) }); closeVehicleEditModal(); showBanner("success", getMessage(json, "Vehicle updated successfully")); await Promise.all([loadVehicles(state.meta.page || 1), selectVehicle(currentId)]); } catch(error){ showBanner("error", error.message || "Failed to save vehicle"); } }
-      async function submitVehicleForm(event){ event.preventDefault(); const payload = validateVehicleForm(); if(!payload) return; const isEditing = Boolean(state.editingVehicleId); try { const json = await fetchJson(isEditing ? `/admin/vehicles/${state.editingVehicleId}` : "/admin/vehicles", { method: isEditing ? "PATCH" : "POST", body: JSON.stringify(payload) }); resetVehicleForm(); showBanner("success", getMessage(json, isEditing ? "Vehicle updated successfully" : "Vehicle created successfully")); await loadVehicles(isEditing ? state.meta.page || 1 : 1); } catch(error){ showBanner("error", error.message || "Failed to save vehicle"); } }
-      async function quickEditVehicle(id){ await selectVehicle(id); if(state.selectedVehicle) openVehicleEditModal(state.selectedVehicle); }
-      function editSelectedVehicle(){ if(state.selectedVehicle){ closeVehicleViewModal(); openVehicleEditModal(state.selectedVehicle); } }
-      async function updateSelectedVehicleStatus(){ if(!state.selectedVehicle) return; try { const json = await fetchJson(`/admin/vehicles/${getId(state.selectedVehicle)}/status`, { method: "PATCH", body: JSON.stringify({ status: document.getElementById("selectedVehicleStatus").value }) }); showBanner("success", getMessage(json, "Vehicle status updated successfully")); await Promise.all([loadVehicles(state.meta.page || 1), selectVehicle(getId(state.selectedVehicle), true)]); } catch(error){ showBanner("error", error.message || "Failed to update vehicle status"); } }
-      async function activateSelectedVehicle(){ if(!state.selectedVehicle) return; try { const json = await fetchJson(`/admin/vehicles/${getId(state.selectedVehicle)}/activate`, { method: "PATCH" }); showBanner("success", getMessage(json, "Vehicle activated successfully")); await Promise.all([loadVehicles(state.meta.page || 1), selectVehicle(getId(state.selectedVehicle), true)]); } catch(error){ showBanner("error", error.message || "Failed to activate vehicle"); } }
-      async function deactivateSelectedVehicle(){ if(!state.selectedVehicle) return; try { const json = await fetchJson(`/admin/vehicles/${getId(state.selectedVehicle)}/deactivate`, { method: "PATCH" }); showBanner("success", getMessage(json, "Vehicle deactivated successfully")); await Promise.all([loadVehicles(state.meta.page || 1), selectVehicle(getId(state.selectedVehicle), true)]); } catch(error){ showBanner("error", error.message || "Failed to deactivate vehicle"); } }
-      function resetFilters(){ document.getElementById("vehicleSearch").value = ""; document.getElementById("filterStatus").value = ""; document.getElementById("filterVehicleType").value = ""; document.getElementById("filterMinLoadKg").value = ""; document.getElementById("filterLimit").value = "10"; loadVehicles(1); }
-      function changePage(delta){ const next = (state.meta.page || 1) + delta; if(next < 1 || next > (state.meta.totalPages || 1)) return; loadVehicles(next); }
-      async function refreshAll(){ showBanner("", ""); await loadVehicles(state.meta.page || 1); if(state.selectedVehicleId) await selectVehicle(state.selectedVehicleId); }
+      const API_BASE =
+        "https://supercycle-api-855015056699.europe-west1.run.app";
+      const token = localStorage.getItem("token");
+
+      if (!token) location.href = "index.html";
+
+      const state = {
+        vehicles: [],
+        meta: { page: 1, totalPages: 1, total: 0 },
+        selectedVehicleId: null,
+        selectedVehicle: null,
+        modalVehicleId: null,
+      };
+
+      function goBack() {
+        location.href = "dashboard.html";
+      }
+
+      function logout() {
+        localStorage.removeItem("token");
+        location.href = "index.html";
+      }
+
+      function getMessage(json, fallback) {
+        return (
+          json?.message ||
+          json?.error ||
+          json?.data?.message ||
+          json?.errors?.[0]?.message ||
+          fallback
+        );
+      }
+
+      function getId(item) {
+        return item?._id || item?.id || item?.vehicleId;
+      }
+
+      function extractCollection(json) {
+        if (Array.isArray(json)) return json;
+        if (Array.isArray(json?.data)) return json.data;
+        if (Array.isArray(json?.data?.data)) return json.data.data;
+        if (Array.isArray(json?.items)) return json.items;
+        if (Array.isArray(json?.results)) return json.results;
+        return [];
+      }
+
+      function escapeHtml(value) {
+        return String(value ?? "-")
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;")
+          .replace(/'/g, "&#39;");
+      }
+
+      function isValidUrl(value) {
+        if (!value) return true;
+        try {
+          new URL(value);
+          return true;
+        } catch (_) {
+          return false;
+        }
+      }
+
+      function toNumber(value) {
+        if (value === "" || value == null) return null;
+        const number = Number(value);
+        return Number.isFinite(number) ? number : NaN;
+      }
+
+      function formatNumber(value) {
+        if (value == null || value === "" || Number.isNaN(Number(value))) return "-";
+        return Number(value).toLocaleString("ar-EG");
+      }
+
+      function statusLabel(status) {
+        const labels = {
+          available: "متاحة",
+          assigned: "مسندة",
+          in_transit: "في الطريق",
+          maintenance: "صيانة",
+          inactive: "غير نشطة",
+        };
+        return labels[status] || status || "-";
+      }
+
+      function showBanner(type, message) {
+        const banner = document.getElementById("pageBanner");
+        if (!message) {
+          banner.className = "banner";
+          banner.textContent = "";
+          return;
+        }
+
+        banner.className = `banner ${type}`;
+        banner.textContent = message;
+      }
+
+      function clearErrors(scope) {
+        document
+          .querySelectorAll(`[data-error-for^="${scope}."]`)
+          .forEach((element) => (element.textContent = ""));
+      }
+
+      function setFieldError(key, message) {
+        const element = document.querySelector(`[data-error-for="${key}"]`);
+        if (element) element.textContent = message;
+      }
+
+      function clearVehicleModalErrors() {
+        document
+          .querySelectorAll("[data-modal-error-for]")
+          .forEach((element) => (element.textContent = ""));
+      }
+
+      function setVehicleModalError(key, message) {
+        const element = document.querySelector(`[data-modal-error-for="${key}"]`);
+        if (element) element.textContent = message;
+      }
+
+      async function fetchJson(path, options = {}) {
+        const response = await fetch(`${API_BASE}${path}`, {
+          ...options,
+          headers: {
+            Authorization: `Bearer ${token}`,
+            ...(options.body ? { "Content-Type": "application/json" } : {}),
+            ...(options.headers || {}),
+          },
+        });
+
+        const text = await response.text();
+        let json = null;
+
+        try {
+          json = text ? JSON.parse(text) : null;
+        } catch (_) {
+          json = null;
+        }
+
+        if (!response.ok) {
+          throw {
+            status: response.status,
+            json,
+            message: getMessage(json, text || "Request failed"),
+          };
+        }
+
+        return json;
+      }
+
+      function statusPill(status) {
+        const normalized = status || "inactive";
+        return `<span class="status-pill ${escapeHtml(normalized)}">${escapeHtml(statusLabel(normalized))}</span>`;
+      }
+
+      function vehicleQuery(page = 1) {
+        const params = new URLSearchParams();
+        params.set("page", String(page));
+        params.set("limit", document.getElementById("filterLimit").value || "10");
+
+        const search = document.getElementById("vehicleSearch").value.trim();
+        const status = document.getElementById("filterStatus").value;
+        const vehicleType = document.getElementById("filterVehicleType").value.trim();
+        const minLoadKg = document.getElementById("filterMinLoadKg").value.trim();
+
+        if (search) params.set("search", search);
+        if (status) params.set("status", status);
+        if (vehicleType) params.set("vehicleType", vehicleType);
+        if (minLoadKg) params.set("minLoadKg", minLoadKg);
+
+        return `?${params.toString()}`;
+      }
+
+      function updateOverview() {
+        const totalLoad = state.vehicles.reduce(
+          (sum, item) => sum + Number(item.maxLoadKg || 0),
+          0,
+        );
+        const available = state.vehicles.filter(
+          (item) => item.status === "available",
+        ).length;
+        const active = state.vehicles.filter(
+          (item) => item.status !== "inactive",
+        ).length;
+
+        document.getElementById("vehiclesTotal").textContent = formatNumber(
+          state.meta.total || state.vehicles.length,
+        );
+        document.getElementById("vehiclesAvailable").textContent = formatNumber(available);
+        document.getElementById("vehiclesActive").textContent = formatNumber(active);
+        document.getElementById("vehiclesLoad").textContent = formatNumber(totalLoad);
+        document.getElementById("selectionVehicleCount").textContent = formatNumber(
+          state.vehicles.length,
+        );
+
+      }
+
+      async function loadVehicles(page = 1) {
+        const vehiclesState = document.getElementById("vehiclesState");
+        const vehiclesTable = document.getElementById("vehiclesTable");
+
+        vehiclesState.className = "loading-state";
+        vehiclesState.textContent = "جاري تحميل العربيات...";
+        vehiclesState.hidden = false;
+        vehiclesTable.hidden = true;
+
+        try {
+          const json = await fetchJson(`/admin/vehicles${vehicleQuery(page)}`);
+          state.vehicles = extractCollection(json);
+          state.meta = {
+            page: json?.page || json?.data?.page || page,
+            totalPages: json?.totalPages || json?.data?.totalPages || 1,
+            total: json?.total || json?.data?.total || state.vehicles.length,
+          };
+
+          renderVehicles();
+          updateOverview();
+        } catch (error) {
+          state.vehicles = [];
+          vehiclesState.className = "empty-state";
+          vehiclesState.textContent = error.message || "تعذر تحميل العربيات";
+          updatePagination();
+          updateOverview();
+        }
+      }
+
+      function renderVehicles() {
+        const vehiclesState = document.getElementById("vehiclesState");
+        const vehiclesTable = document.getElementById("vehiclesTable");
+        const rows = document.getElementById("vehiclesRows");
+
+        if (!state.vehicles.length) {
+          rows.innerHTML = "";
+          vehiclesState.className = "empty-state";
+          vehiclesState.textContent = "لا توجد عربيات مطابقة للفلاتر الحالية";
+          vehiclesState.hidden = false;
+          vehiclesTable.hidden = true;
+          updatePagination();
+          return;
+        }
+
+        rows.innerHTML = state.vehicles
+          .map((item) => {
+            const id = getId(item);
+            return `
+              <tr>
+                <td>
+                  <div class="vehicle-cell">
+                    <span class="vehicle-title">${escapeHtml(item.vehicleType || "-")}</span>
+                    <span class="subtle">${escapeHtml(item.licensePlate || "-")}</span>
+                  </div>
+                </td>
+                <td>
+                  <div class="driver-cell">
+                    <span>${escapeHtml(item.driverName || "-")}</span>
+                    <span class="subtle">${escapeHtml(item.driverPhone || "-")}</span>
+                  </div>
+                </td>
+                <td>${formatNumber(item.maxLoadKg)} كجم</td>
+                <td>${statusPill(item.status)}</td>
+                <td>
+                  <div class="driver-cell">
+                    <span class="subtle">الرقم القومي: ${escapeHtml(item.driverNationalId || "-")}</span>
+                    <span class="subtle">المعرف: ${escapeHtml(id || "-")}</span>
+                  </div>
+                </td>
+                <td>
+                  <div class="row-actions">
+                    <button class="table-link" type="button" onclick="selectVehicle('${escapeHtml(id)}', true)">عرض</button>
+                    <button class="table-link" type="button" onclick="quickEditVehicle('${escapeHtml(id)}')">تعديل</button>
+                  </div>
+                </td>
+              </tr>
+            `;
+          })
+          .join("");
+
+        vehiclesState.hidden = true;
+        vehiclesTable.hidden = false;
+        updatePagination();
+      }
+
+      function updatePagination() {
+        const page = state.meta.page || 1;
+        const totalPages = state.meta.totalPages || 1;
+        document.getElementById("paginationLabel").textContent =
+          `صفحة ${formatNumber(page)} من ${formatNumber(totalPages)}`;
+        document.getElementById("prevPageBtn").disabled = page <= 1;
+        document.getElementById("nextPageBtn").disabled = page >= totalPages;
+      }
+
+      async function selectVehicle(id, openModal = false) {
+        state.selectedVehicleId = id;
+
+        try {
+          const json = await fetchJson(`/admin/vehicles/${id}`);
+          state.selectedVehicle = json?.data || json || null;
+          renderSelectedVehicle();
+          updateOverview();
+          if (openModal && state.selectedVehicle) openVehicleViewModal();
+        } catch (error) {
+          state.selectedVehicle = null;
+          renderSelectedVehicle();
+          showBanner("error", error.message || "تعذر تحميل بيانات العربية");
+        }
+      }
+
+      function renderSelectedVehicle() {
+        const item = state.selectedVehicle;
+        document.getElementById("openVehicleInspectorBtn").disabled = !item;
+        document.getElementById("editSelectedVehicleBtn").disabled = !item;
+
+        if (!item) {
+          updateOverview();
+          return;
+        }
+
+        document.getElementById("vehicleViewVehicle").textContent =
+          `${item.vehicleType || "-"} • ${item.licensePlate || "-"}`;
+        document.getElementById("vehicleViewStatus").innerHTML = statusPill(item.status);
+        document.getElementById("vehicleViewDriver").textContent =
+          item.driverName || "-";
+        document.getElementById("vehicleViewPhone").textContent =
+          item.driverPhone || "-";
+        document.getElementById("vehicleViewNationalId").textContent =
+          item.driverNationalId || "-";
+        document.getElementById("vehicleViewLoad").textContent =
+          `${formatNumber(item.maxLoadKg)} كجم`;
+        document.getElementById("vehicleViewAddress").textContent =
+          item.driverAddress || "-";
+        document.getElementById("vehicleViewId").textContent = getId(item) || "-";
+        document.getElementById("selectedVehicleStatus").value =
+          item.status || "available";
+      }
+
+      function openCreateVehicleModal() {
+        resetVehicleForm();
+        document.getElementById("createVehicleModal").classList.add("open");
+      }
+
+      function closeCreateVehicleModal(event) {
+        if (event && event.target !== event.currentTarget) return;
+        document.getElementById("createVehicleModal").classList.remove("open");
+      }
+
+      function openVehicleViewModal() {
+        if (state.selectedVehicle) {
+          document.getElementById("vehicleViewModal").classList.add("open");
+        }
+      }
+
+      function closeVehicleViewModal(event) {
+        if (event && event.target !== event.currentTarget) return;
+        document.getElementById("vehicleViewModal").classList.remove("open");
+      }
+
+      function resetVehicleForm() {
+        clearErrors("vehicle");
+        document.getElementById("vehicleForm").reset();
+        document.getElementById("vehicleStatus").value = "available";
+        document.getElementById("vehicleFormTitle").textContent =
+          "إدخال عربية جديدة";
+        document.getElementById("vehicleSubmitBtn").textContent = "حفظ العربية";
+      }
+
+      function openVehicleEditModal(item) {
+        state.modalVehicleId = getId(item);
+        clearVehicleModalErrors();
+        document.getElementById("modalVehicleType").value = item.vehicleType || "";
+        document.getElementById("modalLicensePlate").value =
+          item.licensePlate || "";
+        document.getElementById("modalMaxLoadKg").value = item.maxLoadKg ?? "";
+        document.getElementById("modalVehicleStatus").value =
+          item.status || "available";
+        document.getElementById("modalDriverName").value = item.driverName || "";
+        document.getElementById("modalDriverPhone").value =
+          item.driverPhone || "";
+        document.getElementById("modalDriverNationalId").value =
+          item.driverNationalId || "";
+        document.getElementById("modalDriverNationalIdPic").value =
+          item.driverNationalIdPic || "";
+        document.getElementById("modalDriverAddress").value =
+          item.driverAddress || "";
+        document.getElementById("vehicleEditModal").classList.add("open");
+      }
+
+      function closeVehicleEditModal(event) {
+        if (event && event.target !== event.currentTarget) return;
+        state.modalVehicleId = null;
+        document.getElementById("vehicleEditModal").classList.remove("open");
+      }
+
+      function validateVehicleForm() {
+        clearErrors("vehicle");
+
+        const vehicleType = document.getElementById("vehicleType").value.trim();
+        const licensePlate = document.getElementById("licensePlate").value.trim();
+        const maxLoadKg = toNumber(document.getElementById("maxLoadKg").value);
+        const status = document.getElementById("vehicleStatus").value;
+        const driverName = document.getElementById("driverName").value.trim();
+        const driverPhone = document.getElementById("driverPhone").value.trim();
+        const driverNationalId = document
+          .getElementById("driverNationalId")
+          .value.trim();
+        const driverNationalIdPic = document
+          .getElementById("driverNationalIdPic")
+          .value.trim();
+        const driverAddress = document.getElementById("driverAddress").value.trim();
+
+        let valid = true;
+
+        if (!vehicleType) {
+          setFieldError("vehicle.vehicleType", "نوع العربية مطلوب");
+          valid = false;
+        }
+        if (!licensePlate) {
+          setFieldError("vehicle.licensePlate", "رقم اللوحة مطلوب");
+          valid = false;
+        }
+        if (maxLoadKg == null || Number.isNaN(maxLoadKg)) {
+          setFieldError("vehicle.maxLoadKg", "الحمولة مطلوبة");
+          valid = false;
+        }
+        if (!driverName) {
+          setFieldError("vehicle.driverName", "اسم السائق مطلوب");
+          valid = false;
+        }
+        if (!driverPhone) {
+          setFieldError("vehicle.driverPhone", "رقم السائق مطلوب");
+          valid = false;
+        }
+        if (!driverNationalId) {
+          setFieldError("vehicle.driverNationalId", "الرقم القومي مطلوب");
+          valid = false;
+        }
+        if (driverNationalIdPic && !isValidUrl(driverNationalIdPic)) {
+          setFieldError("vehicle.driverNationalIdPic", "أدخل رابطًا صحيحًا");
+          valid = false;
+        }
+
+        if (!valid) return null;
+
+        return {
+          vehicleType,
+          licensePlate,
+          maxLoadKg,
+          status,
+          driverName,
+          driverAddress: driverAddress || undefined,
+          driverPhone,
+          driverNationalId,
+          driverNationalIdPic: driverNationalIdPic || undefined,
+        };
+      }
+
+      function validateVehicleModalForm() {
+        clearVehicleModalErrors();
+
+        const vehicleType = document
+          .getElementById("modalVehicleType")
+          .value.trim();
+        const licensePlate = document
+          .getElementById("modalLicensePlate")
+          .value.trim();
+        const maxLoadKg = toNumber(document.getElementById("modalMaxLoadKg").value);
+        const status = document.getElementById("modalVehicleStatus").value;
+        const driverName = document
+          .getElementById("modalDriverName")
+          .value.trim();
+        const driverPhone = document
+          .getElementById("modalDriverPhone")
+          .value.trim();
+        const driverNationalId = document
+          .getElementById("modalDriverNationalId")
+          .value.trim();
+        const driverNationalIdPic = document
+          .getElementById("modalDriverNationalIdPic")
+          .value.trim();
+        const driverAddress = document
+          .getElementById("modalDriverAddress")
+          .value.trim();
+
+        let valid = true;
+
+        if (!vehicleType) {
+          setVehicleModalError("vehicle.vehicleType", "نوع العربية مطلوب");
+          valid = false;
+        }
+        if (!licensePlate) {
+          setVehicleModalError("vehicle.licensePlate", "رقم اللوحة مطلوب");
+          valid = false;
+        }
+        if (maxLoadKg == null || Number.isNaN(maxLoadKg)) {
+          setVehicleModalError("vehicle.maxLoadKg", "الحمولة مطلوبة");
+          valid = false;
+        }
+        if (!driverName) {
+          setVehicleModalError("vehicle.driverName", "اسم السائق مطلوب");
+          valid = false;
+        }
+        if (!driverPhone) {
+          setVehicleModalError("vehicle.driverPhone", "رقم السائق مطلوب");
+          valid = false;
+        }
+        if (!driverNationalId) {
+          setVehicleModalError("vehicle.driverNationalId", "الرقم القومي مطلوب");
+          valid = false;
+        }
+        if (driverNationalIdPic && !isValidUrl(driverNationalIdPic)) {
+          setVehicleModalError("vehicle.driverNationalIdPic", "أدخل رابطًا صحيحًا");
+          valid = false;
+        }
+
+        if (!valid) return null;
+
+        return {
+          vehicleType,
+          licensePlate,
+          maxLoadKg,
+          status,
+          driverName,
+          driverAddress: driverAddress || undefined,
+          driverPhone,
+          driverNationalId,
+          driverNationalIdPic: driverNationalIdPic || undefined,
+        };
+      }
+
+      async function submitVehicleForm(event) {
+        event.preventDefault();
+        const payload = validateVehicleForm();
+        if (!payload) return;
+
+        try {
+          const json = await fetchJson("/admin/vehicles", {
+            method: "POST",
+            body: JSON.stringify(payload),
+          });
+          closeCreateVehicleModal();
+          resetVehicleForm();
+          showBanner("success", getMessage(json, "تم حفظ العربية بنجاح"));
+          await loadVehicles(1);
+        } catch (error) {
+          showBanner("error", error.message || "تعذر حفظ العربية");
+        }
+      }
+
+      async function submitVehicleEditModal() {
+        if (!state.modalVehicleId) return;
+        const currentId = state.modalVehicleId;
+        const payload = validateVehicleModalForm();
+        if (!payload) return;
+
+        try {
+          const json = await fetchJson(`/admin/vehicles/${currentId}`, {
+            method: "PATCH",
+            body: JSON.stringify(payload),
+          });
+          closeVehicleEditModal();
+          showBanner("success", getMessage(json, "تم تحديث العربية بنجاح"));
+          await Promise.all([
+            loadVehicles(state.meta.page || 1),
+            selectVehicle(currentId),
+          ]);
+        } catch (error) {
+          showBanner("error", error.message || "تعذر حفظ التعديلات");
+        }
+      }
+
+      async function quickEditVehicle(id) {
+        await selectVehicle(id);
+        if (state.selectedVehicle) openVehicleEditModal(state.selectedVehicle);
+      }
+
+      function editSelectedVehicle() {
+        if (state.selectedVehicle) {
+          closeVehicleViewModal();
+          openVehicleEditModal(state.selectedVehicle);
+        }
+      }
+
+      async function updateSelectedVehicleStatus() {
+        if (!state.selectedVehicle) return;
+
+        try {
+          const json = await fetchJson(
+            `/admin/vehicles/${getId(state.selectedVehicle)}/status`,
+            {
+              method: "PATCH",
+              body: JSON.stringify({
+                status: document.getElementById("selectedVehicleStatus").value,
+              }),
+            },
+          );
+          showBanner("success", getMessage(json, "تم تحديث الحالة بنجاح"));
+          await Promise.all([
+            loadVehicles(state.meta.page || 1),
+            selectVehicle(getId(state.selectedVehicle), true),
+          ]);
+        } catch (error) {
+          showBanner("error", error.message || "تعذر تحديث الحالة");
+        }
+      }
+
+      async function activateSelectedVehicle() {
+        if (!state.selectedVehicle) return;
+
+        try {
+          const json = await fetchJson(
+            `/admin/vehicles/${getId(state.selectedVehicle)}/activate`,
+            { method: "PATCH" },
+          );
+          showBanner("success", getMessage(json, "تم تفعيل العربية"));
+          await Promise.all([
+            loadVehicles(state.meta.page || 1),
+            selectVehicle(getId(state.selectedVehicle), true),
+          ]);
+        } catch (error) {
+          showBanner("error", error.message || "تعذر تفعيل العربية");
+        }
+      }
+
+      async function deactivateSelectedVehicle() {
+        if (!state.selectedVehicle) return;
+
+        try {
+          const json = await fetchJson(
+            `/admin/vehicles/${getId(state.selectedVehicle)}/deactivate`,
+            { method: "PATCH" },
+          );
+          showBanner("success", getMessage(json, "تم إيقاف العربية"));
+          await Promise.all([
+            loadVehicles(state.meta.page || 1),
+            selectVehicle(getId(state.selectedVehicle), true),
+          ]);
+        } catch (error) {
+          showBanner("error", error.message || "تعذر إيقاف العربية");
+        }
+      }
+
+      function resetFilters() {
+        document.getElementById("vehicleSearch").value = "";
+        document.getElementById("filterStatus").value = "";
+        document.getElementById("filterVehicleType").value = "";
+        document.getElementById("filterMinLoadKg").value = "";
+        document.getElementById("filterLimit").value = "10";
+        loadVehicles(1);
+      }
+
+      function changePage(delta) {
+        const nextPage = (state.meta.page || 1) + delta;
+        if (nextPage < 1 || nextPage > (state.meta.totalPages || 1)) return;
+        loadVehicles(nextPage);
+      }
+
+      async function refreshAll() {
+        showBanner("", "");
+        await loadVehicles(state.meta.page || 1);
+        if (state.selectedVehicleId) {
+          await selectVehicle(state.selectedVehicleId);
+        }
+      }
+
+      function initMeta() {
+        const formatted = new Date().toLocaleDateString("ar-EG", {
+          weekday: "long",
+          day: "numeric",
+          month: "long",
+          year: "numeric",
+        });
+        document.getElementById("todayLabel").textContent = formatted;
+      }
+
+      initMeta();
       loadVehicles(1);
+      window.onLanguageChange = () => {
+        initMeta();
+        loadVehicles(state.meta.page || 1);
+      };
     </script>
     <script src="./site-i18n.js"></script>
   </body>

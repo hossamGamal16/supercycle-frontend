@@ -1,647 +1,2009 @@
 <!doctype html>
-<html lang="en">
+<html lang="ar" dir="rtl">
   <head>
     <meta charset="UTF-8" />
-    <title>SuperCycle - Admin Dashboard</title>
+    <title>SuperCycle - لوحة تحكم المسؤول</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <style>
+      :root {
+        --bg: #f3f7f2;
+        --bg-accent: #edf6ef;
+        --surface: rgba(255, 255, 255, 0.94);
+        --surface-strong: #ffffff;
+        --surface-soft: #f8fcf8;
+        --sidebar: #0f2516;
+        --sidebar-2: #173220;
+        --sidebar-text: #d6e5d5;
+        --sidebar-muted: #88a18e;
+        --primary: #217346;
+        --primary-2: #2ea05b;
+        --primary-soft: #e7f5eb;
+        --primary-border: #cfe7d5;
+        --warning: #f59e0b;
+        --warning-soft: #fff4d9;
+        --info: #2563eb;
+        --info-soft: #e8f0ff;
+        --success: #138a4b;
+        --success-soft: #e5f7eb;
+        --violet: #7c3aed;
+        --violet-soft: #f1eafe;
+        --teal: #0f9ba8;
+        --teal-soft: #e6fbfd;
+        --danger: #d43f58;
+        --danger-soft: #fdecef;
+        --text: #162418;
+        --text-soft: #5b7160;
+        --text-muted: #829486;
+        --border: #dce9de;
+        --shadow: 0 20px 45px rgba(24, 49, 31, 0.08);
+        --shadow-soft: 0 10px 25px rgba(24, 49, 31, 0.06);
+        --radius-xl: 26px;
+        --radius-lg: 20px;
+        --radius-md: 16px;
+        --radius-sm: 12px;
+      }
+
       * {
         box-sizing: border-box;
         margin: 0;
         padding: 0;
       }
 
-      :root {
-        --primary: #166534;
-        --primary-light: #22a06b;
-        --primary-soft: #e8f7ef;
-        --operations: #1f8f5f;
-        --operations-soft: #e9f8f0;
-        --eco: #15803d;
-        --eco-soft: #ecfdf3;
-        --business: #14532d;
-        --business-soft: #e3f5ea;
-        --surface: #ffffff;
-        --surface-2: #f8fafc;
-        --border: #dbe4ee;
-        --text: #0f172a;
-        --muted: #64748b;
-        --danger: #c5192d;
-        --shadow: 0 18px 50px rgba(15, 23, 42, 0.08);
-      }
-
       body {
-        font-family: "Segoe UI", Tahoma, sans-serif;
+        min-height: 100vh;
+        font-family: "Segoe UI", Tahoma, Arial, sans-serif;
         background:
-          radial-gradient(circle at top left, rgba(34, 160, 107, 0.12), transparent 22%),
-          linear-gradient(180deg, #f7fbf8 0%, #f4f7fb 100%);
+          radial-gradient(
+            circle at top right,
+            rgba(46, 160, 91, 0.12),
+            transparent 24%
+          ),
+          radial-gradient(
+            circle at bottom left,
+            rgba(15, 155, 168, 0.1),
+            transparent 26%
+          ),
+          linear-gradient(180deg, #f8fbf8 0%, var(--bg) 100%);
         color: var(--text);
-        line-height: 1.5;
       }
 
-      .header {
-        background: linear-gradient(135deg, #0f5132 0%, #17844e 50%, #1ea768 100%);
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      button,
+      input,
+      select {
+        font: inherit;
+      }
+
+      .layout {
+        display: flex;
+        min-height: 100vh;
+      }
+
+      .sidebar {
+        width: 264px;
+        flex-shrink: 0;
+        background:
+          linear-gradient(180deg, rgba(46, 160, 91, 0.08), transparent 12%),
+          linear-gradient(180deg, var(--sidebar) 0%, #102819 100%);
+        color: var(--sidebar-text);
+        padding: 22px 16px 18px;
+        position: sticky;
+        top: 0;
+        height: 100vh;
+        overflow-y: auto;
+        border-left: 1px solid rgba(255, 255, 255, 0.04);
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 10px 10px 18px;
+      }
+
+      .brand-mark {
+        width: 46px;
+        height: 46px;
+        border-radius: 15px;
+        background: linear-gradient(135deg, #33a65f, #17653c);
+        display: grid;
+        place-items: center;
         color: #fff;
-        padding: 24px 32px;
-        box-shadow: 0 10px 30px rgba(22, 101, 52, 0.16);
+        font-size: 22px;
+        font-weight: 900;
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.24);
       }
 
-      .header-bar {
-        max-width: 1440px;
-        margin: 0 auto;
+      .brand h1 {
+        font-size: 26px;
+        line-height: 1;
+        font-weight: 900;
+        letter-spacing: -0.03em;
+      }
+
+      .brand p {
+        margin-top: 4px;
+        color: var(--sidebar-muted);
+        font-size: 12px;
+      }
+
+      .nav-group {
+        margin-top: 18px;
+      }
+
+      .nav-group-label {
+        color: #6d8472;
+        font-size: 11px;
+        font-weight: 800;
+        margin: 0 12px 10px;
+      }
+
+      .nav-list {
+        display: grid;
+        gap: 6px;
+      }
+
+      .nav-item {
+        border: 0;
+        background: transparent;
+        color: inherit;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 14px;
+        border-radius: 14px;
+        cursor: pointer;
+        transition:
+          background 0.2s ease,
+          transform 0.2s ease;
+        text-align: right;
+      }
+
+      .nav-item:hover {
+        background: rgba(255, 255, 255, 0.06);
+        transform: translateX(-2px);
+      }
+
+      .nav-item.active {
+        background: linear-gradient(
+          135deg,
+          rgba(46, 160, 91, 0.28),
+          rgba(33, 115, 70, 0.56)
+        );
+        color: #fff;
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12);
+      }
+
+      .nav-icon {
+        width: 34px;
+        height: 34px;
+        border-radius: 10px;
+        display: grid;
+        place-items: center;
+        background: rgba(255, 255, 255, 0.06);
+        color: #fff;
+        font-size: 13px;
+        font-weight: 800;
+        flex-shrink: 0;
+      }
+
+      .nav-copy {
+        flex: 1;
+      }
+
+      .nav-copy strong {
+        display: block;
+        font-size: 13px;
+      }
+
+      .nav-copy span {
+        display: block;
+        margin-top: 2px;
+        color: var(--sidebar-muted);
+        font-size: 11px;
+      }
+
+      .nav-item.active .nav-copy span {
+        color: rgba(255, 255, 255, 0.8);
+      }
+
+      .nav-badge {
+        min-width: 26px;
+        padding: 4px 8px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.12);
+        color: #fff;
+        font-size: 11px;
+        font-weight: 800;
+        text-align: center;
+      }
+
+      .sidebar-footer {
+        margin-top: 18px;
+        padding: 14px;
+        border-radius: 18px;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .sidebar-avatar {
+        width: 42px;
+        height: 42px;
+        border-radius: 14px;
+        background: linear-gradient(135deg, #2ea05b, #1c6b42);
+        display: grid;
+        place-items: center;
+        color: #fff;
+        font-size: 16px;
+        font-weight: 900;
+      }
+
+      .sidebar-footer strong {
+        display: block;
+        color: #fff;
+        font-size: 13px;
+      }
+
+      .sidebar-footer span {
+        color: var(--sidebar-muted);
+        font-size: 11px;
+      }
+
+      .main {
+        flex: 1;
+        min-width: 0;
+        padding: 22px;
+      }
+
+      .topbar {
+        background: rgba(255, 255, 255, 0.78);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(220, 233, 222, 0.9);
+        box-shadow: var(--shadow-soft);
+        border-radius: var(--radius-xl);
+        padding: 20px 22px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 18px;
+        margin-bottom: 18px;
+      }
+
+      .topbar-title h2 {
+        font-size: 28px;
+        letter-spacing: -0.04em;
+        margin-bottom: 6px;
+      }
+
+      .topbar-title p {
+        color: var(--text-soft);
+        font-size: 14px;
+      }
+
+      .topbar-actions {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+
+      .topbar-pill,
+      .icon-button,
+      .logout-btn {
+        border-radius: 15px;
+        border: 1px solid var(--border);
+        background: var(--surface-strong);
+        box-shadow: var(--shadow-soft);
+      }
+
+      .topbar-pill {
+        padding: 11px 16px;
+        color: var(--text);
+        font-weight: 700;
+      }
+
+      .icon-button {
+        width: 46px;
+        height: 46px;
+        display: grid;
+        place-items: center;
+        font-weight: 900;
+        color: var(--text-soft);
+      }
+
+      .logout-btn {
+        border: 0;
+        padding: 12px 18px;
+        cursor: pointer;
+        color: #fff;
+        background: linear-gradient(135deg, var(--primary), var(--primary-2));
+        font-weight: 800;
+      }
+
+      .live-status {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 14px;
+        border-radius: 999px;
+        border: 1px solid var(--border);
+        background: var(--surface-strong);
+        color: var(--text-soft);
+        font-size: 12px;
+        font-weight: 800;
+        white-space: nowrap;
+      }
+
+      .live-status::before {
+        content: "";
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: currentColor;
+      }
+
+      .live-status.connected {
+        color: var(--success);
+      }
+
+      .live-status.connecting,
+      .live-status.reconnecting {
+        color: #a16207;
+      }
+
+      .live-status.disconnected {
+        color: var(--danger);
+      }
+
+      .live-status.polling {
+        color: var(--info);
+      }
+
+      .live-debug {
+        color: var(--text-muted);
+        font-size: 11px;
+        font-weight: 700;
+        max-width: 320px;
+      }
+
+      .dashboard-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 320px;
+        gap: 18px;
+        align-items: start;
+      }
+
+      .stack {
+        display: grid;
+        gap: 18px;
+      }
+
+      .panel {
+        background: var(--surface);
+        border: 1px solid rgba(220, 233, 222, 0.92);
+        border-radius: var(--radius-xl);
+        box-shadow: var(--shadow);
+        padding: 20px;
+      }
+
+      .panel-header {
         display: flex;
         justify-content: space-between;
-        align-items: flex-start;
-        gap: 20px;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 16px;
       }
 
-      .header-copy h1 {
-        font-size: 28px;
+      .panel-header h3 {
+        font-size: 18px;
+        letter-spacing: -0.03em;
+      }
+
+      .panel-header p {
+        color: var(--text-soft);
+        font-size: 13px;
+        margin-top: 4px;
+      }
+
+      .panel-link {
+        color: var(--primary);
+        font-size: 13px;
         font-weight: 800;
+        white-space: nowrap;
+      }
+
+      .hero-band {
+        display: grid;
+        grid-template-columns: minmax(0, 1.4fr) minmax(320px, 0.9fr);
+        gap: 18px;
+      }
+
+      .hero-brief {
+        padding: 26px;
+        background:
+          radial-gradient(
+            circle at top right,
+            rgba(46, 160, 91, 0.18),
+            transparent 26%
+          ),
+          linear-gradient(135deg, #ffffff 0%, #f6fbf6 100%);
+      }
+
+      .hero-brief h3 {
+        font-size: 24px;
         letter-spacing: -0.04em;
         margin-bottom: 8px;
       }
 
-      .header-copy p {
-        max-width: 760px;
-        font-size: 14px;
-        color: rgba(255, 255, 255, 0.82);
+      .hero-brief p {
+        color: var(--text-soft);
+        margin-bottom: 18px;
+        max-width: 720px;
       }
 
-      .logout-btn {
-        border: 1px solid rgba(255, 255, 255, 0.24);
-        background: rgba(255, 255, 255, 0.14);
-        color: #fff;
-        border-radius: 12px;
-        padding: 10px 18px;
-        cursor: pointer;
+      .hero-kpis {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 12px;
+        margin-bottom: 14px;
+      }
+
+      .hero-kpi {
+        border-radius: var(--radius-md);
+        padding: 14px 16px;
+        background: rgba(255, 255, 255, 0.84);
+        border: 1px solid var(--border);
+      }
+
+      .hero-kpi strong {
+        display: block;
+        font-size: 26px;
+        font-weight: 900;
+        line-height: 1;
+        letter-spacing: -0.04em;
+      }
+
+      .hero-kpi span {
+        display: block;
+        margin-top: 6px;
+        color: var(--text-soft);
+        font-size: 12px;
         font-weight: 700;
       }
 
-      .container {
-        max-width: 1440px;
-        margin: 0 auto;
-        padding: 28px 24px 36px;
+      .mini-note {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 12px;
+        border-radius: 999px;
+        background: var(--primary-soft);
+        color: var(--primary);
+        font-size: 12px;
+        font-weight: 800;
       }
 
-      .hero {
+      .focus-list {
         display: grid;
-        grid-template-columns: minmax(0, 1.4fr) minmax(320px, 0.9fr);
-        gap: 18px;
-        margin-top: -18px;
-        margin-bottom: 28px;
+        gap: 12px;
       }
 
-      .hero-panel,
-      .hero-aside,
-      .card {
-        background: rgba(255, 255, 255, 0.96);
-        border: 1px solid rgba(219, 228, 238, 0.8);
-        border-radius: 22px;
-        box-shadow: var(--shadow);
+      .focus-item {
+        padding: 14px 16px;
+        border-radius: var(--radius-md);
+        background: linear-gradient(135deg, #f7fbf7 0%, #eef8f0 100%);
+        border: 1px solid var(--primary-border);
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
       }
 
-      .hero-panel {
-        padding: 24px;
+      .focus-item span {
+        color: var(--text-soft);
+        font-size: 13px;
       }
 
-      .hero-panel h2 {
-        font-size: 22px;
+      .focus-item strong {
+        font-size: 15px;
+      }
+
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(6, minmax(0, 1fr));
+        gap: 12px;
+      }
+
+      .stat-card {
+        border-radius: var(--radius-lg);
+        padding: 16px;
+        border: 1px solid var(--border);
+        background: var(--surface-strong);
+        transition:
+          transform 0.22s ease,
+          box-shadow 0.22s ease;
+      }
+
+      .stat-card:hover,
+      .quick-card:hover,
+      .breakdown-card:hover {
+        transform: translateY(-3px);
+        box-shadow: var(--shadow-soft);
+      }
+
+      .stat-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 12px;
+        margin-bottom: 12px;
+      }
+
+      .stat-icon {
+        width: 46px;
+        height: 46px;
+        border-radius: 15px;
+        display: grid;
+        place-items: center;
+        font-size: 17px;
+        font-weight: 900;
+      }
+
+      .stat-tag {
+        border-radius: 999px;
+        padding: 6px 10px;
+        font-size: 11px;
+        font-weight: 800;
+      }
+
+      .stat-value {
+        font-size: 31px;
+        font-weight: 900;
+        line-height: 1;
         letter-spacing: -0.04em;
-        margin-bottom: 10px;
       }
 
-      .hero-panel p {
-        color: var(--muted);
-        margin-bottom: 18px;
+      .stat-label {
+        margin-top: 8px;
+        color: var(--text-soft);
+        font-size: 13px;
+        font-weight: 700;
       }
 
-      .summary-grid {
+      .stat-foot {
+        margin-top: 6px;
+        color: var(--text-muted);
+        font-size: 12px;
+        font-weight: 700;
+      }
+
+      .breakdown-grid {
         display: grid;
         grid-template-columns: repeat(4, minmax(0, 1fr));
         gap: 12px;
       }
 
-      .summary-tile {
-        padding: 16px;
-        border-radius: 18px;
-        background: var(--surface-2);
+      .breakdown-card {
         border: 1px solid var(--border);
+        border-radius: var(--radius-lg);
+        padding: 15px;
+        background: linear-gradient(180deg, #ffffff 0%, #f9fcf9 100%);
+        transition:
+          transform 0.22s ease,
+          box-shadow 0.22s ease,
+          border-color 0.22s ease;
       }
 
-      .summary-tile strong {
-        display: block;
-        font-size: 28px;
-        line-height: 1;
-        margin-bottom: 8px;
-        color: var(--primary);
+      .breakdown-card:hover {
+        border-color: var(--primary-border);
       }
 
-      .summary-tile span {
-        display: block;
-        font-size: 12px;
-        color: var(--muted);
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 0.06em;
-      }
-
-      .hero-aside {
-        padding: 22px;
-        display: flex;
-        flex-direction: column;
-        gap: 14px;
-      }
-
-      .hero-aside h3 {
-        font-size: 16px;
-        margin-bottom: 2px;
-      }
-
-      .muted {
-        color: var(--muted);
-        font-size: 13px;
-      }
-
-      .aside-item {
-        display: flex;
-        justify-content: space-between;
-        gap: 14px;
-        padding: 12px 14px;
-        border-radius: 16px;
-        background: linear-gradient(135deg, #f2fbf6 0%, #e8f7ef 100%);
-        border: 1px solid var(--border);
-      }
-
-      .aside-item span {
-        color: var(--muted);
-        font-size: 13px;
-      }
-
-      .aside-item strong {
-        font-size: 15px;
-      }
-
-      .section {
-        margin-bottom: 28px;
-      }
-
-      .section-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: end;
-        gap: 12px;
-        margin-bottom: 14px;
-      }
-
-      .section-header h2 {
-        font-size: 18px;
-        letter-spacing: -0.03em;
-      }
-
-      .section-header p {
-        color: var(--muted);
-        font-size: 13px;
-      }
-
-      .cards {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(245px, 1fr));
-        gap: 16px;
-      }
-
-      .card {
-        overflow: hidden;
-        cursor: pointer;
-        transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
-        min-height: 188px;
-      }
-
-      .card:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 24px 48px rgba(15, 23, 42, 0.12);
-        border-color: rgba(34, 160, 107, 0.32);
-      }
-
-      .card-top {
-        padding: 18px 18px 14px;
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-start;
-        gap: 12px;
-      }
-
-      .card-icon {
-        width: 52px;
-        height: 52px;
-        border-radius: 16px;
+      .breakdown-head {
         display: flex;
         align-items: center;
-        justify-content: center;
-        font-size: 24px;
-        font-weight: 800;
-        color: #fff;
-        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3);
+        gap: 10px;
+        margin-bottom: 12px;
       }
 
-      .card-badge {
-        min-width: 38px;
-        padding: 6px 10px;
-        border-radius: 999px;
-        font-size: 12px;
-        font-weight: 800;
-        text-align: center;
-        background: #eef2f7;
-        color: #334155;
+      .breakdown-icon {
+        width: 38px;
+        height: 38px;
+        border-radius: 12px;
+        display: grid;
+        place-items: center;
+        font-weight: 900;
       }
 
-      .card-body {
-        padding: 0 18px 18px;
-      }
-
-      .card h3 {
-        font-size: 16px;
-        margin-bottom: 8px;
-      }
-
-      .card p {
+      .breakdown-head strong {
         font-size: 13px;
-        color: var(--muted);
-        margin-bottom: 14px;
       }
 
-      .card-footer {
+      .breakdown-value {
+        font-size: 34px;
+        font-weight: 900;
+        line-height: 1;
+        letter-spacing: -0.04em;
+      }
+
+      .breakdown-meta,
+      .breakdown-delta {
+        margin-top: 6px;
+        font-size: 12px;
+      }
+
+      .breakdown-meta {
+        color: var(--text-soft);
+      }
+
+      .breakdown-delta {
+        color: var(--primary);
+        font-weight: 800;
+      }
+
+      .mix-card {
+        display: grid;
+        gap: 14px;
+      }
+
+      .mix-card-head {
         display: flex;
         justify-content: space-between;
         align-items: center;
         gap: 10px;
-        padding-top: 12px;
-        border-top: 1px solid var(--border);
-        font-size: 12px;
-        font-weight: 700;
-        color: var(--muted);
       }
 
-      .card-footer strong {
+      .mix-card-head strong {
+        font-size: 14px;
+      }
+
+      .mix-card-head span {
+        color: var(--text-muted);
+        font-size: 11px;
+        font-weight: 700;
+      }
+
+      .mix-chart-wrap {
+        display: grid;
+        justify-items: center;
+        gap: 12px;
+      }
+
+      .mix-chart {
+        --mix-a: 33%;
+        --mix-b: 33%;
+        --mix-c: 34%;
+        width: 148px;
+        height: 148px;
+        border-radius: 50%;
+        background:
+          radial-gradient(circle at center, #ffffff 0 41%, transparent 42%),
+          conic-gradient(
+            var(--info) 0 calc(var(--mix-a) * 1%),
+            #f59e0b calc(var(--mix-a) * 1%) calc((var(--mix-a) + var(--mix-b)) * 1%),
+            var(--success) calc((var(--mix-a) + var(--mix-b)) * 1%) 100%
+          );
+        position: relative;
+        box-shadow: inset 0 0 0 1px rgba(220, 233, 222, 0.95);
+      }
+
+      .mix-chart-center {
+        position: absolute;
+        inset: 0;
+        display: grid;
+        place-items: center;
+        text-align: center;
+      }
+
+      .mix-chart-center strong {
+        display: block;
+        font-size: 24px;
+        line-height: 1;
+        letter-spacing: -0.04em;
+      }
+
+      .mix-chart-center span {
+        display: block;
+        margin-top: 4px;
+        color: var(--text-muted);
+        font-size: 11px;
+        font-weight: 700;
+      }
+
+      .mix-legend {
+        display: grid;
+        gap: 8px;
+        width: 100%;
+      }
+
+      .mix-legend-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 12px;
+        border-radius: 14px;
+        background: linear-gradient(135deg, #fbfdfb 0%, #f0f8f2 100%);
+        border: 1px solid var(--border);
+      }
+
+      .mix-legend-main {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
         color: var(--text);
+        font-size: 12px;
+        font-weight: 800;
+      }
+
+      .mix-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        flex-shrink: 0;
+      }
+
+      .mix-legend-value {
+        color: var(--text-soft);
+        font-size: 11px;
+        font-weight: 800;
+      }
+
+      .price-board {
+        display: grid;
+        gap: 14px;
+      }
+
+      .price-summary {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      .price-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 14px;
+        border-radius: 999px;
+        background: linear-gradient(135deg, #f7fbf7 0%, #eef8f0 100%);
+        border: 1px solid var(--primary-border);
+        color: var(--text-soft);
+        font-size: 12px;
+        font-weight: 800;
+      }
+
+      .price-pill strong {
+        color: var(--text);
+      }
+
+      .price-table-shell {
+        overflow-x: auto;
+        border: 1px solid var(--border);
+        border-radius: var(--radius-lg);
+        background: linear-gradient(180deg, #ffffff 0%, #f8fbf8 100%);
+      }
+
+      .price-table th,
+      .price-table td {
+        font-size: 12px;
+      }
+
+      .price-type-cell {
+        min-width: 170px;
+      }
+
+      .price-type-name {
+        font-weight: 800;
+        color: var(--text);
+      }
+
+      .price-type-meta {
+        display: block;
+        margin-top: 4px;
+        color: var(--text-muted);
+        font-size: 11px;
+      }
+
+      .price-value {
+        font-weight: 800;
+        color: var(--text);
+      }
+
+      .price-delta-up {
+        color: var(--success);
+      }
+
+      .price-delta-down {
+        color: var(--danger);
+      }
+
+      .price-delta-flat {
+        color: var(--text-muted);
+      }
+
+      .quick-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+      }
+
+      .quick-card {
+        border: 1px solid var(--border);
+        border-radius: var(--radius-lg);
+        padding: 16px;
+        background: linear-gradient(180deg, #ffffff 0%, #f8fbf8 100%);
+        cursor: pointer;
+        transition:
+          transform 0.22s ease,
+          box-shadow 0.22s ease,
+          border-color 0.22s ease;
+      }
+
+      .quick-card:hover {
+        border-color: var(--primary-border);
+      }
+
+      .quick-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 12px;
+      }
+
+      .quick-icon {
+        width: 42px;
+        height: 42px;
+        border-radius: 14px;
+        display: grid;
+        place-items: center;
+        color: #fff;
+        font-size: 13px;
+        font-weight: 900;
+      }
+
+      .quick-badge {
+        min-width: 38px;
+        padding: 5px 10px;
+        border-radius: 999px;
+        font-size: 11px;
+        font-weight: 800;
+        text-align: center;
+      }
+
+      .quick-card h4 {
+        font-size: 15px;
+        margin-bottom: 6px;
+      }
+
+      .quick-card p {
+        color: var(--text-soft);
+        font-size: 12px;
+        margin-bottom: 12px;
+        min-height: 34px;
+      }
+
+      .quick-foot {
+        padding-top: 11px;
+        border-top: 1px solid var(--border);
+        color: var(--text-muted);
+        font-size: 12px;
+        font-weight: 800;
+        display: flex;
+        justify-content: space-between;
+      }
+
+      .table-shell {
+        overflow-x: auto;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      th,
+      td {
+        padding: 14px 12px;
+        text-align: right;
+        border-bottom: 1px solid var(--border);
+        white-space: nowrap;
         font-size: 13px;
       }
 
-      .operations .card-icon {
-        background: linear-gradient(135deg, #2aa36f, #1f8f5f);
+      th {
+        color: var(--text-muted);
+        font-size: 11px;
+        font-weight: 800;
+        background: #fbfdfb;
       }
 
-      .operations .card-badge {
-        background: var(--operations-soft);
-        color: var(--operations);
+      tbody tr:hover td {
+        background: rgba(46, 160, 91, 0.03);
       }
 
-      .eco .card-icon {
-        background: linear-gradient(135deg, #16a34a, #15803d);
+      tbody tr:last-child td {
+        border-bottom: 0;
       }
 
-      .eco .card-badge {
-        background: var(--eco-soft);
-        color: var(--eco);
+      .clickable-row {
+        cursor: pointer;
       }
 
-      .business .card-icon {
-        background: linear-gradient(135deg, #1b7c50, #14532d);
+      .shipment-number {
+        color: var(--primary);
+        font-weight: 900;
       }
 
-      .business .card-badge {
-        background: var(--business-soft);
-        color: var(--business);
+      .status-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        border-radius: 999px;
+        padding: 7px 12px;
+        font-size: 11px;
+        font-weight: 800;
       }
 
-      @media (max-width: 1080px) {
-        .hero {
-          grid-template-columns: 1fr;
+      .status-chip::before {
+        content: "";
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: currentColor;
+      }
+
+      .status-pending_approval {
+        background: var(--warning-soft);
+        color: #a16207;
+      }
+
+      .status-pending_segmentation {
+        background: var(--violet-soft);
+        color: var(--violet);
+      }
+
+      .status-in_transit {
+        background: var(--info-soft);
+        color: var(--info);
+      }
+
+      .status-delivered {
+        background: var(--success-soft);
+        color: var(--success);
+      }
+
+      .status-rejected {
+        background: var(--danger-soft);
+        color: var(--danger);
+      }
+
+      .action-link {
+        color: var(--primary);
+        font-weight: 800;
+      }
+
+      .side-stack {
+        display: grid;
+        gap: 18px;
+      }
+
+      .shipments-list {
+        display: grid;
+        gap: 12px;
+      }
+
+      .shipment-card {
+        border: 1px solid var(--border);
+        border-radius: var(--radius-lg);
+        padding: 14px;
+        background: linear-gradient(180deg, #ffffff 0%, #f9fcf9 100%);
+        display: grid;
+        gap: 10px;
+        cursor: pointer;
+        transition:
+          transform 0.22s ease,
+          box-shadow 0.22s ease,
+          border-color 0.22s ease;
+      }
+
+      .shipment-card:hover {
+        transform: translateY(-2px);
+        border-color: var(--primary-border);
+        box-shadow: var(--shadow-soft);
+      }
+
+      .shipment-card-top,
+      .shipment-card-meta {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 10px;
+      }
+
+      .shipment-card-top strong {
+        display: block;
+        font-size: 13px;
+        color: var(--primary);
+      }
+
+      .shipment-card-top span {
+        display: block;
+        margin-top: 4px;
+        font-size: 12px;
+        color: var(--text);
+      }
+
+      .shipment-card-meta {
+        color: var(--text-soft);
+        font-size: 11px;
+      }
+
+      .metric-list {
+        display: grid;
+        gap: 12px;
+      }
+
+      .metric-row {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 12px 14px;
+        border-radius: 16px;
+        background: linear-gradient(135deg, #fbfdfb 0%, #f0f8f2 100%);
+        border: 1px solid var(--border);
+      }
+
+      .metric-row span {
+        color: var(--text-soft);
+        font-size: 12px;
+      }
+
+      .metric-row strong {
+        font-size: 14px;
+      }
+
+      .ops-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+      }
+
+      .ops-card {
+        border: 1px solid var(--border);
+        border-radius: var(--radius-lg);
+        padding: 16px;
+        background: linear-gradient(180deg, #ffffff 0%, #f8fbf8 100%);
+      }
+
+      .ops-card span {
+        display: block;
+        color: var(--text-soft);
+        font-size: 12px;
+        font-weight: 700;
+      }
+
+      .ops-card strong {
+        display: block;
+        margin-top: 8px;
+        font-size: 29px;
+        line-height: 1;
+        letter-spacing: -0.04em;
+      }
+
+      .ops-card small {
+        display: block;
+        margin-top: 8px;
+        color: var(--text-muted);
+        font-size: 11px;
+        font-weight: 700;
+      }
+
+      .loading {
+        color: var(--text-muted);
+      }
+
+      .empty-state {
+        border: 1px dashed var(--border);
+        border-radius: var(--radius-lg);
+        padding: 22px 16px;
+        text-align: center;
+        color: var(--text-muted);
+        font-size: 13px;
+      }
+
+      .error-banner {
+        display: none;
+        margin-bottom: 18px;
+        padding: 14px 16px;
+        border-radius: 16px;
+        border: 1px solid #f7d2d9;
+        background: #fff5f7;
+        color: #a73c51;
+        font-size: 13px;
+        font-weight: 700;
+      }
+
+      .error-banner.show {
+        display: block;
+      }
+
+      @media (max-width: 1380px) {
+        .stats-grid {
+          grid-template-columns: repeat(3, minmax(0, 1fr));
         }
 
-        .summary-grid {
+        .breakdown-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .hero-kpis {
           grid-template-columns: repeat(2, minmax(0, 1fr));
         }
       }
 
-      @media (max-width: 720px) {
-        .header {
-          padding: 20px 18px;
+      @media (max-width: 1240px) {
+        .dashboard-grid,
+        .hero-band {
+          grid-template-columns: 1fr;
         }
 
-        .header-bar {
+        .sidebar {
+          width: 228px;
+        }
+      }
+
+      @media (max-width: 1040px) {
+        .layout {
+          display: block;
+        }
+
+        .sidebar {
+          position: static;
+          width: auto;
+          height: auto;
+          border-left: 0;
+          border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+        }
+
+        .main {
+          padding: 16px;
+        }
+      }
+
+      @media (max-width: 820px) {
+        .topbar {
           flex-direction: column;
           align-items: stretch;
         }
 
-        .container {
-          padding: 18px 14px 28px;
+        .topbar-actions {
+          justify-content: flex-start;
         }
 
-        .hero-panel,
-        .hero-aside {
-          padding: 18px;
+        .stats-grid,
+        .breakdown-grid,
+        .quick-grid {
+          grid-template-columns: 1fr;
         }
 
-        .summary-grid {
-          grid-template-columns: 1fr 1fr;
+        .ops-grid {
+          grid-template-columns: 1fr;
         }
       }
 
       @media (max-width: 560px) {
-        .summary-grid,
-        .cards {
-          grid-template-columns: 1fr;
+        .main {
+          padding: 12px;
         }
 
-        .section-header {
-          align-items: flex-start;
-          flex-direction: column;
+        .panel,
+        .hero-brief {
+          padding: 16px;
+        }
+
+        th,
+        td {
+          padding: 12px 8px;
         }
       }
     </style>
   </head>
 
   <body>
-    <div class="header">
-      <div class="header-bar">
-        <div class="header-copy">
-          <h1>SuperCycle Admin Command Center</h1>
-          <p>
-            Monitor operational queues, eco workflows, and business master data from one compact dashboard.
-          </p>
+    <div class="layout">
+      <aside class="sidebar">
+        <div class="brand">
+          <div class="brand-mark">SC</div>
+          <div>
+            <h1>SuperCycle</h1>
+            <p>لوحة تحكم المسؤول</p>
+          </div>
         </div>
-        <button class="logout-btn" onclick="logout()">Logout</button>
-      </div>
+
+        <div class="nav-group">
+          <div class="nav-list">
+            <button class="nav-item active" type="button">
+              <span class="nav-icon">DB</span>
+              <span class="nav-copy">
+                <strong>الرئيسية</strong>
+                <span>ملخص الأداء اليومي</span>
+              </span>
+            </button>
+          </div>
+        </div>
+
+        <div class="nav-group">
+          <div class="nav-group-label">العمليات</div>
+          <div class="nav-list">
+            <button
+              class="nav-item"
+              type="button"
+              onclick="go('shipments.html?type=approval')"
+            >
+              <span class="nav-icon">AP</span>
+              <span class="nav-copy">
+                <strong>الموافقات</strong>
+                <span>شحنات تحتاج مراجعة</span>
+              </span>
+              <span class="nav-badge" id="sidebarPendingApprovals">-</span>
+            </button>
+            <button
+              class="nav-item"
+              type="button"
+              onclick="go('shipments.html?type=segmentation')"
+            >
+              <span class="nav-icon">SG</span>
+              <span class="nav-copy">
+                <strong>التوجيه والتقسيم</strong>
+                <span>جاهزة للتشغيل</span>
+              </span>
+              <span class="nav-badge" id="sidebarPendingSegmentation">-</span>
+            </button>
+            <button
+              class="nav-item"
+              type="button"
+              onclick="go('vehicles-management.html')"
+            >
+              <span class="nav-icon">VH</span>
+              <span class="nav-copy">
+                <strong>العربيات</strong>
+                <span>إدارة الأسطول</span>
+              </span>
+            </button>
+            <button
+              class="nav-item"
+              type="button"
+              onclick="go('factories-management.html')"
+            >
+              <span class="nav-icon">FC</span>
+              <span class="nav-copy">
+                <strong>المصانع</strong>
+                <span>التغطية والاستقبال</span>
+              </span>
+            </button>
+          </div>
+        </div>
+
+        <div class="nav-group">
+          <div class="nav-group-label">الإدارة</div>
+          <div class="nav-list">
+            <button
+              class="nav-item"
+              type="button"
+              onclick="go('finance-management.html')"
+            >
+              <span class="nav-icon">FN</span>
+              <span class="nav-copy">
+                <strong>المالية</strong>
+                <span>تسويات وتحويلات</span>
+              </span>
+              <span class="nav-badge" id="sidebarFinancePending">-</span>
+            </button>
+            <button
+              class="nav-item"
+              type="button"
+              onclick="go('dosh-management.html')"
+            >
+              <span class="nav-icon">DS</span>
+              <span class="nav-copy">
+                <strong>أنواع وأسعار الدوش</strong>
+                <span>التسعير والفئات</span>
+              </span>
+            </button>
+            <button
+              class="nav-item"
+              type="button"
+              onclick="go('contact-management.html')"
+            >
+              <span class="nav-icon">CX</span>
+              <span class="nav-copy">
+                <strong>الرسائل الواردة</strong>
+                <span>متابعة العملاء</span>
+              </span>
+              <span class="nav-badge" id="sidebarContactsNew">-</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="nav-group">
+          <div class="nav-group-label">المنظومة البيئية</div>
+          <div class="nav-list">
+            <button
+              class="nav-item"
+              type="button"
+              onclick="go('eco-participants.html')"
+            >
+              <span class="nav-icon">EP</span>
+              <span class="nav-copy">
+                <strong>المشاركون البيئيون</strong>
+                <span>إدارة الانضمام</span>
+              </span>
+            </button>
+            <button
+              class="nav-item"
+              type="button"
+              onclick="go('eco-redeems.html')"
+            >
+              <span class="nav-icon">RD</span>
+              <span class="nav-copy">
+                <strong>طلبات الاستبدال</strong>
+                <span>مراجعة وتنفيذ</span>
+              </span>
+              <span class="nav-badge" id="sidebarRedeemsPending">-</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="sidebar-footer">
+          <div class="sidebar-avatar">AD</div>
+          <div>
+            <strong>مسؤول النظام</strong>
+            <span>Admin Control</span>
+          </div>
+        </div>
+      </aside>
+
+      <main class="main">
+        <header class="topbar">
+          <div class="topbar-title">
+            <h2>نظرة تشغيلية شاملة</h2>
+            <p>تشغيل، مالية، أسعار، ولوجستيات في شاشة تنفيذ واحدة.</p>
+          </div>
+
+          <div class="topbar-actions">
+            <div class="topbar-pill" id="todayDate">-</div>
+            <div class="live-status connecting" id="liveStatus">
+              جاري ربط التحديث المباشر...
+            </div>
+            <div class="live-debug" id="liveDebug"></div>
+            <button
+              class="icon-button"
+              type="button"
+              title="تحديث"
+              onclick="refreshDashboard()"
+            >
+              RF
+            </button>
+            <button class="logout-btn" type="button" onclick="logout()">
+              تسجيل الخروج
+            </button>
+          </div>
+        </header>
+
+        <div class="error-banner" id="errorBanner"></div>
+
+        <div class="dashboard-grid">
+          <div class="stack">
+            <div class="hero-band">
+              <section class="panel hero-brief">
+                <div class="mini-note">مؤشرات تنفيذية مباشرة</div>
+                <h3>صورة تشغيل لحظية للأقسام الحرجة</h3>
+                <p>شحنات، مالية، تجار، لوجستيات، ومخزون تشغيلي في قراءة واحدة سريعة.</p>
+                <div class="stats-grid">
+                  <article class="stat-card">
+                    <div class="stat-top">
+                      <div
+                        class="stat-icon"
+                        style="
+                          background: var(--primary-soft);
+                          color: var(--primary);
+                        "
+                      ><span id="statIconShipments">شح</span></div>
+                      <div
+                        class="stat-tag"
+                        style="
+                          background: var(--primary-soft);
+                          color: var(--primary);
+                        "
+                      >
+                        نشاط
+                      </div>
+                    </div>
+                    <div class="stat-value" id="statTotalShipments">-</div>
+                    <div class="stat-label">إجمالي الشحنات</div>
+                    <div class="stat-foot">حجم التشغيل الحالي</div>
+                  </article>
+
+                  <article class="stat-card">
+                    <div class="stat-top">
+                      <div
+                        class="stat-icon"
+                        style="background: var(--warning-soft); color: #a16207"
+                      ><span id="statIconApprovals">مو</span></div>
+                      <div
+                        class="stat-tag"
+                        style="background: var(--warning-soft); color: #a16207"
+                      >
+                        مهم
+                      </div>
+                    </div>
+                    <div class="stat-value" id="statPendingApprovals">-</div>
+                    <div class="stat-label">معلقة موافقة</div>
+                    <div class="stat-foot">تحتاج إجراء فوري</div>
+                  </article>
+
+                  <article class="stat-card">
+                    <div class="stat-top">
+                      <div
+                        class="stat-icon"
+                        style="
+                          background: var(--violet-soft);
+                          color: var(--violet);
+                        "
+                      ><span id="statIconSegmentation">وج</span></div>
+                      <div
+                        class="stat-tag"
+                        style="
+                          background: var(--violet-soft);
+                          color: var(--violet);
+                        "
+                      >
+                        تجهيز
+                      </div>
+                    </div>
+                    <div class="stat-value" id="statPendingSegmentation">-</div>
+                    <div class="stat-label">بانتظار التوجيه</div>
+                    <div class="stat-foot">التقسيم والمسارات</div>
+                  </article>
+
+                  <article class="stat-card">
+                    <div class="stat-top">
+                      <div
+                        class="stat-icon"
+                        style="background: var(--info-soft); color: var(--info)"
+                      ><span id="statIconDelivered">تم</span></div>
+                      <div
+                        class="stat-tag"
+                        style="background: var(--info-soft); color: var(--info)"
+                      >
+                        اليوم
+                      </div>
+                    </div>
+                    <div class="stat-value" id="statCompletedToday">-</div>
+                    <div class="stat-label">تم التسليم اليوم</div>
+                    <div class="stat-foot">قياس الأداء اليومي</div>
+                  </article>
+
+                  <article class="stat-card">
+                    <div class="stat-top">
+                      <div
+                        class="stat-icon"
+                        style="
+                          background: var(--violet-soft);
+                          color: var(--violet);
+                        "
+                      ><span id="statIconFinance">جم</span></div>
+                      <div
+                        class="stat-tag"
+                        style="
+                          background: var(--violet-soft);
+                          color: var(--violet);
+                        "
+                      >
+                        مالية
+                      </div>
+                    </div>
+                    <div
+                      class="stat-value"
+                      id="statPendingFinanceAmount"
+                      style="font-size: 24px"
+                    >
+                      -
+                    </div>
+                    <div class="stat-label">مدفوعات معلقة</div>
+                    <div class="stat-foot">قيمة انتظار التسوية</div>
+                  </article>
+
+                  <article class="stat-card">
+                    <div class="stat-top">
+                      <div
+                        class="stat-icon"
+                        style="background: var(--teal-soft); color: var(--teal)"
+                      ><span id="statIconTraders">تج</span></div>
+                      <div
+                        class="stat-tag"
+                        style="background: var(--teal-soft); color: var(--teal)"
+                      >
+                        تجار
+                      </div>
+                    </div>
+                    <div class="stat-value" id="statTotalTraders">-</div>
+                    <div class="stat-label">إجمالي التجار</div>
+                    <div class="stat-foot">كل الفئات والأنماط</div>
+                  </article>
+                </div>
+              </section>
+
+              <aside class="panel">
+                <div class="panel-header">
+                  <div>
+                    <h3>أولوية المتابعة</h3>
+                    <p>مؤشرات تحتاج مراجعة مباشرة خلال اليوم.</p>
+                  </div>
+                </div>
+                <div class="focus-list">
+                  <div class="focus-item">
+                    <span>تاريخ اليوم</span>
+                    <strong id="focusToday">-</strong>
+                  </div>
+                  <div class="focus-item">
+                    <span id="focusLabelApprovals">الموافقات المعلقة</span>
+                    <strong id="focusApprovals">-</strong>
+                  </div>
+                  <div class="focus-item">
+                    <span id="focusLabelSegmentation">بانتظار التوجيه</span>
+                    <strong id="focusSegmentation">-</strong>
+                  </div>
+                  <div class="focus-item">
+                    <span id="focusLabelFinance">المدفوعات المعلقة</span>
+                    <strong id="focusFinance">-</strong>
+                  </div>
+                  <div class="focus-item">
+                    <span id="focusLabelContacts">رسائل العملاء الجديدة</span>
+                    <strong id="focusContacts" class="loading">جاري التحميل...</strong>
+                  </div>
+                </div>
+              </aside>
+            </div>
+
+            <section class="panel">
+              <div class="panel-header">
+                <div>
+                  <h3>ملخص التجار</h3>
+                  <p>
+                    توزيع قاعدة التجار الحالية مع مقارنة بسيطة بالشهر السابق.
+                  </p>
+                </div>
+              </div>
+              <div class="breakdown-grid">
+                <article class="breakdown-card">
+                  <div class="breakdown-head">
+                    <div
+                      class="breakdown-icon"
+                      style="
+                        background: var(--success-soft);
+                        color: var(--success);
+                      "
+                    ><span id="breakdownIconUncontracted">غر</span></div>
+                    <div>
+                      <strong>غير متعاقدين</strong>
+                    </div>
+                  </div>
+                  <div class="breakdown-value" id="breakdownUncontractedCount">
+                    -
+                  </div>
+                  <div class="breakdown-meta" id="breakdownUncontractedPercent">
+                    -
+                  </div>
+                  <div class="breakdown-delta" id="breakdownUncontractedDelta">
+                    -
+                  </div>
+                </article>
+
+                <article class="breakdown-card">
+                  <div class="breakdown-head">
+                    <div
+                      class="breakdown-icon"
+                      style="background: var(--info-soft); color: var(--info)"
+                    ><span id="breakdownIconMonthly">شه</span></div>
+                    <div>
+                      <strong>متعاقدون شهري</strong>
+                    </div>
+                  </div>
+                  <div class="breakdown-value" id="breakdownMonthlyCount">
+                    -
+                  </div>
+                  <div class="breakdown-meta" id="breakdownMonthlyPercent">
+                    -
+                  </div>
+                  <div class="breakdown-delta" id="breakdownMonthlyDelta">
+                    -
+                  </div>
+                </article>
+
+                <article class="breakdown-card">
+                  <div class="breakdown-head">
+                    <div
+                      class="breakdown-icon"
+                      style="background: var(--warning-soft); color: #a16207"
+                    ><span id="breakdownIconMeal">وج</span></div>
+                    <div>
+                      <strong>متعاقدون وجبات</strong>
+                    </div>
+                  </div>
+                  <div class="breakdown-value" id="breakdownMealCount">-</div>
+                  <div class="breakdown-meta" id="breakdownMealPercent">-</div>
+                  <div class="breakdown-delta" id="breakdownMealDelta">-</div>
+                </article>
+
+                <article class="breakdown-card mix-card">
+                  <div class="mix-card-head">
+                    <strong id="mixChartTitle">تقسيم العملاء</strong>
+                    <span id="mixChartSubtitle">شهري / وجبات / غير متعاقد</span>
+                  </div>
+                  <div class="mix-chart-wrap">
+                    <div class="mix-chart" id="traderMixChart">
+                      <div class="mix-chart-center">
+                        <strong id="traderMixTotal">-</strong>
+                        <span id="traderMixCenterLabel">إجمالي العملاء</span>
+                      </div>
+                    </div>
+                    <div class="mix-legend" id="traderMixLegend">
+                      <div class="empty-state">جاري التحميل...</div>
+                    </div>
+                  </div>
+                </article>
+              </div>
+            </section>
+
+            <section class="panel">
+              <div class="panel-header">
+                <div>
+                  <h3>جدول الأسعار حسب النوع</h3>
+                  <p>آخر 6 أشهر مع آخر سعر ومتوسط التغير لكل نوع.</p>
+                </div>
+                <a class="panel-link" href="dosh-management.html"
+                  >إدارة الأسعار</a
+                >
+              </div>
+              <div class="price-board">
+                <div class="price-summary" id="priceSummary"></div>
+                <div class="price-table-shell">
+                  <table class="price-table">
+                    <thead id="priceTableHead"></thead>
+                    <tbody id="priceTrendsTable">
+                      <tr>
+                        <td colspan="9" class="empty-state">جاري تحميل بيانات الأسعار...</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </section>
+
+            <section class="panel">
+              <div class="panel-header">
+                <div>
+                  <h3>الوصول السريع</h3>
+                  <p>
+                    روابط تشغيلية تم اختيارها من الصفحات الموجودة فعليًا في
+                    المشروع.
+                  </p>
+                </div>
+              </div>
+
+              <div class="quick-grid">
+                <article
+                  class="quick-card"
+                  onclick="go('shipments.html?type=approval')"
+                >
+                  <div class="quick-head">
+                    <div
+                      class="quick-icon"
+                      style="
+                        background: linear-gradient(135deg, #f59e0b, #ca8a04);
+                      "
+                    ><span id="quickIconApprovals">مو</span></div>
+                    <div
+                      class="quick-badge"
+                      id="cardPendingApprovals"
+                      style="background: var(--warning-soft); color: #a16207"
+                    >
+                      -
+                    </div>
+                  </div>
+                  <h4>الموافقات المعلقة</h4>
+                  <p>مراجعة الشحنات قبل اعتمادها وتحريكها للمراحل التالية.</p>
+                  <div class="quick-foot">
+                    <span>العملية</span>
+                    <strong>اعتماد وتعديل</strong>
+                  </div>
+                </article>
+
+                <article
+                  class="quick-card"
+                  onclick="go('shipments.html?type=segmentation')"
+                >
+                  <div class="quick-head">
+                    <div
+                      class="quick-icon"
+                      style="
+                        background: linear-gradient(135deg, #7c3aed, #5b21b6);
+                      "
+                    ><span id="quickIconSegmentation">وج</span></div>
+                    <div
+                      class="quick-badge"
+                      id="cardPendingSegmentation"
+                      style="
+                        background: var(--violet-soft);
+                        color: var(--violet);
+                      "
+                    >
+                      -
+                    </div>
+                  </div>
+                  <h4>التوجيه والتقسيم</h4>
+                  <p>
+                    تجهيز الشحنات للمسارات الصحيحة وربطها بالتشغيل اللوجستي.
+                  </p>
+                  <div class="quick-foot">
+                    <span>العملية</span>
+                    <strong>تقسيم ومسارات</strong>
+                  </div>
+                </article>
+
+                <article class="quick-card" onclick="go('eco-redeems.html')">
+                  <div class="quick-head">
+                    <div
+                      class="quick-icon"
+                      style="
+                        background: linear-gradient(135deg, #15803d, #166534);
+                      "
+                    ><span id="quickIconRedeems">بد</span></div>
+                    <div
+                      class="quick-badge"
+                      id="cardRedeemsPending"
+                      style="
+                        background: var(--success-soft);
+                        color: var(--success);
+                      "
+                    >
+                      -
+                    </div>
+                  </div>
+                  <h4>طلبات الاستبدال</h4>
+                  <p>
+                    متابعة الطلبات البيئية والموافقات وزراعة الطلبات المعتمدة.
+                  </p>
+                  <div class="quick-foot">
+                    <span>العملية</span>
+                    <strong>اعتماد وتتبع</strong>
+                  </div>
+                </article>
+
+                <article
+                  class="quick-card"
+                  onclick="go('finance-management.html')"
+                >
+                  <div class="quick-head">
+                    <div
+                      class="quick-icon"
+                      style="
+                        background: linear-gradient(135deg, #0f9ba8, #155e75);
+                      "
+                    ><span id="quickIconFinance">مل</span></div>
+                    <div
+                      class="quick-badge"
+                      id="cardFinancePending"
+                      style="background: var(--teal-soft); color: var(--teal)"
+                    >
+                      -
+                    </div>
+                  </div>
+                  <h4>المالية</h4>
+                  <p>
+                    تأكيد التحويلات وإغلاق التدفقات المالية المعلقة بسرعة أكبر.
+                  </p>
+                  <div class="quick-foot">
+                    <span>العملية</span>
+                    <strong>مراجعة وتسوية</strong>
+                  </div>
+                </article>
+
+                <article
+                  class="quick-card"
+                  onclick="go('factories-management.html')"
+                >
+                  <div class="quick-head">
+                    <div
+                      class="quick-icon"
+                      style="
+                        background: linear-gradient(135deg, #217346, #1b5e20);
+                      "
+                    ><span id="quickIconFactories">مص</span></div>
+                    <div
+                      class="quick-badge"
+                      id="cardActiveFactories"
+                      style="
+                        background: var(--primary-soft);
+                        color: var(--primary);
+                      "
+                    >
+                      -
+                    </div>
+                  </div>
+                  <h4>المصانع</h4>
+                  <p>
+                    متابعة التغطية التشغيلية والطاقة الاستيعابية للمصانع النشطة.
+                  </p>
+                  <div class="quick-foot">
+                    <span>الشبكة</span>
+                    <strong>إدارة واستيعاب</strong>
+                  </div>
+                </article>
+
+                <article
+                  class="quick-card"
+                  onclick="go('contact-management.html')"
+                >
+                  <div class="quick-head">
+                    <div
+                      class="quick-icon"
+                      style="
+                        background: linear-gradient(135deg, #d43f58, #be123c);
+                      "
+                    ><span id="quickIconContacts">رس</span></div>
+                    <div
+                      class="quick-badge"
+                      id="cardContactMessages"
+                      style="
+                        background: var(--danger-soft);
+                        color: var(--danger);
+                      "
+                    >
+                      -
+                    </div>
+                  </div>
+                  <h4>رسائل العملاء</h4>
+                  <p>
+                    الاطلاع على الرسائل الجديدة والرد عليها دون التنقل بين صفحات
+                    كثيرة.
+                  </p>
+                  <div class="quick-foot">
+                    <span>الخدمة</span>
+                    <strong>Inbox مباشر</strong>
+                  </div>
+                </article>
+              </div>
+            </section>
+
+            <section class="panel">
+              <div class="panel-header">
+                <div>
+                  <h3>آخر الشحنات</h3>
+                  <p>آخر الشحنات الواردة مع فتح مباشر من الصف نفسه.</p>
+                </div>
+                <a class="panel-link" href="shipments.html">عرض كل الشحنات</a>
+              </div>
+
+              <div class="table-shell">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>رقم الشحنة</th>
+                      <th>التاجر</th>
+                      <th>الحالة</th>
+                      <th>الكمية</th>
+                      <th>طلب الاستلام</th>
+                      <th>الإنشاء</th>
+                    </tr>
+                  </thead>
+                  <tbody id="recentShipmentsTable">
+                    <tr>
+                      <td colspan="6" class="empty-state">
+                        جاري تحميل آخر الشحنات...
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </section>
+          </div>
+
+          <aside class="side-stack">
+            <section class="panel">
+              <div class="panel-header">
+                <div>
+                  <h3>شبكة التشغيل</h3>
+                  <p>القدرة الحالية عبر المصانع والمخازن والنقل.</p>
+                </div>
+              </div>
+              <div class="ops-grid">
+                <article class="ops-card">
+                  <span>المصانع النشطة</span>
+                  <strong id="metricFactories">-</strong>
+                  <small>التغطية الإنتاجية الحالية</small>
+                </article>
+                <article class="ops-card">
+                  <span>المخازن</span>
+                  <strong id="metricWarehouses">-</strong>
+                  <small>نقاط الاستلام والتجميع</small>
+                </article>
+                <article class="ops-card">
+                  <span>العربيات</span>
+                  <strong id="metricVehicles">-</strong>
+                  <small>الجاهزية اللوجستية</small>
+                </article>
+                <article class="ops-card">
+                  <span>إجمالي التجار</span>
+                  <strong id="metricTraders">-</strong>
+                  <small>القاعدة التجارية الحالية</small>
+                </article>
+              </div>
+            </section>
+
+            <section class="panel">
+              <div class="panel-header">
+                <div>
+                  <h3>جودة المتابعة</h3>
+                  <p>تنبيهات خدمة وتشغيل غير مكررة مع الكروت الرئيسية.</p>
+                </div>
+              </div>
+              <div class="metric-list">
+                <div class="metric-row">
+                  <span>رسائل جديدة</span>
+                  <strong id="metricContacts">-</strong>
+                </div>
+                <div class="metric-row">
+                  <span>طلبات استبدال معلقة</span>
+                  <strong id="metricRedeems">-</strong>
+                </div>
+                <div class="metric-row">
+                  <span>موافقات معلقة</span>
+                  <strong id="metricPendingApprovals">-</strong>
+                </div>
+                <div class="metric-row">
+                  <span>بانتظار التوجيه</span>
+                  <strong id="metricPendingSegmentation">-</strong>
+                </div>
+                <div class="metric-row">
+                  <span>مدفوعات معلقة</span>
+                  <strong id="metricFinancePending">-</strong>
+                </div>
+              </div>
+            </section>
+          </aside>
+        </div>
+      </main>
     </div>
 
-    <div class="container">
-      <section class="hero">
-        <div class="hero-panel">
-          <h2>Executive Snapshot</h2>
-          <p>
-            A tighter dashboard layout so the whole control surface fits more comfortably on one screen.
-          </p>
-          <div class="summary-grid">
-            <div class="summary-tile">
-              <strong id="summaryPendingApprovals">-</strong>
-              <span>Pending Approvals</span>
-            </div>
-            <div class="summary-tile">
-              <strong id="summaryPendingSegmentation">-</strong>
-              <span>Pending Segmentation</span>
-            </div>
-            <div class="summary-tile">
-              <strong id="summaryFinancePending">-</strong>
-              <span>Finance Queue</span>
-            </div>
-            <div class="summary-tile">
-              <strong id="summaryActiveFactories">-</strong>
-              <span>Active Factories</span>
-            </div>
-          </div>
-        </div>
-
-        <aside class="hero-aside">
-          <div>
-            <h3>Operational Focus</h3>
-            <p class="muted">Fast access to the highest-impact admin actions.</p>
-          </div>
-          <div class="aside-item">
-            <span>Today</span>
-            <strong id="todayDate">-</strong>
-          </div>
-          <div class="aside-item">
-            <span>Finance Pending</span>
-            <strong id="focusFinancePending">-</strong>
-          </div>
-          <div class="aside-item">
-            <span>Factory Network</span>
-            <strong id="focusFactoryCoverage">Loading...</strong>
-          </div>
-        </aside>
-      </section>
-
-      <section class="section">
-        <div class="section-header">
-          <div>
-            <h2>Operations</h2>
-            <p>Approval and routing queues for the daily execution team.</p>
-          </div>
-        </div>
-        <div class="cards">
-          <div class="card operations" onclick="go('shipments.html?type=approval')">
-            <div class="card-top">
-              <div class="card-icon">AP</div>
-              <div class="card-badge" id="pendingApprovalCount">-</div>
-            </div>
-            <div class="card-body">
-              <h3>Pending Approvals</h3>
-              <p>Review shipments waiting for admin validation before they move downstream.</p>
-              <div class="card-footer">
-                <span>Workflow</span>
-                <strong>Approve & edit</strong>
-              </div>
-            </div>
-          </div>
-
-          <div class="card operations" onclick="go('shipments.html?type=segmentation')">
-            <div class="card-top">
-              <div class="card-icon">SG</div>
-              <div class="card-badge" id="pendingSegmentationCount">-</div>
-            </div>
-            <div class="card-body">
-              <h3>Pending Segmentation</h3>
-              <p>Split shipments and assign the right routing structure for logistics readiness.</p>
-              <div class="card-footer">
-                <span>Workflow</span>
-                <strong>Segment & route</strong>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="section">
-        <div class="section-header">
-          <div>
-            <h2>Eco Program</h2>
-            <p>Participant growth and redeem approval activity.</p>
-          </div>
-        </div>
-        <div class="cards">
-          <div class="card eco" onclick="go('eco-participants.html')">
-            <div class="card-top">
-              <div class="card-icon">EP</div>
-              <div class="card-badge">View</div>
-            </div>
-            <div class="card-body">
-              <h3>Eco Participants</h3>
-              <p>Manage enrollment and keep participant records clean and accessible.</p>
-              <div class="card-footer">
-                <span>Coverage</span>
-                <strong>People & accounts</strong>
-              </div>
-            </div>
-          </div>
-
-          <div class="card eco" onclick="go('eco-redeems.html')">
-            <div class="card-top">
-              <div class="card-icon">RD</div>
-              <div class="card-badge" id="ecoRedeemCount">-</div>
-            </div>
-            <div class="card-body">
-              <h3>Redemption Requests</h3>
-              <p>Track redeem demand, approvals, and planting follow-through in one place.</p>
-              <div class="card-footer">
-                <span>Workflow</span>
-                <strong>Approve & track</strong>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="section">
-        <div class="section-header">
-          <div>
-            <h2>Business Management</h2>
-            <p>Master data, pricing rules, and financial workflows for scaling operations.</p>
-          </div>
-        </div>
-        <div class="cards">
-          <div class="card business" onclick="go('representatives-create.html')">
-            <div class="card-top">
-              <div class="card-icon">FR</div>
-              <div class="card-badge">Manage</div>
-            </div>
-            <div class="card-body">
-              <h3>Field Representatives</h3>
-              <p>Create and maintain representative accounts for field execution coverage.</p>
-              <div class="card-footer">
-                <span>People Ops</span>
-                <strong>Users & roles</strong>
-              </div>
-            </div>
-          </div>
-
-          <div class="card business" onclick="go('contracts-create.html')">
-            <div class="card-top">
-              <div class="card-icon">CT</div>
-              <div class="card-badge">Setup</div>
-            </div>
-            <div class="card-body">
-              <h3>Contracts & Pricing</h3>
-              <p>Define trader agreements and the commercial terms behind recurring work.</p>
-              <div class="card-footer">
-                <span>Commercial</span>
-                <strong>Contracts</strong>
-              </div>
-            </div>
-          </div>
-
-          <div class="card business" onclick="go('dosh-management.html')">
-            <div class="card-top">
-              <div class="card-icon">DS</div>
-              <div class="card-badge">Rules</div>
-            </div>
-            <div class="card-body">
-              <h3>Dosht Management</h3>
-              <p>Control Dosht types, quantity tiers, and pricing validity windows.</p>
-              <div class="card-footer">
-                <span>Pricing Engine</span>
-                <strong>Master data</strong>
-              </div>
-            </div>
-          </div>
-
-          <div class="card business" onclick="go('factories-management.html')">
-            <div class="card-top">
-              <div class="card-icon">FC</div>
-              <div class="card-badge" id="factoryCount">-</div>
-            </div>
-            <div class="card-body">
-              <h3>Factories Management</h3>
-              <p>Manage receiving factories, accepted Dosht types, capacity, and operating status.</p>
-              <div class="card-footer">
-                <span>Network</span>
-                <strong>Factories & stats</strong>
-              </div>
-            </div>
-          </div>
-
-          <div class="card business" onclick="go('warehouses-management.html')">
-            <div class="card-top">
-              <div class="card-icon">WH</div>
-              <div class="card-badge" id="warehouseCount">-</div>
-            </div>
-            <div class="card-body">
-              <h3>Warehouses Management</h3>
-              <p>Manage warehouses and warehouse managers with assignment-aware admin controls.</p>
-              <div class="card-footer">
-                <span>Storage Ops</span>
-                <strong>Warehouses & managers</strong>
-              </div>
-            </div>
-          </div>
-
-          <div class="card business" onclick="go('vehicles-management.html')">
-            <div class="card-top">
-              <div class="card-icon">VH</div>
-              <div class="card-badge" id="vehicleCount">-</div>
-            </div>
-            <div class="card-body">
-              <h3>Vehicles Management</h3>
-              <p>Control fleet records, capacity, driver details, and operational vehicle status.</p>
-              <div class="card-footer">
-                <span>Fleet Ops</span>
-                <strong>Vehicles & status</strong>
-              </div>
-            </div>
-          </div>
-
-          <div class="card business" onclick="go('contact-management.html')">
-            <div class="card-top">
-              <div class="card-icon">CX</div>
-              <div class="card-badge" id="contactNewCount">-</div>
-            </div>
-            <div class="card-body">
-              <h3>Contact Management</h3>
-              <p>Review incoming messages, reply to customers, and close or remove resolved cases.</p>
-              <div class="card-footer">
-                <span>Service Desk</span>
-                <strong>Inbox & replies</strong>
-              </div>
-            </div>
-          </div>
-
-          <div class="card business" onclick="go('finance-management.html')">
-            <div class="card-top">
-              <div class="card-icon">FN</div>
-              <div class="card-badge" id="financePendingCount">-</div>
-            </div>
-            <div class="card-body">
-              <h3>Finance Management</h3>
-              <p>Confirm transfers and settle meal and monthly payment flows with control.</p>
-              <div class="card-footer">
-                <span>Finance Ops</span>
-                <strong>Pending review</strong>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-    </div>
-
+    <script src="./node_modules/socket.io-client/dist/socket.io.min.js"></script>
     <script>
       const API_BASE =
         "https://supercycle-api-855015056699.europe-west1.run.app";
-
       const token = localStorage.getItem("token");
+      const ADMIN_DASHBOARD_NAMESPACE = "/admin-dashboard";
+      const OVERVIEW_PATH = "/admin/dashboard/overview";
+      const RECENT_SHIPMENTS_PATH =
+        "/admin/dashboard/recent-shipments?page=1&limit=5";
+      const PRICE_TRENDS_PATH = "/admin/dashboard/price-trends?months=6";
+
       if (!token) location.href = "index.html";
 
+      let dashboardSocket = null;
+      let lastLiveDebugMessage = "";
+
       function logout() {
+        disconnectDashboardSocket();
         localStorage.removeItem("token");
         location.href = "index.html";
       }
@@ -671,110 +2033,1300 @@
         return json;
       }
 
-      function setCount(id, value) {
+      function setText(id, value) {
         const element = document.getElementById(id);
-        if (element) element.textContent = value == null ? "-" : value;
+        if (element)
+          element.textContent = value == null || value === "" ? "-" : value;
       }
 
-      async function loadCounts() {
-        setCount("pendingApprovalCount", "-");
-        setCount("pendingSegmentationCount", "-");
-        setCount("ecoRedeemCount", "-");
-        setCount("financePendingCount", "-");
-        setCount("factoryCount", "-");
-        setCount("warehouseCount", "-");
-        setCount("vehicleCount", "-");
-        setCount("contactNewCount", "-");
-        setCount("summaryPendingApprovals", "-");
-        setCount("summaryPendingSegmentation", "-");
-        setCount("summaryFinancePending", "-");
-        setCount("summaryActiveFactories", "-");
-        setCount("focusFinancePending", "-");
-        document.getElementById("focusFactoryCoverage").textContent = "Loading...";
-
-        try {
-          const [financeJson, factoriesJson] = await Promise.all([
-            fetchJson("/admin/finance/stats?type=all"),
-            fetchJson("/admin/factories?page=1&limit=100&isActive=true"),
-          ]);
-
-          const pending = financeJson?.data?.overview?.pendingShipments ?? 0;
-          const activeFactories =
-            factoriesJson?.total ??
-            factoriesJson?.data?.total ??
-            factoriesJson?.data?.meta?.total ??
-            (Array.isArray(factoriesJson?.data?.data)
-              ? factoriesJson.data.data.length
-              : Array.isArray(factoriesJson?.data)
-                ? factoriesJson.data.length
-                : 0);
-
-          setCount("financePendingCount", pending);
-          setCount("summaryFinancePending", pending);
-          setCount("focusFinancePending", pending);
-          setCount("factoryCount", activeFactories);
-          setCount("summaryActiveFactories", activeFactories);
-          document.getElementById("focusFactoryCoverage").textContent =
-            `${activeFactories} active factories`;
-        } catch (_) {
-          document.getElementById("focusFactoryCoverage").textContent =
-            "Unavailable";
+      function setBanner(message) {
+        const banner = document.getElementById("errorBanner");
+        if (!message) {
+          banner.textContent = "";
+          banner.classList.remove("show");
+          return;
         }
 
+        banner.textContent = message;
+        banner.classList.add("show");
+      }
+
+      function setLiveDebug(message) {
+        lastLiveDebugMessage = message || "";
+        const node = document.getElementById("liveDebug");
+        if (!node) return;
+        node.textContent = lastLiveDebugMessage;
+      }
+
+      function setLiveStatus(state) {
+        const node = document.getElementById("liveStatus");
+        if (!node) return;
+
+        node.classList.remove(
+          "connecting",
+          "connected",
+          "reconnecting",
+          "disconnected",
+          "polling",
+        );
+        node.classList.add(state);
+
+        if (state === "connected") {
+          node.textContent = dashboardText("liveConnected");
+          setLiveDebug("");
+          return;
+        }
+
+        if (state === "reconnecting") {
+          node.textContent = dashboardText("liveReconnecting");
+          return;
+        }
+
+        if (state === "disconnected") {
+          node.textContent = dashboardText("liveDisconnected");
+          return;
+        }
+
+        if (state === "polling") {
+          node.textContent =
+            dashboardLang() === "ar"
+              ? "تحديث تلقائي احتياطي"
+              : "Fallback auto refresh";
+          return;
+        }
+
+        node.textContent = dashboardText("liveConnecting");
+      }
+
+      function socketDebugMessage(messageAr, messageEn) {
+        return dashboardLang() === "ar" ? messageAr : messageEn;
+      }
+
+      function socketErrorMessage(payload) {
+        if (!payload) {
+          return socketDebugMessage(
+            "حدث خطأ غير معروف في البث المباشر.",
+            "An unknown live update error occurred.",
+          );
+        }
+
+        if (typeof payload === "string") return payload;
+
+        return (
+          payload.message ||
+          payload.error ||
+          payload.reason ||
+          socketDebugMessage(
+            "حدث خطأ غير معروف في البث المباشر.",
+            "An unknown live update error occurred.",
+          )
+        );
+      }
+
+      function formatNumber(value) {
+        const lang = dashboardLang();
+        return Number(value || 0).toLocaleString(
+          lang === "ar" ? "ar-EG" : "en-US",
+        );
+      }
+
+      function formatCurrency(value) {
+        const lang = dashboardLang();
+        return lang === "ar"
+          ? `${formatNumber(value)} ج.م`
+          : `EGP ${formatNumber(value)}`;
+      }
+
+      function formatPercent(value) {
+        const lang = dashboardLang();
+        const number = Number(value || 0);
+        const formatted = number.toLocaleString(
+          lang === "ar" ? "ar-EG" : "en-US",
+          {
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 1,
+          },
+        );
+        return lang === "ar"
+          ? `${formatted}% من الإجمالي`
+          : `${formatted}% of total`;
+      }
+
+      function formatDelta(value) {
+        const lang = dashboardLang();
+        const number = Number(value || 0);
+        if (number > 0)
+          return lang === "ar"
+            ? `+${formatNumber(number)} مقارنة بالشهر السابق`
+            : `+${formatNumber(number)} vs last month`;
+        if (number < 0)
+          return lang === "ar"
+            ? `${formatNumber(number)} مقارنة بالشهر السابق`
+            : `${formatNumber(number)} vs last month`;
+        return lang === "ar" ? "بدون تغير عن الشهر السابق" : "No change vs last month";
+      }
+
+      function formatDecimal(value, digits = 2) {
+        const number = Number(value || 0);
+        return number.toLocaleString("en-US", {
+          minimumFractionDigits: 0,
+          maximumFractionDigits: digits,
+        });
+      }
+
+      function formatDate(dateString) {
+        if (!dateString) return "-";
+        const date = new Date(dateString);
+        if (Number.isNaN(date.getTime())) return "-";
+        const lang = dashboardLang();
+
+        return date.toLocaleDateString(lang === "ar" ? "ar-EG" : "en-US", {
+          day: "numeric",
+          month: "long",
+          year: "numeric",
+        });
+      }
+
+      function formatDateTime(dateString) {
+        if (!dateString) return "-";
+        const date = new Date(dateString);
+        if (Number.isNaN(date.getTime())) return "-";
+        const lang = dashboardLang();
+
+        return date.toLocaleString(lang === "ar" ? "ar-EG" : "en-US", {
+          day: "numeric",
+          month: "long",
+          year: "numeric",
+          hour: "numeric",
+          minute: "2-digit",
+        });
+      }
+
+      function formatMonthKey(monthKey) {
+        if (!monthKey) return "-";
+        const [year, month] = String(monthKey).split("-");
+        const date = new Date(Number(year), Number(month) - 1, 1);
+        if (Number.isNaN(date.getTime())) return monthKey;
+        const lang = dashboardLang();
+
+        return date.toLocaleDateString(lang === "ar" ? "ar-EG" : "en-US", {
+          month: "long",
+          year: "numeric",
+        });
+      }
+
+      const dashboardI18n = {
+        ar: {
+          pageTitle: "SuperCycle - لوحة تحكم المسؤول",
+          topbarTitle: "نظرة تشغيلية شاملة",
+          topbarText: "تشغيل، مالية، أسعار، ولوجستيات في شاشة تنفيذ واحدة.",
+          refreshTitle: "تحديث",
+          logout: "تسجيل الخروج",
+          miniNote: "مؤشرات تنفيذية مباشرة",
+          heroTitle: "صورة تشغيل لحظية للأقسام الحرجة",
+          heroText: "أرقام تشغيلية ومالية في قراءة سريعة للإدارة.",
+          focusTitle: "أولوية المتابعة",
+          focusText: "تنبيهات الإدارة العاجلة خلال اليوم.",
+          focusToday: "تاريخ اليوم",
+          focusApprovals: "الموافقات المعلقة",
+          focusSegmentation: "بانتظار التوجيه",
+          focusFinance: "المدفوعات المعلقة",
+          focusContacts: "رسائل العملاء الجديدة",
+          traderTitle: "ملخص التجار",
+          traderText: "توزيع قاعدة التجار الحالية مع قراءة مرئية للشرائح الأساسية.",
+          mixChartTitle: "تقسيم العملاء",
+          mixChartSubtitle: "شهري / وجبات / غير متعاقد",
+          mixChartCenterLabel: "إجمالي العملاء",
+          mixChartEmpty: "لا توجد بيانات كافية",
+          mixLegendMonthly: "شهري",
+          mixLegendMeal: "وجبات",
+          mixLegendUncontracted: "غير متعاقد",
+          pricesTitle: "جدول الأسعار حسب النوع",
+          pricesText: "آخر 6 أشهر مع آخر سعر والتغير لكل نوع.",
+          pricesLink: "إدارة الأسعار",
+          quickTitle: "الوصول السريع",
+          quickText: "اختصارات تشغيلية للأقسام الأكثر استخدامًا.",
+          shipmentsTitle: "آخر الشحنات",
+          shipmentsText: "فتح مباشر من الصف نفسه دون زر إضافي.",
+          shipmentsLink: "عرض كل الشحنات",
+          networkTitle: "شبكة التشغيل",
+          networkText: "البنية التشغيلية الحالية بدون تكرار مع مؤشرات المتابعة.",
+          followupTitle: "جودة المتابعة",
+          followupText: "رسائل وخدمة وتنبيهات تحتاج مراجعة.",
+          liveConnecting: "جاري ربط التحديث المباشر...",
+          liveConnected: "التحديث المباشر متصل",
+          liveReconnecting: "جاري إعادة الربط...",
+          liveDisconnected: "انقطع التحديث المباشر",
+          loading: "جاري التحميل...",
+          noRecent: "لا توجد شحنات حديثة للعرض حالياً.",
+          noPrices: "لا توجد بيانات أسعار كافية حالياً.",
+          loadPrices: "جاري تحميل بيانات الأسعار...",
+          loadShipments: "جاري تحميل آخر الشحنات...",
+          type: "النوع",
+          latestPrice: "آخر سعر",
+          change: "التغير",
+          avg6m: "متوسط 6 أشهر",
+          priceTypes: "الأنواع",
+          pricePeriod: "الفترة",
+          priceHigh: "أعلى سعر",
+          priceLow: "أقل سعر",
+          months: "أشهر",
+          thShipmentNo: "رقم الشحنة",
+          thTrader: "التاجر",
+          thStatus: "الحالة",
+          thQty: "الكمية",
+          thPickup: "طلب الاستلام",
+          thCreated: "الإنشاء",
+          statShipmentsTag: "نشاط",
+          statShipmentsLabel: "إجمالي الشحنات",
+          statShipmentsFoot: "حجم التشغيل الحالي",
+          statApprovalsTag: "مهم",
+          statApprovalsLabel: "معلقة موافقة",
+          statApprovalsFoot: "تحتاج إجراء فوري",
+          statSegmentationTag: "تجهيز",
+          statSegmentationLabel: "بانتظار التوجيه",
+          statSegmentationFoot: "التقسيم والمسارات",
+          statDeliveredTag: "اليوم",
+          statDeliveredLabel: "تم التسليم اليوم",
+          statDeliveredFoot: "قياس الأداء اليومي",
+          statFinanceTag: "مالية",
+          statFinanceLabel: "مدفوعات معلقة",
+          statFinanceFoot: "قيمة انتظار التسوية",
+          statTradersTag: "تجار",
+          statTradersLabel: "إجمالي التجار",
+          statTradersFoot: "كل الفئات والأنماط",
+          metricFactories: "المصانع النشطة",
+          metricFactoriesFoot: "التغطية الإنتاجية الحالية",
+          metricWarehouses: "المخازن",
+          metricWarehousesFoot: "نقاط الاستلام والتجميع",
+          metricVehicles: "العربيات",
+          metricVehiclesFoot: "الجاهزية اللوجستية",
+          metricTraders: "إجمالي التجار",
+          metricTradersFoot: "القاعدة التجارية الحالية",
+          metricContacts: "رسائل جديدة",
+          metricRedeems: "طلبات استبدال معلقة",
+          metricPendingApprovals: "موافقات معلقة",
+          metricPendingSegmentation: "بانتظار التوجيه",
+          metricFinancePending: "مدفوعات معلقة",
+          uncontracted: "غير متعاقدين",
+          monthly: "متعاقدون شهري",
+          meal: "متعاقدون وجبات",
+          weight: "متعاقدون خارجي",
+          quickApprovals: "الموافقات المعلقة",
+          quickApprovalsText: "مراجعة الشحنات قبل الاعتماد.",
+          quickApprovalsFoot1: "العملية",
+          quickApprovalsFoot2: "اعتماد وتعديل",
+          quickSegmentation: "التوجيه والتقسيم",
+          quickSegmentationText: "تجهيز الشحنات للمسارات الصحيحة.",
+          quickSegmentationFoot1: "العملية",
+          quickSegmentationFoot2: "تقسيم ومسارات",
+          quickRedeems: "طلبات الاستبدال",
+          quickRedeemsText: "متابعة الطلبات والموافقات البيئية.",
+          quickRedeemsFoot1: "العملية",
+          quickRedeemsFoot2: "اعتماد وتتبع",
+          quickFinance: "المالية",
+          quickFinanceText: "متابعة التحويلات والتسويات المعلقة.",
+          quickFinanceFoot1: "العملية",
+          quickFinanceFoot2: "مراجعة وتسوية",
+          quickFactories: "المصانع",
+          quickFactoriesText: "متابعة التغطية والطاقة الاستيعابية.",
+          quickFactoriesFoot1: "الشبكة",
+          quickFactoriesFoot2: "إدارة واستيعاب",
+          quickContacts: "رسائل العملاء",
+          quickContactsText: "مراجعة الرسائل الجديدة والرد عليها.",
+          quickContactsFoot1: "الخدمة",
+          quickContactsFoot2: "صندوق الرسائل",
+          status_pending_approval: "معلقة موافقة",
+          status_pending_segmentation: "بانتظار التوجيه",
+          status_in_transit: "قيد النقل",
+          status_delivered: "تم التسليم",
+          status_rejected: "مرفوضة",
+          iconShipments: "شح",
+          iconApprovals: "مو",
+          iconSegmentation: "وج",
+          iconDelivered: "تم",
+          iconFinance: "جم",
+          iconTraders: "تج",
+          iconUncontracted: "غر",
+          iconMonthly: "شه",
+          iconMeal: "وج",
+          iconWeight: "وز",
+          iconRedeems: "بد",
+          iconFactories: "مص",
+          iconContacts: "رس",
+          iconRefresh: "حدث",
+          sidebarAdmin: "مسؤول النظام",
+          sidebarAdminSub: "لوحة الإدارة",
+          brandSub: "لوحة تحكم المسؤول",
+          navHomeTitle: "الرئيسية",
+          navHomeSub: "ملخص الأداء اليومي",
+          navOperations: "العمليات",
+          navApprovalsTitle: "الموافقات",
+          navApprovalsSub: "شحنات تحتاج مراجعة",
+          navSegmentationTitle: "التوجيه والتقسيم",
+          navSegmentationSub: "جاهزة للتشغيل",
+          navVehiclesTitle: "العربيات",
+          navVehiclesSub: "إدارة الأسطول",
+          navFactoriesTitle: "المصانع",
+          navFactoriesSub: "التغطية والاستقبال",
+          navAdminGroup: "الإدارة",
+          navFinanceTitle: "المالية",
+          navFinanceSub: "تسويات وتحويلات",
+          navDoshTitle: "أنواع وأسعار الدوش",
+          navDoshSub: "التسعير والفئات",
+          navContactsTitle: "الرسائل الواردة",
+          navContactsSub: "متابعة العملاء",
+          navEcoGroup: "المنظومة البيئية",
+          navParticipantsTitle: "المشاركون البيئيون",
+          navParticipantsSub: "إدارة الانضمام",
+          navRedeemsTitle: "طلبات الاستبدال",
+          navRedeemsSub: "مراجعة وتنفيذ",
+          navIconHome: "لو",
+          navIconApprovals: "مو",
+          navIconSegmentation: "وج",
+          navIconParticipants: "بي",
+          navIconVehicles: "عر",
+          navIconFactories: "مص",
+          navIconFinance: "مل",
+          navIconDosh: "سع",
+          navIconContacts: "رس",
+          navIconRedeems: "بد",
+        },
+        en: {
+          pageTitle: "SuperCycle - Admin Dashboard",
+          topbarTitle: "Operations Overview",
+          topbarText: "Operations, finance, pricing, and logistics in one executive view.",
+          refreshTitle: "Refresh",
+          logout: "Logout",
+          miniNote: "Live Executive Metrics",
+          heroTitle: "Real-time view of critical operations",
+          heroText: "Operational and financial numbers in one fast executive read.",
+          focusTitle: "Priority Watchlist",
+          focusText: "Urgent admin alerts for today.",
+          focusToday: "Today",
+          focusApprovals: "Pending approvals",
+          focusSegmentation: "Pending routing",
+          focusFinance: "Pending payments",
+          focusContacts: "New contact messages",
+          traderTitle: "Trader Summary",
+          traderText: "Current trader mix with a visual split of the core segments.",
+          mixChartTitle: "Customer Split",
+          mixChartSubtitle: "Monthly / Meal / Uncontracted",
+          mixChartCenterLabel: "Total customers",
+          mixChartEmpty: "No sufficient data",
+          mixLegendMonthly: "Monthly",
+          mixLegendMeal: "Meal",
+          mixLegendUncontracted: "Uncontracted",
+          pricesTitle: "Price Table by Type",
+          pricesText: "Last 6 months with latest price and net change per type.",
+          pricesLink: "Pricing Management",
+          quickTitle: "Quick Access",
+          quickText: "Operational shortcuts for the most used sections.",
+          shipmentsTitle: "Recent Shipments",
+          shipmentsText: "Open directly from the row without an extra action button.",
+          shipmentsLink: "View All Shipments",
+          networkTitle: "Operating Network",
+          networkText: "Current operating infrastructure without repeating watchlist metrics.",
+          followupTitle: "Follow-up Quality",
+          followupText: "Service and support alerts that need review.",
+          liveConnecting: "Connecting live updates...",
+          liveConnected: "Live updates connected",
+          liveReconnecting: "Reconnecting...",
+          liveDisconnected: "Live updates disconnected",
+          loading: "Loading...",
+          noRecent: "No recent shipments available right now.",
+          noPrices: "No sufficient price data available right now.",
+          loadPrices: "Loading price data...",
+          loadShipments: "Loading recent shipments...",
+          type: "Type",
+          latestPrice: "Latest Price",
+          change: "Change",
+          avg6m: "6-month average",
+          priceTypes: "Types",
+          pricePeriod: "Period",
+          priceHigh: "High",
+          priceLow: "Low",
+          months: "months",
+          thShipmentNo: "Shipment No",
+          thTrader: "Trader",
+          thStatus: "Status",
+          thQty: "Quantity",
+          thPickup: "Pickup Request",
+          thCreated: "Created",
+          statShipmentsTag: "Activity",
+          statShipmentsLabel: "Total Shipments",
+          statShipmentsFoot: "Current operating volume",
+          statApprovalsTag: "Urgent",
+          statApprovalsLabel: "Pending Approval",
+          statApprovalsFoot: "Needs immediate action",
+          statSegmentationTag: "Routing",
+          statSegmentationLabel: "Pending Routing",
+          statSegmentationFoot: "Segmentation and lanes",
+          statDeliveredTag: "Today",
+          statDeliveredLabel: "Delivered Today",
+          statDeliveredFoot: "Daily performance measure",
+          statFinanceTag: "Finance",
+          statFinanceLabel: "Pending Payments",
+          statFinanceFoot: "Awaiting settlement",
+          statTradersTag: "Traders",
+          statTradersLabel: "Total Traders",
+          statTradersFoot: "All categories and patterns",
+          metricFactories: "Active Factories",
+          metricFactoriesFoot: "Current production coverage",
+          metricWarehouses: "Warehouses",
+          metricWarehousesFoot: "Collection and receiving points",
+          metricVehicles: "Vehicles",
+          metricVehiclesFoot: "Logistics readiness",
+          metricTraders: "Total Traders",
+          metricTradersFoot: "Current trader base",
+          metricContacts: "New Messages",
+          metricRedeems: "Pending Redeems",
+          metricPendingApprovals: "Pending Approvals",
+          metricPendingSegmentation: "Pending Routing",
+          metricFinancePending: "Pending Payments",
+          uncontracted: "Uncontracted",
+          monthly: "Monthly Contract",
+          meal: "Meal Contract",
+          weight: "External Contract",
+          quickApprovals: "Pending Approvals",
+          quickApprovalsText: "Review shipments before final approval.",
+          quickApprovalsFoot1: "Flow",
+          quickApprovalsFoot2: "Approve and edit",
+          quickSegmentation: "Routing & Segmentation",
+          quickSegmentationText: "Prepare shipments for the right routes.",
+          quickSegmentationFoot1: "Flow",
+          quickSegmentationFoot2: "Routing and lanes",
+          quickRedeems: "Redeem Requests",
+          quickRedeemsText: "Track environmental requests and approvals.",
+          quickRedeemsFoot1: "Flow",
+          quickRedeemsFoot2: "Approve and track",
+          quickFinance: "Finance",
+          quickFinanceText: "Review transfers and pending settlements.",
+          quickFinanceFoot1: "Flow",
+          quickFinanceFoot2: "Review and settle",
+          quickFactories: "Factories",
+          quickFactoriesText: "Monitor coverage and capacity.",
+          quickFactoriesFoot1: "Network",
+          quickFactoriesFoot2: "Manage capacity",
+          quickContacts: "Customer Messages",
+          quickContactsText: "Review new messages and reply quickly.",
+          quickContactsFoot1: "Service",
+          quickContactsFoot2: "Inbox",
+          status_pending_approval: "Pending Approval",
+          status_pending_segmentation: "Pending Routing",
+          status_in_transit: "In Transit",
+          status_delivered: "Delivered",
+          status_rejected: "Rejected",
+          iconShipments: "TS",
+          iconApprovals: "PA",
+          iconSegmentation: "RT",
+          iconDelivered: "DY",
+          iconFinance: "EGP",
+          iconTraders: "TR",
+          iconUncontracted: "UC",
+          iconMonthly: "MC",
+          iconMeal: "ML",
+          iconWeight: "EX",
+          iconRedeems: "RD",
+          iconFactories: "FC",
+          iconContacts: "CX",
+          iconRefresh: "RF",
+          sidebarAdmin: "System Admin",
+          sidebarAdminSub: "Admin Control",
+          brandSub: "Admin Dashboard",
+          navHomeTitle: "Dashboard",
+          navHomeSub: "Daily performance summary",
+          navOperations: "Operations",
+          navApprovalsTitle: "Approvals",
+          navApprovalsSub: "Shipments pending review",
+          navSegmentationTitle: "Routing & Segmentation",
+          navSegmentationSub: "Ready for operations",
+          navVehiclesTitle: "Vehicles",
+          navVehiclesSub: "Fleet management",
+          navFactoriesTitle: "Factories",
+          navFactoriesSub: "Coverage and intake",
+          navAdminGroup: "Administration",
+          navFinanceTitle: "Finance",
+          navFinanceSub: "Settlements and transfers",
+          navDoshTitle: "Dosh Types & Prices",
+          navDoshSub: "Pricing and tiers",
+          navContactsTitle: "Inbox Messages",
+          navContactsSub: "Customer follow-up",
+          navEcoGroup: "Eco System",
+          navParticipantsTitle: "Eco Participants",
+          navParticipantsSub: "Enrollment management",
+          navRedeemsTitle: "Redeem Requests",
+          navRedeemsSub: "Review and execution",
+          navIconHome: "DB",
+          navIconApprovals: "AP",
+          navIconSegmentation: "SG",
+          navIconParticipants: "EP",
+          navIconVehicles: "VH",
+          navIconFactories: "FC",
+          navIconFinance: "FN",
+          navIconDosh: "DS",
+          navIconContacts: "CX",
+          navIconRedeems: "RD",
+        },
+      };
+
+      function dashboardLang() {
+        return typeof window.__lang === "function" ? window.__lang() : "ar";
+      }
+
+      function dashboardText(key) {
+        const lang = dashboardLang();
+        return dashboardI18n[lang]?.[key] || dashboardI18n.ar[key] || key;
+      }
+
+      function setNodeText(selector, value) {
+        const node = document.querySelector(selector);
+        if (node) node.textContent = value;
+      }
+
+      function translateDashboard() {
+        document.title = dashboardText("pageTitle");
+        setNodeText(".topbar-title h2", dashboardText("topbarTitle"));
+        setNodeText(".topbar-title p", dashboardText("topbarText"));
+        setNodeText(".mini-note", dashboardText("miniNote"));
+        setNodeText(".hero-brief h3", dashboardText("heroTitle"));
+        setNodeText(".hero-brief p", dashboardText("heroText"));
+        document.querySelector(".icon-button")?.setAttribute("title", dashboardText("refreshTitle"));
+        setNodeText(".icon-button", dashboardText("iconRefresh"));
+        setNodeText(".logout-btn", dashboardText("logout"));
+        setNodeText(".sidebar-footer strong", dashboardText("sidebarAdmin"));
+        setNodeText(".sidebar-footer span", dashboardText("sidebarAdminSub"));
+        setNodeText(".brand p", dashboardText("brandSub"));
+
+        const navItems = document.querySelectorAll(".sidebar .nav-item");
+        const navMap = [
+          ["navIconHome", "navHomeTitle", "navHomeSub"],
+          ["navIconApprovals", "navApprovalsTitle", "navApprovalsSub"],
+          ["navIconSegmentation", "navSegmentationTitle", "navSegmentationSub"],
+          ["navIconVehicles", "navVehiclesTitle", "navVehiclesSub"],
+          ["navIconFactories", "navFactoriesTitle", "navFactoriesSub"],
+          ["navIconFinance", "navFinanceTitle", "navFinanceSub"],
+          ["navIconDosh", "navDoshTitle", "navDoshSub"],
+          ["navIconContacts", "navContactsTitle", "navContactsSub"],
+          ["navIconParticipants", "navParticipantsTitle", "navParticipantsSub"],
+          ["navIconRedeems", "navRedeemsTitle", "navRedeemsSub"],
+        ];
+        navItems.forEach((item, index) => {
+          const map = navMap[index];
+          if (!map) return;
+          const [iconKey, titleKey, subKey] = map;
+          const icon = item.querySelector(".nav-icon");
+          const title = item.querySelector(".nav-copy strong");
+          const sub = item.querySelector(".nav-copy span");
+          if (icon) icon.textContent = dashboardText(iconKey);
+          if (title) title.textContent = dashboardText(titleKey);
+          if (sub) sub.textContent = dashboardText(subKey);
+        });
+
+        const navGroups = document.querySelectorAll(".nav-group-label");
+        if (navGroups[0]) navGroups[0].textContent = dashboardText("navOperations");
+        if (navGroups[1]) navGroups[1].textContent = dashboardText("navAdminGroup");
+        if (navGroups[2]) navGroups[2].textContent = dashboardText("navEcoGroup");
+
+        setNodeText(".hero-band aside .panel-header h3", dashboardText("focusTitle"));
+        setNodeText(".hero-band aside .panel-header p", dashboardText("focusText"));
+        setNodeText(".focus-item:nth-child(1) span", dashboardText("focusToday"));
+        setNodeText("#focusLabelApprovals", dashboardText("focusApprovals"));
+        setNodeText("#focusLabelSegmentation", dashboardText("focusSegmentation"));
+        setNodeText("#focusLabelFinance", dashboardText("focusFinance"));
+        setNodeText("#focusLabelContacts", dashboardText("focusContacts"));
+
+        setNodeText(".stack > section:nth-of-type(1) .panel-header h3", dashboardText("traderTitle"));
+        setNodeText(".stack > section:nth-of-type(1) .panel-header p", dashboardText("traderText"));
+        setNodeText(".stack > section:nth-of-type(2) .panel-header h3", dashboardText("pricesTitle"));
+        setNodeText(".stack > section:nth-of-type(2) .panel-header p", dashboardText("pricesText"));
+        setNodeText(".stack > section:nth-of-type(2) .panel-link", dashboardText("pricesLink"));
+        setNodeText(".stack > section:nth-of-type(3) .panel-header h3", dashboardText("quickTitle"));
+        setNodeText(".stack > section:nth-of-type(3) .panel-header p", dashboardText("quickText"));
+        setNodeText(".stack > section:nth-of-type(4) .panel-header h3", dashboardText("shipmentsTitle"));
+        setNodeText(".stack > section:nth-of-type(4) .panel-header p", dashboardText("shipmentsText"));
+        setNodeText(".stack > section:nth-of-type(4) .panel-link", dashboardText("shipmentsLink"));
+        setNodeText(".side-stack section:nth-of-type(1) .panel-header h3", dashboardText("networkTitle"));
+        setNodeText(".side-stack section:nth-of-type(1) .panel-header p", dashboardText("networkText"));
+        setNodeText(".side-stack section:nth-of-type(2) .panel-header h3", dashboardText("followupTitle"));
+        setNodeText(".side-stack section:nth-of-type(2) .panel-header p", dashboardText("followupText"));
+        setLiveStatus(
+          document
+            .getElementById("liveStatus")
+            ?.classList.contains("connected")
+            ? "connected"
+            : document
+                  .getElementById("liveStatus")
+                  ?.classList.contains("reconnecting")
+              ? "reconnecting"
+              : document
+                    .getElementById("liveStatus")
+                    ?.classList.contains("disconnected")
+                ? "disconnected"
+                : "connecting",
+        );
+        setLiveDebug(lastLiveDebugMessage);
+
+        const shipmentHeaders = document.querySelectorAll(".stack > section:nth-of-type(4) th");
+        const headerTexts = [
+          dashboardText("thShipmentNo"),
+          dashboardText("thTrader"),
+          dashboardText("thStatus"),
+          dashboardText("thQty"),
+          dashboardText("thPickup"),
+          dashboardText("thCreated"),
+        ];
+        shipmentHeaders.forEach((node, index) => {
+          node.textContent = headerTexts[index] || node.textContent;
+        });
+
+        setNodeText("#statIconShipments", dashboardText("iconShipments"));
+        setNodeText("#statIconApprovals", dashboardText("iconApprovals"));
+        setNodeText("#statIconSegmentation", dashboardText("iconSegmentation"));
+        setNodeText("#statIconDelivered", dashboardText("iconDelivered"));
+        setNodeText("#statIconFinance", dashboardText("iconFinance"));
+        setNodeText("#statIconTraders", dashboardText("iconTraders"));
+        setNodeText("#breakdownIconUncontracted", dashboardText("iconUncontracted"));
+        setNodeText("#breakdownIconMonthly", dashboardText("iconMonthly"));
+        setNodeText("#breakdownIconMeal", dashboardText("iconMeal"));
+        setNodeText("#breakdownIconWeight", dashboardText("iconWeight"));
+        setNodeText("#quickIconApprovals", dashboardText("iconApprovals"));
+        setNodeText("#quickIconSegmentation", dashboardText("iconSegmentation"));
+        setNodeText("#quickIconRedeems", dashboardText("iconRedeems"));
+        setNodeText("#quickIconFinance", dashboardText("iconFinance"));
+        setNodeText("#quickIconFactories", dashboardText("iconFactories"));
+        setNodeText("#quickIconContacts", dashboardText("iconContacts"));
+
+        const statCards = document.querySelectorAll(".stats-grid .stat-card");
+        const statMap = [
+          ["statShipmentsTag", "statShipmentsLabel", "statShipmentsFoot"],
+          ["statApprovalsTag", "statApprovalsLabel", "statApprovalsFoot"],
+          ["statSegmentationTag", "statSegmentationLabel", "statSegmentationFoot"],
+          ["statDeliveredTag", "statDeliveredLabel", "statDeliveredFoot"],
+          ["statFinanceTag", "statFinanceLabel", "statFinanceFoot"],
+          ["statTradersTag", "statTradersLabel", "statTradersFoot"],
+        ];
+        statCards.forEach((card, index) => {
+          const map = statMap[index];
+          if (!map) return;
+          card.querySelector(".stat-tag").textContent = dashboardText(map[0]);
+          card.querySelector(".stat-label").textContent = dashboardText(map[1]);
+          card.querySelector(".stat-foot").textContent = dashboardText(map[2]);
+        });
+
+        const breakdownTitles = [
+          dashboardText("uncontracted"),
+          dashboardText("monthly"),
+          dashboardText("meal"),
+        ];
+        document.querySelectorAll(".breakdown-head strong").forEach((node, index) => {
+          node.textContent = breakdownTitles[index] || node.textContent;
+        });
+
+        setNodeText("#mixChartTitle", dashboardText("mixChartTitle"));
+        setNodeText("#mixChartSubtitle", dashboardText("mixChartSubtitle"));
+        setNodeText("#traderMixCenterLabel", dashboardText("mixChartCenterLabel"));
+
+        const quickCards = document.querySelectorAll(".quick-grid .quick-card");
+        const quickMap = [
+          ["quickApprovals", "quickApprovalsText", "quickApprovalsFoot1", "quickApprovalsFoot2"],
+          ["quickSegmentation", "quickSegmentationText", "quickSegmentationFoot1", "quickSegmentationFoot2"],
+          ["quickRedeems", "quickRedeemsText", "quickRedeemsFoot1", "quickRedeemsFoot2"],
+          ["quickFinance", "quickFinanceText", "quickFinanceFoot1", "quickFinanceFoot2"],
+          ["quickFactories", "quickFactoriesText", "quickFactoriesFoot1", "quickFactoriesFoot2"],
+          ["quickContacts", "quickContactsText", "quickContactsFoot1", "quickContactsFoot2"],
+        ];
+        quickCards.forEach((card, index) => {
+          const map = quickMap[index];
+          if (!map) return;
+          card.querySelector("h4").textContent = dashboardText(map[0]);
+          card.querySelector("p").textContent = dashboardText(map[1]);
+          const foot = card.querySelectorAll(".quick-foot span, .quick-foot strong");
+          if (foot[0]) foot[0].textContent = dashboardText(map[2]);
+          if (foot[1]) foot[1].textContent = dashboardText(map[3]);
+        });
+
+        const opsLabels = [
+          ["metricFactories", "metricFactoriesFoot"],
+          ["metricWarehouses", "metricWarehousesFoot"],
+          ["metricVehicles", "metricVehiclesFoot"],
+          ["metricTraders", "metricTradersFoot"],
+        ];
+        document.querySelectorAll(".ops-card").forEach((card, index) => {
+          const map = opsLabels[index];
+          if (!map) return;
+          card.querySelector("span").textContent = dashboardText(map[0]);
+          card.querySelector("small").textContent = dashboardText(map[1]);
+        });
+
+        const metricRows = [
+          "metricContacts",
+          "metricRedeems",
+          "metricPendingApprovals",
+          "metricPendingSegmentation",
+          "metricFinancePending",
+        ];
+        document.querySelectorAll(".metric-row span").forEach((node, index) => {
+          node.textContent = dashboardText(metricRows[index]);
+        });
+      }
+
+      function statusClass(status) {
+        return `status-${status || "pending_approval"}`;
+      }
+
+      function statusLabel(status, labelAr) {
+        if (dashboardLang() === "ar" && labelAr) return labelAr;
+        return dashboardText(`status_${status}`) || status || "-";
+      }
+
+      function shipmentDestination(item) {
+        const id = item?.id || item?._id || item?.shipmentId;
+        if (!id) return "shipments.html";
+
+        if (item?.status === "pending_approval")
+          return `shipment.html?id=${id}`;
+        if (item?.status === "pending_segmentation")
+          return `segment.html?id=${id}`;
+        return "shipments.html";
+      }
+
+      function renderOverview(data) {
+        const summary = data?.summary || {};
+        const traderBreakdown = data?.traderBreakdown || {};
+        const operations = data?.operations || {};
+
+        setText("statTotalShipments", formatNumber(summary.totalShipments));
+        setText("statPendingApprovals", formatNumber(summary.pendingApprovals));
+        setText(
+          "statPendingSegmentation",
+          formatNumber(summary.pendingSegmentation),
+        );
+        setText("statCompletedToday", formatNumber(summary.completedToday));
+        setText(
+          "statPendingFinanceAmount",
+          formatCurrency(summary.pendingFinanceAmount),
+        );
+        setText("statTotalTraders", formatNumber(summary.totalTraders));
+
+        setText("focusApprovals", formatNumber(summary.pendingApprovals));
+        setText("focusSegmentation", formatNumber(summary.pendingSegmentation));
+        setText("focusFinance", formatCurrency(summary.pendingFinanceAmount));
+        setText("focusContacts", formatNumber(operations.newContactMessages));
+
+        setText(
+          "sidebarPendingApprovals",
+          formatNumber(summary.pendingApprovals),
+        );
+        setText(
+          "sidebarPendingSegmentation",
+          formatNumber(summary.pendingSegmentation),
+        );
+        setText(
+          "sidebarFinancePending",
+          formatNumber(summary.pendingFinanceAmount),
+        );
+        setText(
+          "sidebarContactsNew",
+          formatNumber(operations.newContactMessages),
+        );
+        setText(
+          "sidebarRedeemsPending",
+          formatNumber(operations.pendingRedeems),
+        );
+
+        setText("cardPendingApprovals", formatNumber(summary.pendingApprovals));
+        setText(
+          "cardPendingSegmentation",
+          formatNumber(summary.pendingSegmentation),
+        );
+        setText(
+          "cardFinancePending",
+          formatNumber(summary.pendingFinanceAmount),
+        );
+        setText(
+          "cardActiveFactories",
+          formatNumber(operations.activeFactories),
+        );
+        setText(
+          "cardContactMessages",
+          formatNumber(operations.newContactMessages),
+        );
+        setText("cardRedeemsPending", formatNumber(operations.pendingRedeems));
+
+        setText("metricFactories", formatNumber(operations.activeFactories));
+        setText("metricWarehouses", formatNumber(operations.warehouses));
+        setText("metricVehicles", formatNumber(operations.vehicles));
+        setText("metricTraders", formatNumber(summary.totalTraders));
+        setText("metricContacts", formatNumber(operations.newContactMessages));
+        setText("metricRedeems", formatNumber(operations.pendingRedeems));
+        setText(
+          "metricPendingApprovals",
+          formatNumber(summary.pendingApprovals),
+        );
+        setText(
+          "metricPendingSegmentation",
+          formatNumber(summary.pendingSegmentation),
+        );
+        setText(
+          "metricFinancePending",
+          formatCurrency(summary.pendingFinanceAmount),
+        );
+
+        renderBreakdownItem("Uncontracted", traderBreakdown.uncontracted);
+        renderBreakdownItem("Monthly", traderBreakdown.contractedMonthly);
+        renderBreakdownItem("Meal", traderBreakdown.contractedMeal);
+        renderTraderMixChart({
+          uncontracted: traderBreakdown.uncontracted,
+          monthly: traderBreakdown.contractedMonthly,
+          meal: traderBreakdown.contractedMeal,
+        });
+      }
+
+      function renderBreakdownItem(prefix, item) {
+        setText(`breakdown${prefix}Count`, formatNumber(item?.count));
+        setText(`breakdown${prefix}Percent`, formatPercent(item?.percentage));
+        setText(`breakdown${prefix}Delta`, formatDelta(item?.deltaVsLastMonth));
+      }
+
+      function renderTraderMixChart(items) {
+        const chart = document.getElementById("traderMixChart");
+        const legend = document.getElementById("traderMixLegend");
+        const totalNode = document.getElementById("traderMixTotal");
+
+        const monthlyCount = Number(items?.monthly?.count || 0);
+        const mealCount = Number(items?.meal?.count || 0);
+        const uncontractedCount = Number(items?.uncontracted?.count || 0);
+        const total = monthlyCount + mealCount + uncontractedCount;
+
+        totalNode.textContent = formatNumber(total);
+
+        if (!total) {
+          chart.style.setProperty("--mix-a", 33);
+          chart.style.setProperty("--mix-b", 33);
+          chart.style.setProperty("--mix-c", 34);
+          legend.innerHTML = `<div class="empty-state">${dashboardText("mixChartEmpty")}</div>`;
+          return;
+        }
+
+        const monthlyPercent = (monthlyCount / total) * 100;
+        const mealPercent = (mealCount / total) * 100;
+        const uncontractedPercent = Math.max(
+          0,
+          100 - monthlyPercent - mealPercent,
+        );
+
+        chart.style.setProperty("--mix-a", monthlyPercent.toFixed(2));
+        chart.style.setProperty("--mix-b", mealPercent.toFixed(2));
+        chart.style.setProperty("--mix-c", uncontractedPercent.toFixed(2));
+
+        const rows = [
+          {
+            label: dashboardText("mixLegendMonthly"),
+            color: "var(--info)",
+            count: monthlyCount,
+            percent: monthlyPercent,
+          },
+          {
+            label: dashboardText("mixLegendMeal"),
+            color: "#f59e0b",
+            count: mealCount,
+            percent: mealPercent,
+          },
+          {
+            label: dashboardText("mixLegendUncontracted"),
+            color: "var(--success)",
+            count: uncontractedCount,
+            percent: uncontractedPercent,
+          },
+        ];
+
+        legend.innerHTML = rows
+          .map(
+            (row) => `
+              <div class="mix-legend-item">
+                <div class="mix-legend-main">
+                  <span class="mix-dot" style="background:${row.color}"></span>
+                  <span>${row.label}</span>
+                </div>
+                <div class="mix-legend-value">${formatNumber(row.count)} • ${Number(
+                  row.percent,
+                ).toLocaleString(dashboardLang() === "ar" ? "ar-EG" : "en-US", {
+                  minimumFractionDigits: 0,
+                  maximumFractionDigits: 1,
+                })}%</div>
+              </div>
+            `,
+          )
+          .join("");
+      }
+
+      function renderRecentShipments(items) {
+        const tableBody = document.getElementById("recentShipmentsTable");
+
+        if (!Array.isArray(items) || !items.length) {
+          tableBody.innerHTML = `
+            <tr>
+              <td colspan="6" class="empty-state">لا توجد شحنات حديثة للعرض حالياً.</td>
+            </tr>
+          `;
+          tableBody.querySelector(".empty-state").textContent = dashboardText("noRecent");
+          return;
+        }
+
+        tableBody.innerHTML = items
+          .map((item) => {
+            const label = statusLabel(item.status, item.statusLabelAr);
+            const destination = shipmentDestination(item);
+
+            return `
+              <tr class="clickable-row" onclick="go('${destination}')">
+                <td><span class="shipment-number">${item.shipmentNumber || "-"}</span></td>
+                <td>${item.traderName || "-"}</td>
+                <td><span class="status-chip ${statusClass(item.status)}">${label}</span></td>
+                <td>${formatNumber(item.quantityKg)} كجم</td>
+                <td>${formatDateTime(item.requestedPickupAt)}</td>
+                <td>${formatDateTime(item.createdAt)}</td>
+              </tr>
+            `;
+          })
+          .join("");
+      }
+
+      function renderPriceTrends(data) {
+        const months = Array.isArray(data?.months) ? data.months : [];
+        const series = Array.isArray(data?.series) ? data.series : [];
+        const summary = document.getElementById("priceSummary");
+        const head = document.getElementById("priceTableHead");
+        const body = document.getElementById("priceTrendsTable");
+
+        if (!months.length || !series.length) {
+          summary.innerHTML = "";
+          head.innerHTML = "";
+          body.innerHTML = `
+            <tr>
+              <td colspan="9" class="empty-state">${dashboardText("noPrices")}</td>
+            </tr>
+          `;
+          return;
+        }
+
+        const allValues = series.flatMap((item) =>
+          Array.isArray(item.values)
+            ? item.values.map((value) => Number(value || 0))
+            : [],
+        );
+        const maxValue = Math.max(...allValues, 0);
+        const minValue = Math.min(...allValues, 0);
+
+        summary.innerHTML = `
+          <span class="price-pill">${dashboardText("priceTypes")} <strong>${formatNumber(series.length)}</strong></span>
+          <span class="price-pill">${dashboardText("pricePeriod")} <strong>${formatNumber(months.length)} ${dashboardText("months")}</strong></span>
+          <span class="price-pill">${dashboardText("priceHigh")} <strong>${formatDecimal(maxValue)}</strong></span>
+          <span class="price-pill">${dashboardText("priceLow")} <strong>${formatDecimal(minValue)}</strong></span>
+        `;
+
+        head.innerHTML = `
+          <tr>
+            <th>${dashboardText("type")}</th>
+            ${months.map((month) => `<th>${formatMonthKey(month)}</th>`).join("")}
+            <th>${dashboardText("latestPrice")}</th>
+            <th>${dashboardText("change")}</th>
+          </tr>
+        `;
+
+        body.innerHTML = series
+          .map((item, index) => {
+            const values = Array.isArray(item.values) ? item.values : [];
+            const name = item.typeNameAr || item.typeNameEn || `نوع ${index + 1}`;
+            const latestPrice = Number(
+              item.latestPrice ?? values[values.length - 1] ?? 0,
+            );
+            const firstPrice = Number(values[0] ?? latestPrice);
+            const delta = latestPrice - firstPrice;
+            const deltaClass =
+              delta > 0
+                ? "price-delta-up"
+                : delta < 0
+                  ? "price-delta-down"
+                  : "price-delta-flat";
+            const deltaPrefix = delta > 0 ? "+" : "";
+
+            return `
+              <tr>
+                <td class="price-type-cell">
+                  <span class="price-type-name">${name}</span>
+                  <span class="price-type-meta">${dashboardText("avg6m")}</span>
+                </td>
+                ${months
+                  .map(
+                    (_, monthIndex) =>
+                      `<td><span class="price-value">${formatDecimal(
+                        values[monthIndex],
+                      )}</span></td>`,
+                  )
+                  .join("")}
+                <td><span class="price-value">${formatDecimal(latestPrice)}</span></td>
+                <td><span class="${deltaClass}">${deltaPrefix}${formatDecimal(delta)}</span></td>
+              </tr>
+            `;
+          })
+          .join("");
+      }
+
+      async function loadStaticDashboardData() {
         try {
-          const [warehousesJson, vehiclesJson, contactJson] = await Promise.all([
-            fetchJson("/admin/warehouses?page=1&limit=1"),
-            fetchJson("/admin/vehicles?page=1&limit=1"),
-            fetchJson("/admin/contact-messages?page=1&limit=1&status=new"),
+          const [recentJson, priceJson] = await Promise.all([
+            fetchJson(RECENT_SHIPMENTS_PATH),
+            fetchJson(PRICE_TRENDS_PATH),
           ]);
 
-          const warehouseCount =
-            warehousesJson?.total ??
-            warehousesJson?.data?.total ??
-            warehousesJson?.meta?.total ??
-            warehousesJson?.data?.meta?.total ??
-            (Array.isArray(warehousesJson?.data?.data)
-              ? warehousesJson.data.data.length
-              : Array.isArray(warehousesJson?.data)
-                ? warehousesJson.data.length
-                : 0);
-          const vehicleCount =
-            vehiclesJson?.total ??
-            vehiclesJson?.data?.total ??
-            vehiclesJson?.meta?.total ??
-            vehiclesJson?.data?.meta?.total ??
-            (Array.isArray(vehiclesJson?.data?.data)
-              ? vehiclesJson.data.data.length
-              : Array.isArray(vehiclesJson?.data)
-                ? vehiclesJson.data.length
-                : 0);
-          const contactCount =
-            contactJson?.total ??
-            contactJson?.data?.total ??
-            contactJson?.meta?.total ??
-            contactJson?.data?.meta?.total ??
-            (Array.isArray(contactJson?.data?.data)
-              ? contactJson.data.data.length
-              : Array.isArray(contactJson?.data)
-                ? contactJson.data.length
-                : 0);
+          renderRecentShipments(recentJson?.data || []);
+          renderPriceTrends(priceJson?.data || {});
+        } catch (error) {
+          setBanner(
+            dashboardLang() === "ar"
+              ? `تعذر تحميل بعض بيانات الداشبورد الآن. ${error.message || ""}`
+              : `Unable to load some dashboard data right now. ${error.message || ""}`,
+          );
+          renderRecentShipments([]);
+          renderPriceTrends({});
+        }
+      }
 
-          setCount("warehouseCount", warehouseCount);
-          setCount("vehicleCount", vehicleCount);
-          setCount("contactNewCount", contactCount);
-        } catch (_) {}
+      async function loadOverviewFallback() {
+        try {
+          const overviewJson = await fetchJson(OVERVIEW_PATH);
+          renderOverview(overviewJson?.data);
+        } catch (error) {
+          setBanner(
+            dashboardLang() === "ar"
+              ? `تعذر تحميل الملخص التنفيذي الآن. ${error.message || ""}`
+              : `Unable to load overview data right now. ${error.message || ""}`,
+          );
+        }
+      }
+
+
+
+
+
+      async function connectOverviewStream() {
+        return connectDashboardSocket();
+
+        stopOverviewStream();
+        setLiveStatus(overviewStreamAttempt ? "reconnecting" : "connecting");
+
+        const controller = new AbortController();
+        overviewStreamController = controller;
+
+        try {
+          const response = await fetch(`${API_BASE}${OVERVIEW_STREAM_PATH}`, {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`,
+              Accept: "text/event-stream",
+              Cache: "no-cache",
+            },
+            signal: controller.signal,
+          });
+
+          if (!response.ok) {
+            throw new Error(`Stream request failed with ${response.status}`);
+          }
+
+          overviewStreamAttempt = 0;
+          stopOverviewPolling();
+          setLiveStatus("connected");
+          await consumeOverviewStream(response, controller.signal);
+
+          if (!controller.signal.aborted) {
+            throw new Error("Overview stream closed");
+          }
+        } catch (error) {
+          if (controller.signal.aborted) return;
+          console.error("Overview SSE connection failed", error);
+          setLiveDebug(
+            dashboardLang() === "ar"
+              ? `فشل البث المباشر: ${error.message || "خطأ غير معروف"}`
+              : `Live stream failed: ${error.message || "Unknown error"}`,
+          );
+          loadOverviewFallback();
+          scheduleOverviewReconnect();
+        }
+      }
+
+      function applyOverviewPayload(payload) {
+        if (!payload?.data) return;
+        renderOverview(payload.data);
+        setBanner("");
+        setLiveStatus("connected");
+        setLiveDebug("");
+      }
+
+      function disconnectDashboardSocket() {
+        if (!dashboardSocket) return;
+
+        dashboardSocket.removeAllListeners();
+        dashboardSocket.io?.removeAllListeners?.();
+        dashboardSocket.disconnect();
+        dashboardSocket = null;
+      }
+
+      function connectDashboardSocket() {
+        if (dashboardSocket) return dashboardSocket;
+        if (typeof io !== "function") {
+          setLiveStatus("disconnected");
+          setLiveDebug(
+            socketDebugMessage(
+              "مكتبة Socket.IO غير متاحة في الصفحة.",
+              "Socket.IO client is not available on this page.",
+            ),
+          );
+          return null;
+        }
+
+        setLiveStatus("connecting");
+
+        dashboardSocket = io(`${API_BASE}${ADMIN_DASHBOARD_NAMESPACE}`, {
+          transports: ["websocket", "polling"],
+          auth: {
+            token,
+          },
+        });
+
+        dashboardSocket.on("connect", () => {
+          setLiveStatus("connected");
+          setLiveDebug("");
+        });
+
+        dashboardSocket.on("disconnect", (reason) => {
+          setLiveStatus("reconnecting");
+          setLiveDebug(
+            socketDebugMessage(
+              `انقطع اتصال اللوحة المباشرة: ${reason || "سبب غير معروف"}`,
+              `Dashboard socket disconnected: ${reason || "Unknown reason"}`,
+            ),
+          );
+        });
+
+        dashboardSocket.on("connect_error", (error) => {
+          setLiveStatus("reconnecting");
+          setLiveDebug(
+            socketDebugMessage(
+              `تعذر الاتصال بلوحة الإدارة المباشرة: ${error?.message || "خطأ غير معروف"}`,
+              `Unable to connect live admin dashboard: ${error?.message || "Unknown error"}`,
+            ),
+          );
+        });
+
+        dashboardSocket.on("admin:dashboard:connected", (payload) => {
+          console.log("dashboard socket connected", payload);
+          setLiveStatus("connected");
+          setLiveDebug("");
+        });
+
+        dashboardSocket.on("admin:dashboard:overview", (payload) => {
+          try {
+            applyOverviewPayload(payload);
+          } catch (error) {
+            console.error("Failed to apply dashboard overview payload", error);
+            setLiveStatus("disconnected");
+            setLiveDebug(
+              socketDebugMessage(
+                `تعذر تحديث بيانات اللوحة: ${error?.message || "خطأ غير معروف"}`,
+                `Failed to update dashboard data: ${error?.message || "Unknown error"}`,
+              ),
+            );
+          }
+        });
+
+        dashboardSocket.on("admin:dashboard:error", (payload) => {
+          console.error("dashboard socket error", payload);
+          setLiveStatus("disconnected");
+          setLiveDebug(socketErrorMessage(payload));
+        });
+
+        dashboardSocket.io.on("reconnect_attempt", () => {
+          setLiveStatus("reconnecting");
+          setLiveDebug(
+            socketDebugMessage(
+              "جاري محاولة إعادة ربط لوحة الإدارة المباشرة...",
+              "Attempting to reconnect the live admin dashboard...",
+            ),
+          );
+        });
+
+        dashboardSocket.io.on("reconnect", () => {
+          setLiveStatus("connected");
+          setLiveDebug("");
+        });
+
+        dashboardSocket.io.on("reconnect_error", (error) => {
+          setLiveStatus("reconnecting");
+          setLiveDebug(
+            socketDebugMessage(
+              `فشلت محاولة إعادة الربط: ${error?.message || "خطأ غير معروف"}`,
+              `Reconnect attempt failed: ${error?.message || "Unknown error"}`,
+            ),
+          );
+        });
+
+        dashboardSocket.io.on("reconnect_failed", () => {
+          setLiveStatus("disconnected");
+          setLiveDebug(
+            socketDebugMessage(
+              "فشلت كل محاولات إعادة الربط بلوحة الإدارة المباشرة.",
+              "All attempts to reconnect the live admin dashboard failed.",
+            ),
+          );
+        });
+
+        return dashboardSocket;
       }
 
       function initDashboardMeta() {
         const today = new Date();
-        document.getElementById("todayDate").textContent = today.toLocaleDateString(
-          "en-GB",
-          { day: "2-digit", month: "short", year: "numeric" },
-        );
+        const lang = dashboardLang();
+        const formatted = today.toLocaleDateString(lang === "ar" ? "ar-EG" : "en-US", {
+          weekday: "long",
+          day: "numeric",
+          month: "long",
+          year: "numeric",
+        });
+
+        setText("todayDate", formatted);
+        setText("focusToday", formatted);
       }
 
+      function refreshDashboard() {
+        setBanner("");
+        setLiveDebug("");
+        loadOverviewFallback();
+        loadStaticDashboardData();
+
+        const socket = connectDashboardSocket();
+        if (socket) {
+          socket.emit("admin:dashboard:overview:refresh");
+        }
+      }
+
+      window.onLanguageChange = function () {
+        translateDashboard();
+        initDashboardMeta();
+        loadOverviewFallback();
+        loadStaticDashboardData();
+        setLiveDebug(lastLiveDebugMessage);
+      };
+
+      window.addEventListener("pagehide", disconnectDashboardSocket);
+      window.addEventListener("beforeunload", disconnectDashboardSocket);
+
+      translateDashboard();
       initDashboardMeta();
-      loadCounts();
+      loadOverviewFallback();
+      loadStaticDashboardData();
+      connectDashboardSocket();
     </script>
     <script src="./site-i18n.js"></script>
   </body>

@@ -1,96 +1,557 @@
 <!doctype html>
-<html lang="en">
+<html lang="ar" dir="rtl">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>SuperCycle - Shipments Management</title>
+    <title>SuperCycle - إدارة الشحنات</title>
 
-    <!-- ====== STYLES (زي ما هي) ====== -->
     <style>
+      :root {
+        --bg: #f3f7f2;
+        --surface: rgba(255, 255, 255, 0.95);
+        --surface-strong: #ffffff;
+        --surface-soft: #f8fcf8;
+        --sidebar: #0f2516;
+        --sidebar-text: #d6e5d5;
+        --sidebar-muted: #88a18e;
+        --primary: #217346;
+        --primary-2: #2ea05b;
+        --primary-soft: #e7f5eb;
+        --primary-border: #cfe7d5;
+        --warning: #f59e0b;
+        --warning-soft: #fff4d9;
+        --info: #2563eb;
+        --info-soft: #e8f0ff;
+        --violet: #7c3aed;
+        --violet-soft: #f1eafe;
+        --danger: #d43f58;
+        --danger-soft: #fdecef;
+        --text: #162418;
+        --text-soft: #5b7160;
+        --text-muted: #829486;
+        --border: #dce9de;
+        --shadow: 0 20px 45px rgba(24, 49, 31, 0.08);
+        --shadow-soft: 0 10px 25px rgba(24, 49, 31, 0.06);
+        --radius-xl: 26px;
+        --radius-lg: 20px;
+        --radius-md: 16px;
+        --radius-sm: 12px;
+      }
+
       * {
+        box-sizing: border-box;
         margin: 0;
         padding: 0;
-        box-sizing: border-box;
       }
 
       body {
-        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-        background: #f5f7fa;
-        color: #1a1a1a;
+        min-height: 100vh;
+        font-family: "Segoe UI", Tahoma, Arial, sans-serif;
+        background:
+          radial-gradient(
+            circle at top right,
+            rgba(46, 160, 91, 0.12),
+            transparent 24%
+          ),
+          radial-gradient(
+            circle at bottom left,
+            rgba(15, 155, 168, 0.08),
+            transparent 26%
+          ),
+          linear-gradient(180deg, #f8fbf8 0%, var(--bg) 100%);
+        color: var(--text);
       }
 
-      .header {
-        background: linear-gradient(135deg, #1a7f4f 0%, #2ba572 100%);
-        color: white;
-        padding: 30px 40px;
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      button {
+        font: inherit;
+      }
+
+      .layout {
         display: flex;
-        justify-content: space-between;
-        align-items: center;
-        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+        min-height: 100vh;
       }
 
-      .header h1 {
-        font-size: 32px;
-        font-weight: 700;
+      .sidebar {
+        width: 264px;
+        flex-shrink: 0;
+        background:
+          linear-gradient(180deg, rgba(46, 160, 91, 0.08), transparent 12%),
+          linear-gradient(180deg, var(--sidebar) 0%, #102819 100%);
+        color: var(--sidebar-text);
+        padding: 22px 16px 18px;
+        position: sticky;
+        top: 0;
+        height: 100vh;
+        overflow-y: auto;
+        border-left: 1px solid rgba(255, 255, 255, 0.04);
+      }
+
+      .brand {
         display: flex;
         align-items: center;
-        gap: 15px;
+        gap: 14px;
+        padding: 10px 10px 18px;
       }
 
-      .logout-btn {
-        background: rgba(255, 255, 255, 0.2);
-        color: white;
-        padding: 10px 24px;
-        border: 1.5px solid rgba(255, 255, 255, 0.4);
-        border-radius: 8px;
+      .brand-mark {
+        width: 46px;
+        height: 46px;
+        border-radius: 15px;
+        background: linear-gradient(135deg, #33a65f, #17653c);
+        display: grid;
+        place-items: center;
+        color: #fff;
+        font-size: 22px;
+        font-weight: 900;
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.24);
+      }
+
+      .brand h1 {
+        font-size: 26px;
+        line-height: 1;
+        font-weight: 900;
+        letter-spacing: -0.03em;
+      }
+
+      .brand p {
+        margin-top: 4px;
+        color: var(--sidebar-muted);
+        font-size: 12px;
+      }
+
+      .nav-group {
+        margin-top: 18px;
+      }
+
+      .nav-group-label {
+        color: #6d8472;
+        font-size: 11px;
+        font-weight: 800;
+        margin: 0 12px 10px;
+      }
+
+      .nav-list {
+        display: grid;
+        gap: 6px;
+      }
+
+      .nav-item {
+        border: 0;
+        background: transparent;
+        color: inherit;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 14px;
+        border-radius: 14px;
         cursor: pointer;
-        font-weight: 600;
+        transition:
+          background 0.2s ease,
+          transform 0.2s ease;
+        text-align: right;
+      }
+
+      .nav-item:hover {
+        background: rgba(255, 255, 255, 0.06);
+        transform: translateX(-2px);
+      }
+
+      .nav-item.active {
+        background: linear-gradient(
+          135deg,
+          rgba(46, 160, 91, 0.28),
+          rgba(33, 115, 70, 0.56)
+        );
+        color: #fff;
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12);
+      }
+
+      .nav-icon {
+        width: 34px;
+        height: 34px;
+        border-radius: 10px;
+        display: grid;
+        place-items: center;
+        background: rgba(255, 255, 255, 0.06);
+        color: #fff;
+        font-size: 13px;
+        font-weight: 800;
+        flex-shrink: 0;
+      }
+
+      .nav-copy {
+        flex: 1;
+      }
+
+      .nav-copy strong {
+        display: block;
+        font-size: 13px;
+      }
+
+      .nav-copy span {
+        display: block;
+        margin-top: 2px;
+        color: var(--sidebar-muted);
+        font-size: 11px;
+      }
+
+      .nav-item.active .nav-copy span {
+        color: rgba(255, 255, 255, 0.8);
+      }
+
+      .nav-badge {
+        min-width: 26px;
+        padding: 4px 8px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.12);
+        color: #fff;
+        font-size: 11px;
+        font-weight: 800;
+        text-align: center;
+      }
+
+      .sidebar-footer {
+        margin-top: 18px;
+        padding: 14px;
+        border-radius: 18px;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .sidebar-avatar {
+        width: 42px;
+        height: 42px;
+        border-radius: 14px;
+        background: linear-gradient(135deg, #2ea05b, #1c6b42);
+        display: grid;
+        place-items: center;
+        color: #fff;
+        font-size: 16px;
+        font-weight: 900;
+      }
+
+      .sidebar-footer strong {
+        display: block;
+        color: #fff;
+        font-size: 13px;
+      }
+
+      .sidebar-footer span {
+        color: var(--sidebar-muted);
+        font-size: 11px;
+      }
+
+      .main {
+        flex: 1;
+        min-width: 0;
+        padding: 22px;
+      }
+
+      .topbar {
+        background: rgba(255, 255, 255, 0.78);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(220, 233, 222, 0.9);
+        box-shadow: var(--shadow-soft);
+        border-radius: var(--radius-xl);
+        padding: 20px 22px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 18px;
+        margin-bottom: 18px;
+      }
+
+      .topbar-title h2 {
+        font-size: 28px;
+        letter-spacing: -0.04em;
+        margin-bottom: 6px;
+      }
+
+      .topbar-title p {
+        color: var(--text-soft);
         font-size: 14px;
       }
 
-      .container {
-        max-width: 1400px;
-        margin: 0 auto;
-        padding: 40px 20px;
+      .topbar-actions {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
       }
 
-      .section {
-        background: white;
-        border-radius: 12px;
-        margin-bottom: 40px;
-        overflow: hidden;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+      .topbar-pill,
+      .icon-button,
+      .logout-btn {
+        border-radius: 15px;
+        border: 1px solid var(--border);
+        background: var(--surface-strong);
+        box-shadow: var(--shadow-soft);
       }
 
-      .section-header {
-        padding: 24px 30px;
-        border-bottom: 3px solid;
+      .topbar-pill {
+        padding: 11px 16px;
+        color: var(--text);
+        font-weight: 700;
+      }
+
+      .icon-button {
+        width: 46px;
+        height: 46px;
+        display: grid;
+        place-items: center;
+        font-weight: 900;
+        color: var(--text-soft);
+        cursor: pointer;
+      }
+
+      .logout-btn {
+        border: 0;
+        padding: 12px 18px;
+        cursor: pointer;
+        color: #fff;
+        background: linear-gradient(135deg, var(--primary), var(--primary-2));
+        font-weight: 800;
+      }
+
+      .page-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 320px;
+        gap: 18px;
+        align-items: start;
+      }
+
+      .stack,
+      .side-stack {
+        display: grid;
+        gap: 18px;
+      }
+
+      .panel {
+        background: var(--surface);
+        border: 1px solid rgba(220, 233, 222, 0.92);
+        border-radius: var(--radius-xl);
+        box-shadow: var(--shadow);
+        padding: 20px;
+      }
+
+      .hero {
+        padding: 26px;
+        background:
+          radial-gradient(
+            circle at top right,
+            rgba(46, 160, 91, 0.18),
+            transparent 26%
+          ),
+          linear-gradient(135deg, #ffffff 0%, #f6fbf6 100%);
+      }
+
+      .mini-note {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 12px;
+        border-radius: 999px;
+        background: var(--primary-soft);
+        color: var(--primary);
+        font-size: 12px;
+        font-weight: 800;
+      }
+
+      .hero h3 {
+        margin-top: 14px;
+        font-size: 24px;
+        letter-spacing: -0.04em;
+      }
+
+      .hero p {
+        margin-top: 8px;
+        color: var(--text-soft);
+        max-width: 780px;
+      }
+
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 12px;
+        margin-top: 20px;
+      }
+
+      .stat-card {
+        border-radius: var(--radius-lg);
+        padding: 16px;
+        border: 1px solid var(--border);
+        background: var(--surface-strong);
+        transition:
+          transform 0.22s ease,
+          box-shadow 0.22s ease;
+      }
+
+      .stat-card:hover,
+      .queue-card:hover {
+        transform: translateY(-3px);
+        box-shadow: var(--shadow-soft);
+      }
+
+      .stat-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 12px;
+        margin-bottom: 12px;
+      }
+
+      .stat-icon {
+        width: 46px;
+        height: 46px;
+        border-radius: 15px;
+        display: grid;
+        place-items: center;
+        font-size: 15px;
+        font-weight: 900;
+      }
+
+      .stat-tag {
+        border-radius: 999px;
+        padding: 6px 10px;
+        font-size: 11px;
+        font-weight: 800;
+      }
+
+      .stat-value {
+        font-size: 30px;
+        font-weight: 900;
+        line-height: 1;
+        letter-spacing: -0.04em;
+      }
+
+      .stat-label {
+        margin-top: 8px;
+        color: var(--text-soft);
+        font-size: 13px;
+        font-weight: 700;
+      }
+
+      .stat-foot {
+        margin-top: 6px;
+        color: var(--text-muted);
+        font-size: 12px;
+        font-weight: 700;
+      }
+
+      .panel-header {
         display: flex;
         justify-content: space-between;
         align-items: center;
+        gap: 12px;
+        margin-bottom: 16px;
       }
 
-      .section.approval .section-header {
-        border-bottom-color: #f39c12;
-        background: #fef5e7;
+      .panel-header h3 {
+        font-size: 18px;
+        letter-spacing: -0.03em;
       }
 
-      .section.segmentation .section-header {
-        border-bottom-color: #2ba572;
-        background: #eafaf1;
+      .panel-header p {
+        color: var(--text-soft);
+        font-size: 13px;
+        margin-top: 4px;
       }
 
-      .badge-count {
-        background: #e74c3c;
-        color: white;
-        border-radius: 50%;
-        width: 40px;
-        height: 40px;
+      .panel-link {
+        color: var(--primary);
+        font-size: 13px;
+        font-weight: 800;
+        white-space: nowrap;
+      }
+
+      .queue-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+      }
+
+      .queue-card {
+        border: 1px solid var(--border);
+        border-radius: var(--radius-lg);
+        padding: 18px;
+        background: linear-gradient(180deg, #ffffff 0%, #f8fbf8 100%);
+        cursor: pointer;
+        transition:
+          transform 0.22s ease,
+          box-shadow 0.22s ease,
+          border-color 0.22s ease;
+      }
+
+      .queue-card.active {
+        border-color: var(--primary-border);
+        box-shadow: var(--shadow-soft);
+      }
+
+      .queue-card-head {
         display: flex;
+        justify-content: space-between;
         align-items: center;
-        justify-content: center;
-        font-weight: 700;
+        gap: 10px;
+        margin-bottom: 16px;
+      }
+
+      .queue-icon {
+        width: 42px;
+        height: 42px;
+        border-radius: 14px;
+        display: grid;
+        place-items: center;
+        color: #fff;
+        font-size: 13px;
+        font-weight: 900;
+      }
+
+      .queue-badge {
+        min-width: 42px;
+        padding: 6px 10px;
+        border-radius: 999px;
+        font-size: 11px;
+        font-weight: 800;
+        text-align: center;
+      }
+
+      .queue-card h4 {
         font-size: 16px;
+        margin-bottom: 6px;
+      }
+
+      .queue-card p {
+        color: var(--text-soft);
+        font-size: 12px;
+        min-height: 34px;
+      }
+
+      .queue-foot {
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
+        margin-top: 14px;
+        padding-top: 12px;
+        border-top: 1px solid var(--border);
+        color: var(--text-muted);
+        font-size: 12px;
+        font-weight: 800;
+      }
+
+      .table-shell {
+        overflow-x: auto;
+        border: 1px solid var(--border);
+        border-radius: var(--radius-lg);
+        background: linear-gradient(180deg, #ffffff 0%, #f8fbf8 100%);
       }
 
       table {
@@ -100,110 +561,620 @@
 
       th,
       td {
-        padding: 16px 20px;
-        border-bottom: 1px solid #e8ecf1;
+        padding: 14px 12px;
+        text-align: right;
+        border-bottom: 1px solid var(--border);
+        white-space: nowrap;
         font-size: 13px;
       }
 
       th {
-        background: #f8f9fa;
-        font-weight: 700;
-        text-transform: uppercase;
+        color: var(--text-muted);
+        font-size: 11px;
+        font-weight: 800;
+        background: #fbfdfb;
       }
 
-      tr.clickable {
+      tbody tr:hover td {
+        background: rgba(46, 160, 91, 0.03);
+      }
+
+      tbody tr:last-child td {
+        border-bottom: 0;
+      }
+
+      .clickable-row {
         cursor: pointer;
       }
 
-      tr.clickable:hover {
-        background: #f8f9fa;
+      .shipment-number {
+        color: var(--primary);
+        font-weight: 900;
       }
 
-      .status-badge {
-        display: inline-block;
-        padding: 6px 12px;
-        border-radius: 6px;
-        font-size: 12px;
-        font-weight: 600;
+      .status-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        border-radius: 999px;
+        padding: 7px 12px;
+        font-size: 11px;
+        font-weight: 800;
+      }
+
+      .status-chip::before {
+        content: "";
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: currentColor;
       }
 
       .status-pending,
-      .status-pending_admin_review {
-        background: #fff3cd;
-        color: #856404;
+      .status-pending_approval {
+        background: var(--warning-soft);
+        color: #a16207;
       }
 
-      .empty-message {
+      .status-pending_admin_review,
+      .status-pending_segmentation {
+        background: var(--violet-soft);
+        color: var(--violet);
+      }
+
+      .status-delivered {
+        background: var(--primary-soft);
+        color: var(--primary);
+      }
+
+      .status-rejected {
+        background: var(--danger-soft);
+        color: var(--danger);
+      }
+
+      .empty-state {
+        border: 1px dashed var(--border);
+        border-radius: var(--radius-lg);
+        padding: 28px 16px;
         text-align: center;
-        padding: 50px;
-        color: #999;
-        font-style: italic;
+        color: var(--text-muted);
+        font-size: 13px;
       }
 
-      .hidden {
+      .error-banner {
         display: none;
+        margin-bottom: 18px;
+        padding: 14px 16px;
+        border-radius: 16px;
+        border: 1px solid #f7d2d9;
+        background: #fff5f7;
+        color: #a73c51;
+        font-size: 13px;
+        font-weight: 700;
+      }
+
+      .error-banner.show {
+        display: block;
+      }
+
+      .focus-list,
+      .metric-list {
+        display: grid;
+        gap: 12px;
+      }
+
+      .focus-item,
+      .metric-row {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 12px 14px;
+        border-radius: 16px;
+        background: linear-gradient(135deg, #fbfdfb 0%, #f0f8f2 100%);
+        border: 1px solid var(--border);
+      }
+
+      .focus-item span,
+      .metric-row span {
+        color: var(--text-soft);
+        font-size: 12px;
+      }
+
+      .focus-item strong,
+      .metric-row strong {
+        font-size: 14px;
+      }
+
+      .section-hidden {
+        display: none;
+      }
+
+      @media (max-width: 1380px) {
+        .stats-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+
+      @media (max-width: 1240px) {
+        .page-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .sidebar {
+          width: 228px;
+        }
+      }
+
+      @media (max-width: 1040px) {
+        .layout {
+          display: block;
+        }
+
+        .sidebar {
+          position: static;
+          width: auto;
+          height: auto;
+          border-left: 0;
+          border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+        }
+
+        .main {
+          padding: 16px;
+        }
+      }
+
+      @media (max-width: 820px) {
+        .topbar {
+          flex-direction: column;
+          align-items: stretch;
+        }
+
+        .topbar-actions {
+          justify-content: flex-start;
+        }
+
+        .stats-grid,
+        .queue-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media (max-width: 560px) {
+        .main {
+          padding: 12px;
+        }
+
+        .panel,
+        .hero {
+          padding: 16px;
+        }
+
+        th,
+        td {
+          padding: 12px 8px;
+        }
       }
     </style>
   </head>
 
   <body>
-    <div class="header">
-      <h1>♻️ Shipments Management</h1>
-      <button class="logout-btn" onclick="logout()">Logout</button>
-    </div>
+    <div class="layout">
+      <aside class="sidebar">
+        <div class="brand">
+          <div class="brand-mark">SC</div>
+          <div>
+            <h1>SuperCycle</h1>
+            <p>لوحة تحكم المسؤول</p>
+          </div>
+        </div>
 
-    <div class="container">
-      <!-- ===== APPROVAL ===== -->
-      <div class="section approval" id="approvalSection">
-        <div class="section-header">
-          <h2>⏳ Pending Approval / Edit</h2>
-          <span id="approvalCount" class="badge-count">0</span>
+        <div class="nav-group">
+          <div class="nav-list">
+            <button class="nav-item" type="button" onclick="go('dashboard.html')">
+              <span class="nav-icon">DB</span>
+              <span class="nav-copy">
+                <strong>الرئيسية</strong>
+                <span>ملخص الأداء اليومي</span>
+              </span>
+            </button>
+          </div>
         </div>
-        <table>
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Shipment No</th>
-              <th>Total (KG)</th>
-              <th>Status</th>
-              <th>Created At</th>
-            </tr>
-          </thead>
-          <tbody id="approvalRows"></tbody>
-        </table>
-        <div id="approvalEmpty" class="empty-message hidden">
-          No pending shipments for approval
-        </div>
-      </div>
 
-      <!-- ===== SEGMENTATION ===== -->
-      <div class="section segmentation" id="segmentationSection">
-        <div class="section-header">
-          <h2>🚚 Pending Segmentation & Routing</h2>
-          <span id="segmentationCount" class="badge-count">0</span>
+        <div class="nav-group">
+          <div class="nav-group-label">العمليات</div>
+          <div class="nav-list">
+            <button
+              class="nav-item"
+              id="navApproval"
+              type="button"
+              onclick="go('shipments.html?type=approval')"
+            >
+              <span class="nav-icon">AP</span>
+              <span class="nav-copy">
+                <strong>الموافقات</strong>
+                <span>شحنات تحتاج مراجعة</span>
+              </span>
+              <span class="nav-badge" id="sidebarPendingApprovals">-</span>
+            </button>
+            <button
+              class="nav-item"
+              id="navSegmentation"
+              type="button"
+              onclick="go('shipments.html?type=segmentation')"
+            >
+              <span class="nav-icon">SG</span>
+              <span class="nav-copy">
+                <strong>التوجيه والتقسيم</strong>
+                <span>جاهزة للتشغيل</span>
+              </span>
+              <span class="nav-badge" id="sidebarPendingSegmentation">-</span>
+            </button>
+            <button
+              class="nav-item"
+              type="button"
+              onclick="go('vehicles-management.html')"
+            >
+              <span class="nav-icon">VH</span>
+              <span class="nav-copy">
+                <strong>العربيات</strong>
+                <span>إدارة الأسطول</span>
+              </span>
+            </button>
+            <button
+              class="nav-item"
+              type="button"
+              onclick="go('factories-management.html')"
+            >
+              <span class="nav-icon">FC</span>
+              <span class="nav-copy">
+                <strong>المصانع</strong>
+                <span>التغطية والاستقبال</span>
+              </span>
+            </button>
+          </div>
         </div>
-        <table>
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Shipment No</th>
-              <th>Total (KG)</th>
-              <th>Status</th>
-              <th>Created At</th>
-            </tr>
-          </thead>
-          <tbody id="segmentationRows"></tbody>
-        </table>
-        <div id="segmentationEmpty" class="empty-message hidden">
-          No pending shipments for segmentation
+
+        <div class="nav-group">
+          <div class="nav-group-label">الإدارة</div>
+          <div class="nav-list">
+            <button
+              class="nav-item"
+              type="button"
+              onclick="go('finance-management.html')"
+            >
+              <span class="nav-icon">FN</span>
+              <span class="nav-copy">
+                <strong>المالية</strong>
+                <span>تسويات وتحويلات</span>
+              </span>
+            </button>
+            <button
+              class="nav-item"
+              type="button"
+              onclick="go('dosh-management.html')"
+            >
+              <span class="nav-icon">DS</span>
+              <span class="nav-copy">
+                <strong>أنواع وأسعار الدوش</strong>
+                <span>التسعير والفئات</span>
+              </span>
+            </button>
+            <button
+              class="nav-item"
+              type="button"
+              onclick="go('contact-management.html')"
+            >
+              <span class="nav-icon">CX</span>
+              <span class="nav-copy">
+                <strong>الرسائل الواردة</strong>
+                <span>متابعة العملاء</span>
+              </span>
+            </button>
+          </div>
         </div>
-      </div>
+
+        <div class="nav-group">
+          <div class="nav-group-label">المنظومة البيئية</div>
+          <div class="nav-list">
+            <button
+              class="nav-item"
+              type="button"
+              onclick="go('eco-participants.html')"
+            >
+              <span class="nav-icon">EP</span>
+              <span class="nav-copy">
+                <strong>المشاركون البيئيون</strong>
+                <span>إدارة الانضمام</span>
+              </span>
+            </button>
+            <button
+              class="nav-item"
+              type="button"
+              onclick="go('eco-redeems.html')"
+            >
+              <span class="nav-icon">RD</span>
+              <span class="nav-copy">
+                <strong>طلبات الاستبدال</strong>
+                <span>مراجعة وتنفيذ</span>
+              </span>
+            </button>
+          </div>
+        </div>
+
+        <div class="sidebar-footer">
+          <div class="sidebar-avatar">AD</div>
+          <div>
+            <strong>مسؤول النظام</strong>
+            <span>Admin Control</span>
+          </div>
+        </div>
+      </aside>
+
+      <main class="main">
+        <header class="topbar">
+          <div class="topbar-title">
+            <h2 id="pageTitle">سير الموافقات والتوجيه</h2>
+            <p id="pageSubtitle">
+              شاشة تشغيل موحدة لمراجعة الشحنات قبل الاعتماد أو قبل ربطها بالمسارات.
+            </p>
+          </div>
+
+          <div class="topbar-actions">
+            <div class="topbar-pill" id="todayDate">-</div>
+            <button class="icon-button" type="button" title="تحديث" onclick="refreshPage()">
+              RF
+            </button>
+            <button class="logout-btn" type="button" onclick="logout()">
+              تسجيل الخروج
+            </button>
+          </div>
+        </header>
+
+        <div class="error-banner" id="errorBanner"></div>
+
+        <div class="page-grid">
+          <div class="stack">
+            <section class="panel hero">
+              <div class="mini-note" id="heroBadge">عمليات تحتاج قرار</div>
+              <h3 id="heroTitle">نقطة التحكم قبل التنفيذ</h3>
+              <p id="heroText">
+                استخدم هذه الشاشة لمراجعة الطلبات المعلقة، تحديد الأولويات، ثم فتح الشحنة مباشرة من الجدول لاتخاذ الإجراء المناسب.
+              </p>
+
+              <div class="stats-grid">
+                <article class="stat-card" id="statApprovalCard">
+                  <div class="stat-top">
+                    <div class="stat-icon" style="background: var(--warning-soft); color: #a16207">
+                      مو
+                    </div>
+                    <div class="stat-tag" style="background: var(--warning-soft); color: #a16207">
+                      موافقات
+                    </div>
+                  </div>
+                  <div class="stat-value" id="statApprovals">-</div>
+                  <div class="stat-label">معلقة اعتماد</div>
+                  <div class="stat-foot">جاهزة للمراجعة الفورية</div>
+                </article>
+
+                <article class="stat-card" id="statSegmentationCard">
+                  <div class="stat-top">
+                    <div class="stat-icon" style="background: var(--violet-soft); color: var(--violet)">
+                      وج
+                    </div>
+                    <div class="stat-tag" style="background: var(--violet-soft); color: var(--violet)">
+                      توجيه
+                    </div>
+                  </div>
+                  <div class="stat-value" id="statSegmentations">-</div>
+                  <div class="stat-label">بانتظار التوجيه</div>
+                  <div class="stat-foot">ربط بالشاحنات والمسارات</div>
+                </article>
+
+                <article class="stat-card">
+                  <div class="stat-top">
+                    <div class="stat-icon" style="background: var(--info-soft); color: var(--info)">
+                      شح
+                    </div>
+                    <div class="stat-tag" style="background: var(--info-soft); color: var(--info)">
+                      مرئي
+                    </div>
+                  </div>
+                  <div class="stat-value" id="statVisible">-</div>
+                  <div class="stat-label">المعروض الآن</div>
+                  <div class="stat-foot">حسب الفلتر الحالي</div>
+                </article>
+
+                <article class="stat-card">
+                  <div class="stat-top">
+                    <div class="stat-icon" style="background: var(--primary-soft); color: var(--primary)">
+                      كجم
+                    </div>
+                    <div class="stat-tag" style="background: var(--primary-soft); color: var(--primary)">
+                      حمولة
+                    </div>
+                  </div>
+                  <div class="stat-value" id="statVisibleQuantity">-</div>
+                  <div class="stat-label">إجمالي الكمية</div>
+                  <div class="stat-foot">للشحنات المفتوحة في الشاشة</div>
+                </article>
+              </div>
+            </section>
+
+            <section class="panel" id="quickWorkflowSection">
+              <div class="panel-header">
+                <div>
+                  <h3>مسارات العمل السريعة</h3>
+                  <p>اختيار مباشر بين قائمة الموافقات وقائمة التوجيه دون الرجوع لصفحة أخرى.</p>
+                </div>
+              </div>
+
+              <div class="queue-grid">
+                <article
+                  class="queue-card"
+                  id="approvalCard"
+                  onclick="go('shipments.html?type=approval')"
+                >
+                  <div class="queue-card-head">
+                    <div class="queue-icon" style="background: linear-gradient(135deg, #f59e0b, #ca8a04)">
+                      AP
+                    </div>
+                    <div class="queue-badge" id="approvalCount" style="background: var(--warning-soft); color: #a16207">
+                      -
+                    </div>
+                  </div>
+                  <h4>الموافقات</h4>
+                  <p>فحص الشحنة واعتمادها أو تعديلها قبل انتقالها للمرحلة التشغيلية التالية.</p>
+                  <div class="queue-foot">
+                    <span>المسار</span>
+                    <strong>اعتماد ومراجعة</strong>
+                  </div>
+                </article>
+
+                <article
+                  class="queue-card"
+                  id="segmentationCard"
+                  onclick="go('shipments.html?type=segmentation')"
+                >
+                  <div class="queue-card-head">
+                    <div class="queue-icon" style="background: linear-gradient(135deg, #7c3aed, #5b21b6)">
+                      SG
+                    </div>
+                    <div class="queue-badge" id="segmentationCount" style="background: var(--violet-soft); color: var(--violet)">
+                      -
+                    </div>
+                  </div>
+                  <h4>التوجيه والتقسيم</h4>
+                  <p>تجهيز الشحنة للمركبة المناسبة والمسار الصحيح قبل بدء الحركة اللوجستية.</p>
+                  <div class="queue-foot">
+                    <span>المسار</span>
+                    <strong>تقسيم ومسارات</strong>
+                  </div>
+                </article>
+              </div>
+            </section>
+
+            <section class="panel" id="approvalSection">
+              <div class="panel-header">
+                <div>
+                  <h3>قائمة الموافقات</h3>
+                  <p>انقر على أي صف لفتح الشحنة مباشرة والانتقال إلى شاشة الاعتماد.</p>
+                </div>
+                <a class="panel-link" href="shipment.html">فتح أول شحنة</a>
+              </div>
+
+              <div class="table-shell">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>رقم الشحنة</th>
+                      <th>الكمية</th>
+                      <th>الحالة</th>
+                      <th>الإنشاء</th>
+                    </tr>
+                  </thead>
+                  <tbody id="approvalRows"></tbody>
+                </table>
+              </div>
+              <div id="approvalEmpty" class="empty-state section-hidden">
+                لا توجد شحنات معلقة للموافقة حاليًا.
+              </div>
+            </section>
+
+            <section class="panel" id="segmentationSection">
+              <div class="panel-header">
+                <div>
+                  <h3>قائمة التوجيه والتقسيم</h3>
+                  <p>افتح الشحنة من الجدول لبدء توزيع الحمولة وربطها بالمسار المناسب.</p>
+                </div>
+                <a class="panel-link" href="segment.html">فتح أول شحنة</a>
+              </div>
+
+              <div class="table-shell">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>رقم الشحنة</th>
+                      <th>الكمية</th>
+                      <th>الحالة</th>
+                      <th>الإنشاء</th>
+                    </tr>
+                  </thead>
+                  <tbody id="segmentationRows"></tbody>
+                </table>
+              </div>
+              <div id="segmentationEmpty" class="empty-state section-hidden">
+                لا توجد شحنات بانتظار التوجيه حاليًا.
+              </div>
+            </section>
+          </div>
+
+          <aside class="side-stack">
+            <section class="panel">
+              <div class="panel-header">
+                <div>
+                  <h3>أولوية المتابعة</h3>
+                  <p>مؤشرات سريعة للقرار التشغيلي قبل فتح تفاصيل الشحنة.</p>
+                </div>
+              </div>
+              <div class="focus-list">
+                <div class="focus-item">
+                  <span>وضع الشاشة</span>
+                  <strong id="focusMode">كل القوائم</strong>
+                </div>
+                <div class="focus-item">
+                  <span>أولوية التشغيل</span>
+                  <strong id="focusPriority">مراجعة متوازية</strong>
+                </div>
+                <div class="focus-item">
+                  <span>قائمة الموافقات</span>
+                  <strong id="focusApprovals">-</strong>
+                </div>
+                <div class="focus-item">
+                  <span>قائمة التوجيه</span>
+                  <strong id="focusSegmentations">-</strong>
+                </div>
+              </div>
+            </section>
+
+            <section class="panel">
+              <div class="panel-header">
+                <div>
+                  <h3>ملخص تشغيلي</h3>
+                  <p>أرقام جانبية تدعم قرارك السريع داخل الصفحة.</p>
+                </div>
+              </div>
+              <div class="metric-list">
+                <div class="metric-row">
+                  <span>إجمالي المعلّق</span>
+                  <strong id="metricTotalOpen">-</strong>
+                </div>
+                <div class="metric-row">
+                  <span>إجمالي الكمية</span>
+                  <strong id="metricTotalQuantity">-</strong>
+                </div>
+                <div class="metric-row">
+                  <span>قائمة مرئية</span>
+                  <strong id="metricVisibleMode">-</strong>
+                </div>
+                <div class="metric-row">
+                  <span>آخر تحديث</span>
+                  <strong id="metricLastUpdated">-</strong>
+                </div>
+              </div>
+            </section>
+          </aside>
+        </div>
+      </main>
     </div>
 
     <script>
       const API_BASE =
         "https://supercycle-api-855015056699.europe-west1.run.app";
       const token = localStorage.getItem("token");
+      const pageType = new URLSearchParams(window.location.search).get("type");
+
       if (!token) location.href = "index.html";
 
       function logout() {
@@ -211,17 +1182,42 @@
         location.href = "index.html";
       }
 
-      // ✅ قراءة type من URL
-      const pageType = new URLSearchParams(window.location.search).get("type");
-      // approval | segmentation | null
+      function go(path) {
+        location.href = path;
+      }
 
-      function applyPageType() {
-        if (pageType === "approval") {
-          document.getElementById("segmentationSection").style.display = "none";
+      function setText(id, value) {
+        const node = document.getElementById(id);
+        if (node) node.textContent = value == null || value === "" ? "-" : value;
+      }
+
+      function setBanner(message) {
+        const banner = document.getElementById("errorBanner");
+        if (!message) {
+          banner.textContent = "";
+          banner.classList.remove("show");
+          return;
         }
-        if (pageType === "segmentation") {
-          document.getElementById("approvalSection").style.display = "none";
-        }
+
+        banner.textContent = message;
+        banner.classList.add("show");
+      }
+
+      function formatNumber(value) {
+        return Number(value || 0).toLocaleString("ar-EG");
+      }
+
+      function formatDateTime(value) {
+        if (!value) return "-";
+        const date = new Date(value);
+        if (Number.isNaN(date.getTime())) return "-";
+        return date.toLocaleString("ar-EG", {
+          day: "numeric",
+          month: "long",
+          year: "numeric",
+          hour: "numeric",
+          minute: "2-digit",
+        });
       }
 
       function extractCollection(json) {
@@ -233,37 +1229,114 @@
         return [];
       }
 
-      async function loadShipments() {
-        const res = await fetch(`${API_BASE}/admin/shipments?limit=100`, {
-          headers: { Authorization: "Bearer " + token },
-        });
-        const json = await res.json();
-        const allShipments = extractCollection(json);
+      function statusLabel(status) {
+        const map = {
+          pending: "معلقة موافقة",
+          pending_approval: "معلقة موافقة",
+          pending_admin_review: "بانتظار التوجيه",
+          pending_segmentation: "بانتظار التوجيه",
+          delivered: "تم التسليم",
+          rejected: "مرفوضة",
+        };
 
-        let approvals = [];
-        let segmentations = [];
-
-        if (!pageType || pageType === "approval") {
-          approvals = allShipments.filter((s) => s.status === "pending");
+        if (typeof window.__status === "function") {
+          const translated = window.__status(status);
+          if (translated) return translated;
         }
 
-        if (!pageType || pageType === "segmentation") {
-          segmentations = allShipments.filter(
-            (s) => s.status === "pending_admin_review",
-          );
-        }
+        return map[status] || status || "-";
+      }
 
-        renderTable(approvals, "approvalRows", "approvalEmpty", "approval");
-        renderTable(
-          segmentations,
-          "segmentationRows",
-          "segmentationEmpty",
-          "segmentation",
+      function statusClass(status) {
+        return `status-${status || "pending"}`;
+      }
+
+      function quantityKg(item) {
+        return Number(
+          item?.totalQuantityKg ??
+            item?.quantityKg ??
+            item?.totalKg ??
+            item?.quantity ??
+            0,
         );
+      }
 
-        document.getElementById("approvalCount").innerText = approvals.length;
-        document.getElementById("segmentationCount").innerText =
-          segmentations.length;
+      function approvalStatus(item) {
+        return item?.status === "pending" || item?.status === "pending_approval";
+      }
+
+      function segmentationStatus(item) {
+        return (
+          item?.status === "pending_admin_review" ||
+          item?.status === "pending_segmentation"
+        );
+      }
+
+      function shipmentDestination(item, type) {
+        const shipmentKey = item?._id || item?.id || item?.shipmentId;
+        if (!shipmentKey) return "shipments.html";
+        return type === "approval"
+          ? `shipment.html?id=${shipmentKey}`
+          : `segment.html?id=${shipmentKey}`;
+      }
+
+      function pageModeLabel() {
+        if (pageType === "approval") return "الموافقات فقط";
+        if (pageType === "segmentation") return "التوجيه فقط";
+        return "كل القوائم";
+      }
+
+      function visiblePriorityLabel() {
+        if (pageType === "approval") return "اعتماد الشحنات أولًا";
+        if (pageType === "segmentation") return "تسريع الربط بالمسارات";
+        return "مراجعة متوازية";
+      }
+
+      function visibleCollection(approvals, segmentations) {
+        if (pageType === "approval") return approvals;
+        if (pageType === "segmentation") return segmentations;
+        return approvals.concat(segmentations);
+      }
+
+      function applyPageTypeShell() {
+        const approvalSection = document.getElementById("approvalSection");
+        const segmentationSection = document.getElementById("segmentationSection");
+        const quickWorkflowSection = document.getElementById("quickWorkflowSection");
+        const statApprovalCard = document.getElementById("statApprovalCard");
+        const statSegmentationCard = document.getElementById("statSegmentationCard");
+        const approvalNav = document.getElementById("navApproval");
+        const segmentationNav = document.getElementById("navSegmentation");
+        const approvalCard = document.getElementById("approvalCard");
+        const segmentationCard = document.getElementById("segmentationCard");
+
+        if (pageType === "approval") {
+          quickWorkflowSection.classList.add("section-hidden");
+          segmentationSection.classList.add("section-hidden");
+          statSegmentationCard.classList.add("section-hidden");
+          approvalNav.classList.add("active");
+          approvalCard.classList.add("active");
+          setText("pageTitle", "مركز الموافقات");
+          setText("pageSubtitle", "كل الشحنات التي تحتاج مراجعة واعتماد قبل انتقالها للتشغيل.");
+          setText("heroBadge", "اعتماد مباشر");
+          setText("heroTitle", "قرار سريع قبل تحريك الشحنة");
+          setText("heroText", "هذه الشاشة تركز على كل ما يحتاج توقيعًا تشغيليًا أو تعديلًا قبل اعتماد الطلب.");
+        } else if (pageType === "segmentation") {
+          quickWorkflowSection.classList.add("section-hidden");
+          approvalSection.classList.add("section-hidden");
+          statApprovalCard.classList.add("section-hidden");
+          segmentationNav.classList.add("active");
+          segmentationCard.classList.add("active");
+          setText("pageTitle", "مركز التوجيه والتقسيم");
+          setText("pageSubtitle", "كل الشحنات الجاهزة للربط بالسيارات والمسارات التشغيلية.");
+          setText("heroBadge", "توزيع وتشغيل");
+          setText("heroTitle", "من الاعتماد إلى الحركة اللوجستية");
+          setText("heroText", "راجع الشحنات الجاهزة للتوجيه وحدد المسار المناسب بأسرع صورة تنفيذية ممكنة.");
+        } else {
+          approvalNav.classList.add("active");
+          segmentationNav.classList.add("active");
+          approvalCard.classList.add("active");
+          segmentationCard.classList.add("active");
+        }
       }
 
       function renderTable(list, rowsId, emptyId, type) {
@@ -272,35 +1345,121 @@
         rows.innerHTML = "";
 
         if (!list.length) {
-          empty.classList.remove("hidden");
+          empty.classList.remove("section-hidden");
           return;
         }
-        empty.classList.add("hidden");
 
-        list.forEach((s, i) => {
+        empty.classList.add("section-hidden");
+
+        list.forEach((item, index) => {
+          const destination = shipmentDestination(item, type);
           const tr = document.createElement("tr");
-          tr.className = "clickable";
+          tr.className = "clickable-row";
+          tr.onclick = () => go(destination);
           tr.innerHTML = `
-        <td>${i + 1}</td>
-        <td><strong>${s.shipmentNumber}</strong></td>
-        <td>${s.totalQuantityKg}</td>
-        <td><span class="status-badge status-${s.status}">${__status(s.status)}</span></td>
-        <td>${__formatDateTime(s.createdAt)}</td>
-      `;
-          tr.onclick = () => {
-            const shipmentKey = s._id || s.id || s.shipmentId;
-            location.href =
-              type === "approval"
-                ? `shipment.html?id=${shipmentKey}`
-                : `segment.html?id=${shipmentKey}`;
-          };
+            <td>${formatNumber(index + 1)}</td>
+            <td><span class="shipment-number">${item.shipmentNumber || "-"}</span></td>
+            <td>${formatNumber(quantityKg(item))} كجم</td>
+            <td><span class="status-chip ${statusClass(item.status)}">${statusLabel(item.status)}</span></td>
+            <td>${formatDateTime(item.createdAt)}</td>
+          `;
           rows.appendChild(tr);
         });
       }
 
-      applyPageType();
+      function renderSummary(approvals, segmentations) {
+        const visible = visibleCollection(approvals, segmentations);
+        const visibleQuantity = visible.reduce(
+          (sum, item) => sum + quantityKg(item),
+          0,
+        );
+        const totalOpen = approvals.length + segmentations.length;
+        const totalQuantity = approvals
+          .concat(segmentations)
+          .reduce((sum, item) => sum + quantityKg(item), 0);
+
+        setText("approvalCount", formatNumber(approvals.length));
+        setText("segmentationCount", formatNumber(segmentations.length));
+        setText("sidebarPendingApprovals", formatNumber(approvals.length));
+        setText("sidebarPendingSegmentation", formatNumber(segmentations.length));
+
+        setText("statApprovals", formatNumber(approvals.length));
+        setText("statSegmentations", formatNumber(segmentations.length));
+        setText("statVisible", formatNumber(visible.length));
+        setText("statVisibleQuantity", formatNumber(visibleQuantity));
+
+        setText("focusMode", pageModeLabel());
+        setText("focusPriority", visiblePriorityLabel());
+        setText("focusApprovals", formatNumber(approvals.length));
+        setText("focusSegmentations", formatNumber(segmentations.length));
+
+        setText("metricTotalOpen", formatNumber(totalOpen));
+        setText("metricTotalQuantity", `${formatNumber(totalQuantity)} كجم`);
+        setText("metricVisibleMode", pageModeLabel());
+        setText("metricLastUpdated", formatDateTime(new Date().toISOString()));
+      }
+
+      async function loadShipments() {
+        try {
+          setBanner("");
+          const response = await fetch(`${API_BASE}/admin/shipments?limit=100`, {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+
+          const text = await response.text();
+          let json = null;
+
+          try {
+            json = text ? JSON.parse(text) : null;
+          } catch (_) {
+            json = null;
+          }
+
+          if (!response.ok) {
+            throw new Error(json?.message || text || "Request failed");
+          }
+
+          const allShipments = extractCollection(json);
+          const approvals = allShipments.filter(approvalStatus);
+          const segmentations = allShipments.filter(segmentationStatus);
+
+          renderTable(approvals, "approvalRows", "approvalEmpty", "approval");
+          renderTable(
+            segmentations,
+            "segmentationRows",
+            "segmentationEmpty",
+            "segmentation",
+          );
+          renderSummary(approvals, segmentations);
+        } catch (error) {
+          setBanner(`تعذر تحميل بيانات الشحنات الآن. ${error.message || ""}`);
+          renderTable([], "approvalRows", "approvalEmpty", "approval");
+          renderTable([], "segmentationRows", "segmentationEmpty", "segmentation");
+          renderSummary([], []);
+        }
+      }
+
+      function refreshPage() {
+        loadShipments();
+      }
+
+      function initMeta() {
+        const formatted = new Date().toLocaleDateString("ar-EG", {
+          weekday: "long",
+          day: "numeric",
+          month: "long",
+          year: "numeric",
+        });
+        setText("todayDate", formatted);
+      }
+
+      applyPageTypeShell();
+      initMeta();
       loadShipments();
-      window.onLanguageChange = () => loadShipments();
+      window.onLanguageChange = () => {
+        initMeta();
+        loadShipments();
+      };
     </script>
     <script src="./site-i18n.js"></script>
   </body>
