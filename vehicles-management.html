@@ -253,6 +253,45 @@
         font-size: 11px;
       }
 
+      .sidebar-mobile-head,
+      .drawer-toggle,
+      .sidebar-overlay {
+        display: none;
+      }
+
+      .sidebar-mobile-head {
+        align-items: center;
+        justify-content: flex-end;
+        margin-bottom: 8px;
+      }
+
+      .sidebar-close,
+      .drawer-toggle {
+        border: 1px solid var(--border);
+        background: var(--surface-strong);
+        color: var(--text);
+        border-radius: 14px;
+        min-height: 44px;
+        min-width: 44px;
+        padding: 10px 14px;
+        font-weight: 800;
+        box-shadow: var(--shadow-soft);
+      }
+
+      .drawer-toggle {
+        justify-content: center;
+      }
+
+      .sidebar-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(15, 37, 22, 0.42);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.2s ease;
+        z-index: 70;
+      }
+
       .page {
         flex: 1;
         max-width: 1440px;
@@ -857,11 +896,58 @@
           grid-template-columns: 1fr;
         }
       }
+
+      @media (max-width: 760px) {
+        body.drawer-open {
+          overflow: hidden;
+        }
+
+        .sidebar {
+          position: fixed;
+          top: 0;
+          bottom: 0;
+          height: 100vh;
+          z-index: 80;
+          max-width: min(88vw, 320px);
+          width: min(88vw, 320px);
+          transition: transform 0.24s ease;
+        }
+
+        html[dir="rtl"] .sidebar {
+          right: 0;
+          left: auto;
+          transform: translateX(105%);
+        }
+
+        html[dir="ltr"] .sidebar {
+          left: 0;
+          right: auto;
+          transform: translateX(-105%);
+        }
+
+        body.drawer-open .sidebar {
+          transform: translateX(0);
+        }
+
+        .sidebar-overlay,
+        .sidebar-mobile-head,
+        .drawer-toggle {
+          display: flex;
+        }
+
+        body.drawer-open .sidebar-overlay {
+          opacity: 1;
+          pointer-events: auto;
+        }
+      }
     </style>
   </head>
   <body>
     <div class="layout">
       <aside class="sidebar">
+        <div class="sidebar-mobile-head">
+          <button class="sidebar-close" type="button" onclick="closeSidebarDrawer()">X</button>
+        </div>
         <div class="brand">
           <div class="brand-mark">SC</div>
           <div>
@@ -979,6 +1065,7 @@
           </div>
         </div>
       </aside>
+      <button class="sidebar-overlay" type="button" aria-label="Close navigation" onclick="closeSidebarDrawer()"></button>
 
       <div class="page">
       <header class="topbar">
@@ -987,6 +1074,7 @@
           <p>�"�^حة أسط�^�" �.بسطة �"عرض ا�"إحصائ�Sات �^�.تابعة ا�"عرب�Sات �^إدخا�" عرب�Sة جد�Sدة ع�?د ا�"حاجة.</p>
         </div>
         <div class="topbar-actions">
+          <button class="ghost-btn drawer-toggle" type="button" onclick="toggleSidebarDrawer()">القائمة</button>
           <div class="pill" id="todayLabel">-</div>
           <button class="icon-button" type="button" onclick="refreshAll()">�?�</button>
           <button class="ghost-btn" type="button" onclick="goBack()">ا�"رج�^ع �"�"رئ�Sس�Sة</button>
@@ -1833,6 +1921,19 @@
         location.href = "index.html";
       }
 
+      function isDrawerViewport() {
+        return window.innerWidth <= 760;
+      }
+
+      function closeSidebarDrawer() {
+        document.body.classList.remove("drawer-open");
+      }
+
+      function toggleSidebarDrawer() {
+        if (!isDrawerViewport()) return;
+        document.body.classList.toggle("drawer-open");
+      }
+
       function getMessage(json, fallback) {
         return (
           json?.message ||
@@ -2499,10 +2600,15 @@
       initMeta();
       loadVehicles(1);
       window.onLanguageChange = () => {
+        closeSidebarDrawer();
         translateVehicles();
         initMeta();
         loadVehicles(state.meta.page || 1);
       };
+
+      window.addEventListener("resize", () => {
+        if (!isDrawerViewport()) closeSidebarDrawer();
+      });
     </script>
     <script src="./site-i18n.js"></script>
   </body>

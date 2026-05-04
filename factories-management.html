@@ -267,6 +267,45 @@
         font-size: 11px;
       }
 
+      .sidebar-mobile-head,
+      .drawer-toggle,
+      .sidebar-overlay {
+        display: none;
+      }
+
+      .sidebar-mobile-head {
+        align-items: center;
+        justify-content: flex-end;
+        margin-bottom: 8px;
+      }
+
+      .sidebar-close,
+      .drawer-toggle {
+        border: 1px solid var(--border);
+        background: var(--surface-strong);
+        color: var(--text);
+        border-radius: 14px;
+        min-height: 44px;
+        min-width: 44px;
+        padding: 10px 14px;
+        font-weight: 800;
+        box-shadow: var(--shadow-soft);
+      }
+
+      .drawer-toggle {
+        justify-content: center;
+      }
+
+      .sidebar-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(15, 37, 22, 0.42);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.2s ease;
+        z-index: 70;
+      }
+
       .main-content {
         flex: 1;
         min-width: 0;
@@ -922,6 +961,48 @@
       }
 
       @media (max-width: 760px) {
+        body.drawer-open {
+          overflow: hidden;
+        }
+
+        .sidebar {
+          position: fixed;
+          top: 0;
+          bottom: 0;
+          height: 100vh;
+          z-index: 80;
+          max-width: min(88vw, 320px);
+          width: min(88vw, 320px);
+          transition: transform 0.24s ease;
+        }
+
+        html[dir="rtl"] .sidebar {
+          right: 0;
+          left: auto;
+          transform: translateX(105%);
+        }
+
+        html[dir="ltr"] .sidebar {
+          left: 0;
+          right: auto;
+          transform: translateX(-105%);
+        }
+
+        body.drawer-open .sidebar {
+          transform: translateX(0);
+        }
+
+        .sidebar-overlay,
+        .sidebar-mobile-head,
+        .drawer-toggle {
+          display: flex;
+        }
+
+        body.drawer-open .sidebar-overlay {
+          opacity: 1;
+          pointer-events: auto;
+        }
+
         .main-content {
           padding: 14px;
         }
@@ -968,6 +1049,9 @@
   <body>
     <div class="app-shell">
       <aside class="sidebar">
+        <div class="sidebar-mobile-head">
+          <button class="sidebar-close" type="button" onclick="closeSidebarDrawer()">X</button>
+        </div>
         <div class="brand">
           <div class="brand-mark">SC</div>
           <div>
@@ -1088,6 +1172,7 @@
           </div>
         </div>
       </aside>
+      <button class="sidebar-overlay" type="button" aria-label="Close navigation" onclick="closeSidebarDrawer()"></button>
 
       <main class="main-content">
         <div class="header">
@@ -1096,6 +1181,7 @@
             <p>إدارة احترافية لشبكة المصانع والطاقة الاستيعابية والاستقبال وحالة التشغيل.</p>
           </div>
           <div class="header-actions">
+            <button class="header-btn drawer-toggle" type="button" onclick="toggleSidebarDrawer()">القائمة</button>
             <button class="header-btn cat-cta" type="button" onclick="openCreateFactoryModal()">CAT</button>
             <button class="header-btn" type="button" onclick="logout()">تسجيل الخروج</button>
           </div>
@@ -1742,6 +1828,19 @@
       function logout() {
         localStorage.removeItem("token");
         location.href = "index.html";
+      }
+
+      function isDrawerViewport() {
+        return window.innerWidth <= 760;
+      }
+
+      function closeSidebarDrawer() {
+        document.body.classList.remove("drawer-open");
+      }
+
+      function toggleSidebarDrawer() {
+        if (!isDrawerViewport()) return;
+        document.body.classList.toggle("drawer-open");
       }
 
       function getMessage(json, fallback) {
@@ -2394,6 +2493,7 @@
       }
 
       window.onLanguageChange = () => {
+        closeSidebarDrawer();
         translateFactories();
         renderDoshTypeOptions();
         updateOverviewCards();
@@ -2401,6 +2501,10 @@
         renderSelectedFactory();
         updatePagination();
       };
+
+      window.addEventListener("resize", () => {
+        if (!isDrawerViewport()) closeSidebarDrawer();
+      });
 
       init();
     </script>
