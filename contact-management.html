@@ -23,13 +23,53 @@
       .modal { position:fixed; inset:0; background:rgba(15,23,42,.48); display:none; align-items:center; justify-content:center; padding:24px; z-index:999; } .modal.open { display:flex; } .modal-content { width:min(920px,100%); max-height:calc(100vh - 48px); overflow-y:auto; background:#fff; border-radius:18px; box-shadow:0 18px 40px rgba(15,23,42,.18); } .modal-header,.modal-body,.modal-footer { padding:18px 20px; } .modal-header { border-bottom:1px solid var(--gray-200); display:flex; justify-content:space-between; align-items:center; gap:12px; } .modal-footer { border-top:1px solid var(--gray-200); display:flex; justify-content:flex-end; gap:10px; flex-wrap:wrap; }
       .inspector-card { background:linear-gradient(180deg,#fcfefc 0%,#f4faf6 100%); border:1px solid rgba(22,101,52,.12); } .inspector-summary { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:16px; } .inspector-pill { background:#fff; border:1px solid var(--gray-200); border-radius:14px; padding:14px; } .inspector-pill strong { display:block; font-size:12px; color:var(--gray-500); text-transform:uppercase; margin-bottom:6px; } .inspector-title { font-size:16px; font-weight:800; color:#14532d; } .inspector-note { color:var(--gray-500); font-size:13px; line-height:1.6; }
       .profile-hero { display:flex; justify-content:space-between; align-items:flex-start; gap:16px; padding:18px; border-radius:18px; background:linear-gradient(135deg,#0f5132 0%,#17844e 58%,#1ea768 100%); color:#fff; margin-bottom:16px; } .profile-hero h4 { font-size:22px; margin-bottom:6px; } .profile-hero p { color:rgba(255,255,255,.82); font-size:14px; } .profile-badge { display:inline-flex; align-items:center; padding:7px 12px; border-radius:999px; background:rgba(255,255,255,.16); border:1px solid rgba(255,255,255,.22); font-size:12px; font-weight:800; }
-      @media (max-width:1180px) { .hero-grid,.layout { grid-template-columns:1fr; } .stats-grid,.filters,.detail-grid,.inspector-summary { grid-template-columns:1fr 1fr; } }
-      @media (max-width:760px) { .header { padding:18px; flex-direction:column; align-items:stretch; } .container { padding:18px 14px 28px; } .filters,.detail-grid,.inspector-summary { grid-template-columns:1fr; } .card-header,.card-body { padding-left:14px; padding-right:14px; } .profile-hero { flex-direction:column; } }
+      :root { --bg:#f3f7f2; --surface:rgba(255,255,255,.95); --sidebar:#0f2516; --sidebar-text:#d6e5d5; --sidebar-muted:#88a18e; --border:#dce9de; --shadow:0 20px 45px rgba(24,49,31,.08); --shadow-soft:0 10px 25px rgba(24,49,31,.06); --radius-xl:26px; --radius-lg:20px; --radius-md:16px; }
+      body { min-height:100vh; background:radial-gradient(circle at top right,rgba(46,160,91,.12),transparent 24%),radial-gradient(circle at bottom left,rgba(15,155,168,.08),transparent 26%),linear-gradient(180deg,#f8fbf8 0%,var(--bg) 100%); }
+      .app-shell { display:flex; min-height:100vh; }
+      .sidebar { width:264px; flex-shrink:0; background:linear-gradient(180deg,rgba(46,160,91,.08),transparent 12%),linear-gradient(180deg,var(--sidebar) 0%,#102819 100%); color:var(--sidebar-text); padding:22px 16px 18px; position:sticky; top:0; height:100vh; overflow-y:auto; border-left:1px solid rgba(255,255,255,.04); }
+      .brand { display:flex; align-items:center; gap:14px; padding:10px 10px 18px; }
+      .brand-mark { width:46px; height:46px; border-radius:15px; background:linear-gradient(135deg,#33a65f,#17653c); display:grid; place-items:center; color:#fff; font-size:22px; font-weight:900; box-shadow:inset 0 1px 0 rgba(255,255,255,.24); }
+      .brand h1 { font-size:26px; line-height:1; font-weight:900; letter-spacing:-.03em; }
+      .brand p { margin-top:4px; color:var(--sidebar-muted); font-size:12px; }
+      .nav-group { margin-top:18px; }
+      .nav-group-label { color:#6d8472; font-size:11px; font-weight:800; margin:0 12px 10px; }
+      .nav-list { display:grid; gap:6px; }
+      .nav-item { border:0; background:transparent; color:inherit; width:100%; display:flex; align-items:center; gap:12px; padding:12px 14px; border-radius:14px; cursor:pointer; transition:background .2s ease,transform .2s ease; text-align:right; }
+      .nav-item:hover { background:rgba(255,255,255,.06); transform:translateX(-2px); }
+      .nav-item.active { background:linear-gradient(135deg,rgba(46,160,91,.28),rgba(33,115,70,.56)); color:#fff; box-shadow:inset 0 1px 0 rgba(255,255,255,.12); }
+      .nav-icon { width:34px; height:34px; border-radius:10px; display:grid; place-items:center; background:rgba(255,255,255,.06); color:#fff; font-size:13px; font-weight:800; flex-shrink:0; }
+      .nav-copy { flex:1; }
+      .nav-copy strong { display:block; font-size:13px; }
+      .nav-copy span { display:block; margin-top:2px; color:var(--sidebar-muted); font-size:11px; }
+      .nav-item.active .nav-copy span { color:rgba(255,255,255,.8); }
+      .sidebar-footer { margin-top:18px; padding:14px; border-radius:18px; background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.06); display:flex; align-items:center; gap:12px; }
+      .sidebar-avatar { width:42px; height:42px; border-radius:14px; background:linear-gradient(135deg,#2ea05b,#1c6b42); display:grid; place-items:center; color:#fff; font-size:16px; font-weight:900; }
+      .sidebar-footer strong { display:block; color:#fff; font-size:13px; }
+      .sidebar-footer span { color:var(--sidebar-muted); font-size:11px; }
+      .main-content { flex:1; min-width:0; padding:22px; }
+      .header { background:rgba(255,255,255,.78); color:var(--gray-900); padding:20px 22px; border:1px solid rgba(220,233,222,.9); box-shadow:var(--shadow-soft); border-radius:var(--radius-xl); backdrop-filter:blur(12px); }
+      .header p { color:var(--gray-500); }
+      .header-btn { background:var(--gray-100); color:var(--gray-700); border:1px solid var(--gray-200); }
+      .container { max-width:none; margin:0; padding:22px 0 8px; }
+      .card { border-radius:24px; box-shadow:var(--shadow); border:1px solid rgba(220,233,222,.92); }
+      .modal-content { border-radius:24px; box-shadow:var(--shadow); }
+      @media (max-width:1180px) { .hero-grid,.layout { grid-template-columns:1fr; } .stats-grid,.filters,.detail-grid,.inspector-summary { grid-template-columns:1fr 1fr; } .sidebar { width:220px; } }
+      @media (max-width:760px) { .app-shell { display:block; } .sidebar { width:100%; height:auto; position:relative; } .main-content { padding:14px; } .header { padding:18px; flex-direction:column; align-items:stretch; } .container { padding:18px 0 28px; } .filters,.detail-grid,.inspector-summary { grid-template-columns:1fr; } .card-header,.card-body { padding-left:14px; padding-right:14px; } .profile-hero { flex-direction:column; } .header-btn,.inline-actions button,.pagination button,.modal-footer button,.actions button { width:100%; } }
     </style>
   </head>
   <body>
-    <div class="header"><div><h1>Contact Management</h1><p>Review incoming contact messages, respond professionally, and close resolved conversations.</p></div><div class="header-actions"><button class="header-btn" onclick="goBack()">Back to Dashboard</button><button class="header-btn" onclick="logout()">Logout</button></div></div>
-    <div class="container">
+    <div class="app-shell">
+      <aside class="sidebar">
+        <div class="brand"><div class="brand-mark">SC</div><div><h1>SuperCycle</h1><p>لوحة تحكم المسؤول</p></div></div>
+        <div class="nav-group"><div class="nav-list"><button class="nav-item" type="button" onclick="go('dashboard.html')"><span class="nav-icon">DB</span><span class="nav-copy"><strong>الرئيسية</strong><span>ملخص الأداء اليومي</span></span></button></div></div>
+        <div class="nav-group"><div class="nav-group-label">العمليات</div><div class="nav-list"><button class="nav-item" type="button" onclick="go('shipments.html?type=approval')"><span class="nav-icon">AP</span><span class="nav-copy"><strong>الموافقات</strong><span>شحنات تحتاج مراجعة</span></span></button><button class="nav-item" type="button" onclick="go('shipments.html?type=segmentation')"><span class="nav-icon">SG</span><span class="nav-copy"><strong>التوجيه والتقسيم</strong><span>جاهزة للتشغيل</span></span></button><button class="nav-item" type="button" onclick="go('vehicles-management.html')"><span class="nav-icon">VH</span><span class="nav-copy"><strong>العربيات</strong><span>إدارة الأسطول</span></span></button><button class="nav-item" type="button" onclick="go('factories-management.html')"><span class="nav-icon">FC</span><span class="nav-copy"><strong>المصانع</strong><span>التغطية والاستقبال</span></span></button></div></div>
+        <div class="nav-group"><div class="nav-group-label">الإدارة</div><div class="nav-list"><button class="nav-item" type="button" onclick="go('finance-management.html')"><span class="nav-icon">FN</span><span class="nav-copy"><strong>المالية</strong><span>تسويات وتحويلات</span></span></button><button class="nav-item" type="button" onclick="go('dosh-management.html')"><span class="nav-icon">DS</span><span class="nav-copy"><strong>أنواع وأسعار الدشت</strong><span>التسعير والفئات</span></span></button><button class="nav-item active" type="button"><span class="nav-icon">CX</span><span class="nav-copy"><strong>الرسائل الواردة</strong><span>متابعة العملاء</span></span></button><button class="nav-item" type="button" onclick="go('contracts-create.html')"><span class="nav-icon">CT</span><span class="nav-copy"><strong>العقود</strong><span>إنشاء متعاقدين جدد</span></span></button></div></div>
+        <div class="nav-group"><div class="nav-group-label">المنظومة البيئية</div><div class="nav-list"><button class="nav-item" type="button" onclick="go('eco-participants.html')"><span class="nav-icon">EP</span><span class="nav-copy"><strong>المشاركون البيئيون</strong><span>إدارة الانضمام</span></span></button><button class="nav-item" type="button" onclick="go('eco-redeems.html')"><span class="nav-icon">RD</span><span class="nav-copy"><strong>طلبات الاستبدال</strong><span>مراجعة وتنفيذ</span></span></button></div></div>
+        <div class="sidebar-footer"><div class="sidebar-avatar">AD</div><div><strong>مسؤول النظام</strong><span>Admin Control</span></div></div>
+      </aside>
+      <main class="main-content">
+        <div class="header"><div><h1>Contact Management</h1><p>Review incoming contact messages, respond professionally, and close resolved conversations.</p></div><div class="header-actions"><button class="header-btn" onclick="goBack()">Back to Dashboard</button><button class="header-btn" onclick="logout()">Logout</button></div></div>
+        <div class="container">
       <div id="pageBanner" class="banner"></div>
       <section class="hero-grid">
         <div class="card"><div class="card-header"><div><h2>Inbox Overview</h2><p class="card-hint">Track new, replied, and closed messages without leaving the service queue.</p></div><button class="btn-secondary" type="button" onclick="refreshAll()">Refresh All</button></div><div class="card-body"><div class="stats-grid"><div class="stat"><strong id="messagesTotal">0</strong><span>Total</span></div><div class="stat"><strong id="messagesNew">0</strong><span>New</span></div><div class="stat"><strong id="messagesReplied">0</strong><span>Replied</span></div><div class="stat"><strong id="messagesClosed">0</strong><span>Closed</span></div></div></div></div>
@@ -48,6 +88,8 @@
         </div></div>
         <div class="card inspector-card"><div class="card-header"><div><h2>Message Inspector</h2><p class="card-hint">Open a popup to review, reply, close, or delete from one place.</p></div></div><div class="card-body"><div class="inspector-summary"><div class="inspector-pill"><strong>Current Selection</strong><div id="messageInspectorName" class="inspector-title">No message selected</div></div><div class="inspector-pill"><strong>Next Step</strong><div class="inspector-note">Use Open to launch a focused conversation popup with full reply controls.</div></div></div><div class="actions"><button class="btn-primary" id="openMessageInspectorBtn" type="button" onclick="openSelectedMessageView()" disabled>Open Conversation</button></div></div></div>
       </div>
+        </div>
+      </main>
     </div>
     <div id="messageViewModal" class="modal" onclick="closeMessageViewModal(event)">
       <div class="modal-content" onclick="event.stopPropagation()">
@@ -64,27 +106,115 @@
     <script>
       const API_BASE = "https://supercycle-api-855015056699.europe-west1.run.app"; const token = localStorage.getItem("token"); if(!token) location.href = "index.html";
       const state = { messages: [], meta: { page:1, totalPages:1, total:0 }, selectedMessageId: null, selectedMessage: null };
-      function goBack(){ location.href = "dashboard.html"; } function logout(){ localStorage.removeItem("token"); location.href = "index.html"; }
+      function go(path){ location.href = path; } function goBack(){ location.href = "dashboard.html"; } function logout(){ localStorage.removeItem("token"); location.href = "index.html"; }
       function getMessage(json,fallback){ return json?.message || json?.error || json?.data?.message || json?.errors?.[0]?.message || fallback; } function getId(item){ return item?._id || item?.id || item?.messageId; } function extractCollection(json){ if(Array.isArray(json)) return json; if(Array.isArray(json?.data)) return json.data; if(Array.isArray(json?.data?.data)) return json.data.data; if(Array.isArray(json?.items)) return json.items; if(Array.isArray(json?.results)) return json.results; return []; }
       function escapeHtml(value){ return String(value ?? "-").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#39;"); } function showBanner(type,message){ const el = document.getElementById("pageBanner"); if(!message){ el.className = "banner"; el.textContent = ""; return; } el.className = `banner ${type}`; el.textContent = message; }
+      function t(text, vars){ return typeof window.__t === "function" ? window.__t(text, vars) : text; }
+      function setNodeText(selector, value){ const node = document.querySelector(selector); if(node) node.textContent = value; }
+      function statusText(status){ const map = { new: "New", replied: "Replied", closed: "Closed" }; return t(map[status] || status || "-"); }
       async function fetchJson(path, options = {}){ const response = await fetch(`${API_BASE}${path}`, { ...options, headers: { Authorization: `Bearer ${token}`, ...(options.body ? { "Content-Type":"application/json" } : {}), ...(options.headers || {}) } }); const text = await response.text(); let json = null; try { json = text ? JSON.parse(text) : null; } catch(_) { json = null; } if(!response.ok) throw { status: response.status, json, message: getMessage(json, text || "Request failed") }; return json; }
-      function statusPill(status){ return `<span class="status-pill ${status || "new"}">${escapeHtml(status || "-")}</span>`; }
+      function statusPill(status){ return `<span class="status-pill ${status || "new"}">${escapeHtml(statusText(status))}</span>`; }
       function query(page = 1){ const params = new URLSearchParams(); params.set("page", String(page)); params.set("limit", document.getElementById("messageLimit").value || "10"); const status = document.getElementById("messageStatus").value; const search = document.getElementById("messageSearch").value.trim(); if(status) params.set("status", status); if(search) params.set("search", search); return `?${params.toString()}`; }
-      function updateOverview(){ const byStatus = { new:0, replied:0, closed:0 }; state.messages.forEach((item) => { byStatus[item.status] = (byStatus[item.status] || 0) + 1; }); document.getElementById("messagesTotal").textContent = state.meta.total || state.messages.length; document.getElementById("messagesNew").textContent = byStatus.new || 0; document.getElementById("messagesReplied").textContent = byStatus.replied || 0; document.getElementById("messagesClosed").textContent = byStatus.closed || 0; document.getElementById("selectedSender").textContent = state.selectedMessage?.name || state.selectedMessage?.fullName || state.selectedMessage?.senderName || "No message selected"; document.getElementById("selectedStatus").innerHTML = state.selectedMessage ? statusPill(state.selectedMessage.status) : "-"; }
-      async function loadMessages(page = 1){ document.getElementById("messagesState").className = "loading-state"; document.getElementById("messagesState").textContent = "Loading contact messages..."; document.getElementById("messagesState").hidden = false; document.getElementById("messagesTable").hidden = true; try { const json = await fetchJson(`/admin/contact-messages${query(page)}`); state.messages = extractCollection(json); state.meta = { page: json?.page || json?.data?.page || page, totalPages: json?.totalPages || json?.data?.totalPages || 1, total: json?.total || json?.data?.total || state.messages.length }; renderMessages(); updateOverview(); } catch(error){ state.messages = []; document.getElementById("messagesState").className = "empty-state"; document.getElementById("messagesState").textContent = error.message || "Failed to load contact messages"; } }
+      function updateOverview(){ const byStatus = { new:0, replied:0, closed:0 }; state.messages.forEach((item) => { byStatus[item.status] = (byStatus[item.status] || 0) + 1; }); document.getElementById("messagesTotal").textContent = state.meta.total || state.messages.length; document.getElementById("messagesNew").textContent = byStatus.new || 0; document.getElementById("messagesReplied").textContent = byStatus.replied || 0; document.getElementById("messagesClosed").textContent = byStatus.closed || 0; document.getElementById("selectedSender").textContent = state.selectedMessage?.name || state.selectedMessage?.fullName || state.selectedMessage?.senderName || t("No message selected"); document.getElementById("selectedStatus").innerHTML = state.selectedMessage ? statusPill(state.selectedMessage.status) : "-"; }
+      async function loadMessages(page = 1){ document.getElementById("messagesState").className = "loading-state"; document.getElementById("messagesState").textContent = t("Loading contact messages..."); document.getElementById("messagesState").hidden = false; document.getElementById("messagesTable").hidden = true; try { const json = await fetchJson(`/admin/contact-messages${query(page)}`); state.messages = extractCollection(json); state.meta = { page: json?.page || json?.data?.page || page, totalPages: json?.totalPages || json?.data?.totalPages || 1, total: json?.total || json?.data?.total || state.messages.length }; renderMessages(); updateOverview(); } catch(error){ state.messages = []; document.getElementById("messagesState").className = "empty-state"; document.getElementById("messagesState").textContent = error.message || t("Failed to load contact messages"); } }
       function renderMessages(){ if(!state.messages.length){ document.getElementById("messagesState").className = "empty-state"; document.getElementById("messagesState").textContent = "No contact messages found"; updatePagination(); return; } document.getElementById("messagesRows").innerHTML = state.messages.map((item) => `<tr><td><div class="inline-stack"><strong>${escapeHtml(item.name || item.fullName || item.senderName || "-")}</strong><span class="subtle">${escapeHtml(item.email || "-")} • ${escapeHtml(item.phone || "-")}</span></div></td><td><div class="inline-stack"><strong>${escapeHtml(item.subject || "-")}</strong><span class="subtle">${escapeHtml((item.message || "").slice(0,80) || "-")}</span></div></td><td>${statusPill(item.status)}</td><td><button class="btn-link" type="button" onclick="selectMessage('${getId(item)}', true)">Open</button></td></tr>`).join(""); document.getElementById("messagesState").hidden = true; document.getElementById("messagesTable").hidden = false; updatePagination(); }
-      function updatePagination(){ const page = state.meta.page || 1; const totalPages = state.meta.totalPages || 1; document.getElementById("paginationLabel").textContent = `Page ${page} of ${totalPages}`; document.getElementById("prevPageBtn").disabled = page <= 1; document.getElementById("nextPageBtn").disabled = page >= totalPages; }
-      async function selectMessage(id, openModal = false){ state.selectedMessageId = id; try { const json = await fetchJson(`/admin/contact-messages/${id}`); state.selectedMessage = json?.data || json || null; renderSelectedMessage(); updateOverview(); if(openModal && state.selectedMessage) openMessageViewModal(); } catch(error){ state.selectedMessage = null; renderSelectedMessage(); showBanner("error", error.message || "Failed to load message details"); } }
-      function renderSelectedMessage(){ const item = state.selectedMessage; document.getElementById("messageInspectorName").textContent = item?.name || item?.fullName || item?.senderName || "No message selected"; document.getElementById("openMessageInspectorBtn").disabled = !item; if(!item) return; document.getElementById("detailSender").textContent = item.name || item.fullName || item.senderName || "-"; document.getElementById("detailStatus").textContent = item.status || "-"; document.getElementById("detailEmail").textContent = item.email || "-"; document.getElementById("detailPhone").textContent = item.phone || "-"; document.getElementById("detailSubject").textContent = item.subject || "-"; document.getElementById("detailId").textContent = getId(item) || "-"; document.getElementById("detailMessage").value = item.message || ""; document.getElementById("adminReply").value = item.adminReply || ""; document.getElementById("adminReplyError").textContent = ""; }
+      function updatePagination(){ const page = state.meta.page || 1; const totalPages = state.meta.totalPages || 1; document.getElementById("paginationLabel").textContent = t("Page {page} of {total}", { page, total: totalPages }); document.getElementById("prevPageBtn").disabled = page <= 1; document.getElementById("nextPageBtn").disabled = page >= totalPages; }
+      async function selectMessage(id, openModal = false){ state.selectedMessageId = id; try { const json = await fetchJson(`/admin/contact-messages/${id}`); state.selectedMessage = json?.data || json || null; renderSelectedMessage(); updateOverview(); if(openModal && state.selectedMessage) openMessageViewModal(); } catch(error){ state.selectedMessage = null; renderSelectedMessage(); showBanner("error", error.message || t("Failed to load message details")); } }
+      function renderSelectedMessage(){ const item = state.selectedMessage; document.getElementById("messageInspectorName").textContent = item?.name || item?.fullName || item?.senderName || t("No message selected"); document.getElementById("openMessageInspectorBtn").disabled = !item; if(!item) return; document.getElementById("detailSender").textContent = item.name || item.fullName || item.senderName || "-"; document.getElementById("detailStatus").textContent = statusText(item.status); document.getElementById("detailEmail").textContent = item.email || "-"; document.getElementById("detailPhone").textContent = item.phone || "-"; document.getElementById("detailSubject").textContent = item.subject || "-"; document.getElementById("detailId").textContent = getId(item) || "-"; document.getElementById("detailMessage").value = item.message || ""; document.getElementById("adminReply").value = item.adminReply || ""; document.getElementById("adminReplyError").textContent = ""; }
       function openMessageViewModal(){ if(state.selectedMessage) document.getElementById("messageViewModal").classList.add("open"); }
       function closeMessageViewModal(event){ if(event && event.target !== event.currentTarget) return; document.getElementById("messageViewModal").classList.remove("open"); }
       function openSelectedMessageView(){ openMessageViewModal(); }
-      async function replyToSelectedMessage(){ if(!state.selectedMessage) return; const adminReply = document.getElementById("adminReply").value.trim(); if(!adminReply){ document.getElementById("adminReplyError").textContent = "Reply text is required"; return; } document.getElementById("adminReplyError").textContent = ""; try { const json = await fetchJson(`/admin/contact-messages/${getId(state.selectedMessage)}/reply`, { method: "PATCH", body: JSON.stringify({ adminReply }) }); showBanner("success", getMessage(json, "Reply sent successfully")); await Promise.all([loadMessages(state.meta.page || 1), selectMessage(getId(state.selectedMessage), true)]); } catch(error){ showBanner("error", error.message || "Failed to reply to message"); } }
-      async function closeSelectedMessage(){ if(!state.selectedMessage) return; try { const json = await fetchJson(`/admin/contact-messages/${getId(state.selectedMessage)}/close`, { method: "PATCH" }); showBanner("success", getMessage(json, "Contact message closed successfully")); await Promise.all([loadMessages(state.meta.page || 1), selectMessage(getId(state.selectedMessage), true)]); } catch(error){ showBanner("error", error.message || "Failed to close message"); } }
-      async function deleteSelectedMessage(){ if(!state.selectedMessage) return; try { const json = await fetchJson(`/admin/contact-messages/${getId(state.selectedMessage)}`, { method: "DELETE" }); closeMessageViewModal(); showBanner("success", getMessage(json, "Contact message deleted successfully")); state.selectedMessage = null; state.selectedMessageId = null; renderSelectedMessage(); await loadMessages(state.meta.page || 1); updateOverview(); } catch(error){ showBanner("error", error.message || "Failed to delete message"); } }
+      async function replyToSelectedMessage(){ if(!state.selectedMessage) return; const adminReply = document.getElementById("adminReply").value.trim(); if(!adminReply){ document.getElementById("adminReplyError").textContent = t("Reply text is required"); return; } document.getElementById("adminReplyError").textContent = ""; try { const json = await fetchJson(`/admin/contact-messages/${getId(state.selectedMessage)}/reply`, { method: "PATCH", body: JSON.stringify({ adminReply }) }); showBanner("success", getMessage(json, t("Reply sent successfully"))); await Promise.all([loadMessages(state.meta.page || 1), selectMessage(getId(state.selectedMessage), true)]); } catch(error){ showBanner("error", error.message || t("Failed to reply to message")); } }
+      async function closeSelectedMessage(){ if(!state.selectedMessage) return; try { const json = await fetchJson(`/admin/contact-messages/${getId(state.selectedMessage)}/close`, { method: "PATCH" }); showBanner("success", getMessage(json, t("Contact message closed successfully"))); await Promise.all([loadMessages(state.meta.page || 1), selectMessage(getId(state.selectedMessage), true)]); } catch(error){ showBanner("error", error.message || t("Failed to close message")); } }
+      async function deleteSelectedMessage(){ if(!state.selectedMessage) return; try { const json = await fetchJson(`/admin/contact-messages/${getId(state.selectedMessage)}`, { method: "DELETE" }); closeMessageViewModal(); showBanner("success", getMessage(json, t("Contact message deleted successfully"))); state.selectedMessage = null; state.selectedMessageId = null; renderSelectedMessage(); await loadMessages(state.meta.page || 1); updateOverview(); } catch(error){ showBanner("error", error.message || t("Failed to delete message")); } }
       function resetFilters(){ document.getElementById("messageSearch").value = ""; document.getElementById("messageStatus").value = ""; document.getElementById("messageLimit").value = "10"; loadMessages(1); }
       function changePage(delta){ const next = (state.meta.page || 1) + delta; if(next < 1 || next > (state.meta.totalPages || 1)) return; loadMessages(next); }
       async function refreshAll(){ showBanner("", ""); await loadMessages(state.meta.page || 1); if(state.selectedMessageId) await selectMessage(state.selectedMessageId); }
+      function translateContactPage(){
+        document.title = t("SuperCycle - Contact Management");
+        setNodeText(".brand p", t("Admin Dashboard"));
+        setNodeText(".nav-group:first-of-type .nav-copy strong", t("Dashboard"));
+        setNodeText(".nav-group:first-of-type .nav-copy span", t("Daily performance summary"));
+        const navGroupLabels = document.querySelectorAll(".nav-group-label");
+        if(navGroupLabels[0]) navGroupLabels[0].textContent = t("Operations");
+        if(navGroupLabels[1]) navGroupLabels[1].textContent = t("Administration");
+        if(navGroupLabels[2]) navGroupLabels[2].textContent = t("Environmental Ecosystem");
+        const navCopies = document.querySelectorAll(".nav-item .nav-copy");
+        if(navCopies[1]){ navCopies[1].querySelector("strong").textContent = t("Approvals"); navCopies[1].querySelector("span").textContent = t("Shipments pending review"); }
+        if(navCopies[2]){ navCopies[2].querySelector("strong").textContent = t("Routing & Segmentation"); navCopies[2].querySelector("span").textContent = t("Ready for operations"); }
+        if(navCopies[3]){ navCopies[3].querySelector("strong").textContent = t("Vehicles"); navCopies[3].querySelector("span").textContent = t("Fleet management"); }
+        if(navCopies[4]){ navCopies[4].querySelector("strong").textContent = t("Factories"); navCopies[4].querySelector("span").textContent = t("Coverage and intake"); }
+        if(navCopies[5]){ navCopies[5].querySelector("strong").textContent = t("Finance"); navCopies[5].querySelector("span").textContent = t("Settlements and transfers"); }
+        if(navCopies[6]){ navCopies[6].querySelector("strong").textContent = t("Dosh Types & Prices"); navCopies[6].querySelector("span").textContent = t("Pricing and tiers"); }
+        if(navCopies[7]){ navCopies[7].querySelector("strong").textContent = t("Inbox"); navCopies[7].querySelector("span").textContent = t("Customer follow-up"); }
+        if(navCopies[8]){ navCopies[8].querySelector("strong").textContent = t("Contracts"); navCopies[8].querySelector("span").textContent = t("Create contractors"); }
+        if(navCopies[9]){ navCopies[9].querySelector("strong").textContent = t("Eco Participants"); navCopies[9].querySelector("span").textContent = t("Enrollment management"); }
+        if(navCopies[10]){ navCopies[10].querySelector("strong").textContent = t("Redeem Requests"); navCopies[10].querySelector("span").textContent = t("Review and execution"); }
+        setNodeText(".sidebar-footer strong", t("System Admin"));
+        setNodeText(".sidebar-footer span", t("Admin Control"));
+        setNodeText(".header h1", t("Contact Management"));
+        setNodeText(".header p", t("Review incoming contact messages, respond professionally, and close resolved conversations."));
+        const headerBtns = document.querySelectorAll(".header .header-btn");
+        if(headerBtns[0]) headerBtns[0].textContent = t("Back to Dashboard");
+        if(headerBtns[1]) headerBtns[1].textContent = t("Logout");
+        setNodeText(".hero-grid .card:first-child h2", t("Inbox Overview"));
+        setNodeText(".hero-grid .card:first-child .card-hint", t("Track new, replied, and closed messages without leaving the service queue."));
+        setNodeText(".hero-grid .card:first-child .btn-secondary", t("Refresh All"));
+        setNodeText("#messagesTotal + span", t("Total"));
+        setNodeText("#messagesNew + span", t("New"));
+        setNodeText("#messagesReplied + span", t("Replied"));
+        setNodeText("#messagesClosed + span", t("Closed"));
+        setNodeText(".hero-grid .card:nth-child(2) h3", t("Selection Insight"));
+        setNodeText(".hero-grid .card:nth-child(2) .card-hint", t("Current selected conversation stays visible while you work."));
+        const selectedLabels = document.querySelectorAll(".hero-grid .detail-item strong");
+        if(selectedLabels[0]) selectedLabels[0].textContent = t("Selected Sender");
+        if(selectedLabels[1]) selectedLabels[1].textContent = t("Selected Status");
+        setNodeText(".layout .card:first-child h2", t("Contact Inbox"));
+        setNodeText(".layout .card:first-child .card-hint", t("Search by sender, email, phone, subject, or message content."));
+        const filterBtns = document.querySelectorAll(".layout .card:first-child .inline-actions button");
+        if(filterBtns[0]) filterBtns[0].textContent = t("Reset");
+        if(filterBtns[1]) filterBtns[1].textContent = t("Search");
+        setNodeText("label[for='messageSearch']", t("Search"));
+        setNodeText("label[for='messageStatus']", t("Status"));
+        setNodeText("label[for='messageLimit']", t("Page Size"));
+        const messageStatus = document.getElementById("messageStatus");
+        if(messageStatus){
+          messageStatus.options[0].text = t("All");
+          messageStatus.options[1].text = t("New");
+          messageStatus.options[2].text = t("Replied");
+          messageStatus.options[3].text = t("Closed");
+        }
+        const ths = document.querySelectorAll("#messagesTable th");
+        if(ths[0]) ths[0].textContent = t("Sender");
+        if(ths[1]) ths[1].textContent = t("Subject");
+        if(ths[2]) ths[2].textContent = t("Status");
+        if(ths[3]) ths[3].textContent = t("Action");
+        setNodeText("#prevPageBtn", t("Previous"));
+        setNodeText("#nextPageBtn", t("Next"));
+        setNodeText(".inspector-card h2", t("Message Inspector"));
+        setNodeText(".inspector-card .card-hint", t("Open a popup to review, reply, close, or delete from one place."));
+        const inspectorLabels = document.querySelectorAll(".inspector-pill strong");
+        if(inspectorLabels[0]) inspectorLabels[0].textContent = t("Current Selection");
+        if(inspectorLabels[1]) inspectorLabels[1].textContent = t("Next Step");
+        setNodeText(".inspector-pill .inspector-note", t("Use Open to launch a focused conversation popup with full reply controls."));
+        setNodeText("#openMessageInspectorBtn", t("Open Conversation"));
+        setNodeText("#messageViewModal .modal-header h3", t("Contact Conversation"));
+        setNodeText("#messageViewModal .modal-header .card-hint", t("Conversation inspector with reply and lifecycle controls."));
+        setNodeText("#messageViewModal .modal-header .btn-secondary", t("Close"));
+        const modalLabels = document.querySelectorAll("#messageViewModal .detail-item strong");
+        if(modalLabels[0]) modalLabels[0].textContent = t("Email");
+        if(modalLabels[1]) modalLabels[1].textContent = t("Phone");
+        if(modalLabels[2]) modalLabels[2].textContent = t("ID");
+        setNodeText("label[for='detailMessage']", t("Message"));
+        setNodeText("label[for='adminReply']", t("Admin Reply"));
+        const modalBtns = document.querySelectorAll("#messageViewModal .modal-footer button");
+        if(modalBtns[0]) modalBtns[0].textContent = t("Send Reply");
+        if(modalBtns[1]) modalBtns[1].textContent = t("Close Message");
+        if(modalBtns[2]) modalBtns[2].textContent = t("Delete Message");
+      }
+      function renderMessages(){ if(!state.messages.length){ document.getElementById("messagesState").className = "empty-state"; document.getElementById("messagesState").textContent = t("No contact messages found"); updatePagination(); return; } document.getElementById("messagesRows").innerHTML = state.messages.map((item) => `<tr><td><div class="inline-stack"><strong>${escapeHtml(item.name || item.fullName || item.senderName || "-")}</strong><span class="subtle">${escapeHtml(item.email || "-")} • ${escapeHtml(item.phone || "-")}</span></div></td><td><div class="inline-stack"><strong>${escapeHtml(item.subject || "-")}</strong><span class="subtle">${escapeHtml((item.message || "").slice(0,80) || "-")}</span></div></td><td>${statusPill(item.status)}</td><td><button class="btn-link" type="button" onclick="selectMessage('${getId(item)}', true)">${escapeHtml(t("Open"))}</button></td></tr>`).join(""); document.getElementById("messagesState").hidden = true; document.getElementById("messagesTable").hidden = false; updatePagination(); }
+      window.onLanguageChange = () => { translateContactPage(); updateOverview(); renderMessages(); renderSelectedMessage(); updatePagination(); };
+      if(typeof window.__t === "function"){ translateContactPage(); }
       loadMessages(1);
     </script>
     <script src="./site-i18n.js"></script>

@@ -1,15 +1,19 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="ar" dir="rtl">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>SuperCycle - إدارة العربيات</title>
+    <title>SuperCycle - Vehicles Management</title>
     <style>
       :root {
         --bg: #f3f7f2;
         --surface: rgba(255, 255, 255, 0.95);
         --surface-strong: #ffffff;
         --surface-soft: #f8fcf8;
+        --sidebar: #0f2516;
+        --sidebar-2: #173220;
+        --sidebar-text: #d6e5d5;
+        --sidebar-muted: #88a18e;
         --primary: #217346;
         --primary-2: #2ea05b;
         --primary-soft: #e7f5eb;
@@ -70,10 +74,191 @@
         cursor: pointer;
       }
 
+      .layout {
+        display: flex;
+        min-height: 100vh;
+      }
+
+      .sidebar {
+        width: 264px;
+        flex-shrink: 0;
+        background:
+          linear-gradient(180deg, rgba(46, 160, 91, 0.08), transparent 12%),
+          linear-gradient(180deg, var(--sidebar) 0%, #102819 100%);
+        color: var(--sidebar-text);
+        padding: 22px 16px 18px;
+        position: sticky;
+        top: 0;
+        height: 100vh;
+        overflow-y: auto;
+        border-left: 1px solid rgba(255, 255, 255, 0.04);
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 10px 10px 18px;
+      }
+
+      .brand-mark {
+        width: 46px;
+        height: 46px;
+        border-radius: 15px;
+        background: linear-gradient(135deg, #33a65f, #17653c);
+        display: grid;
+        place-items: center;
+        color: #fff;
+        font-size: 22px;
+        font-weight: 900;
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.24);
+      }
+
+      .brand h1 {
+        font-size: 26px;
+        line-height: 1;
+        font-weight: 900;
+        letter-spacing: -0.03em;
+      }
+
+      .brand p {
+        margin-top: 4px;
+        color: var(--sidebar-muted);
+        font-size: 12px;
+      }
+
+      .nav-group {
+        margin-top: 18px;
+      }
+
+      .nav-group-label {
+        color: #6d8472;
+        font-size: 11px;
+        font-weight: 800;
+        margin: 0 12px 10px;
+      }
+
+      .nav-list {
+        display: grid;
+        gap: 6px;
+      }
+
+      .nav-item {
+        border: 0;
+        background: transparent;
+        color: inherit;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 14px;
+        border-radius: 14px;
+        cursor: pointer;
+        transition:
+          background 0.2s ease,
+          transform 0.2s ease;
+        text-align: right;
+      }
+
+      .nav-item:hover {
+        background: rgba(255, 255, 255, 0.06);
+        transform: translateX(-2px);
+      }
+
+      .nav-item.active {
+        background: linear-gradient(
+          135deg,
+          rgba(46, 160, 91, 0.28),
+          rgba(33, 115, 70, 0.56)
+        );
+        color: #fff;
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12);
+      }
+
+      .nav-icon {
+        width: 34px;
+        height: 34px;
+        border-radius: 10px;
+        display: grid;
+        place-items: center;
+        background: rgba(255, 255, 255, 0.06);
+        color: #fff;
+        font-size: 13px;
+        font-weight: 800;
+        flex-shrink: 0;
+      }
+
+      .nav-copy {
+        flex: 1;
+      }
+
+      .nav-copy strong {
+        display: block;
+        font-size: 13px;
+      }
+
+      .nav-copy span {
+        display: block;
+        margin-top: 2px;
+        color: var(--sidebar-muted);
+        font-size: 11px;
+      }
+
+      .nav-item.active .nav-copy span {
+        color: rgba(255, 255, 255, 0.8);
+      }
+
+      .nav-badge {
+        min-width: 26px;
+        padding: 4px 8px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.12);
+        color: #fff;
+        font-size: 11px;
+        font-weight: 800;
+        text-align: center;
+      }
+
+      .sidebar-footer {
+        margin-top: 18px;
+        padding: 14px;
+        border-radius: 18px;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .sidebar-avatar {
+        width: 42px;
+        height: 42px;
+        border-radius: 14px;
+        background: linear-gradient(135deg, #2ea05b, #1c6b42);
+        display: grid;
+        place-items: center;
+        color: #fff;
+        font-size: 16px;
+        font-weight: 900;
+      }
+
+      .sidebar-footer strong {
+        display: block;
+        color: #fff;
+        font-size: 13px;
+      }
+
+      .sidebar-footer span {
+        color: var(--sidebar-muted);
+        font-size: 11px;
+      }
+
       .page {
+        flex: 1;
         max-width: 1440px;
         margin: 0 auto;
         padding: 22px;
+        min-width: 0;
       }
 
       .topbar {
@@ -629,6 +814,16 @@
       }
 
       @media (max-width: 820px) {
+        .layout {
+          display: block;
+        }
+
+        .sidebar {
+          width: 100%;
+          height: auto;
+          position: static;
+        }
+
         .page {
           padding: 14px;
         }
@@ -643,7 +838,16 @@
         .topbar-actions,
         .hero-actions,
         .panel-actions {
-          justify-content: flex-start;
+          justify-content: stretch;
+        }
+
+        .topbar-actions button,
+        .hero-actions button,
+        .panel-actions button,
+        .pagination button,
+        .modal-footer button,
+        .row-actions button {
+          width: 100%;
         }
 
         .stats-grid,
@@ -656,17 +860,137 @@
     </style>
   </head>
   <body>
-    <div class="page">
+    <div class="layout">
+      <aside class="sidebar">
+        <div class="brand">
+          <div class="brand-mark">SC</div>
+          <div>
+            <h1>SuperCycle</h1>
+            <p>�"�^حة تح�f�. ا�"�.سؤ�^�"</p>
+          </div>
+        </div>
+
+        <div class="nav-group">
+          <div class="nav-list">
+            <button class="nav-item" type="button" onclick="go('dashboard.html')">
+              <span class="nav-icon">DB</span>
+              <span class="nav-copy">
+                <strong>ا�"رئ�Sس�Sة</strong>
+                <span>�.�"خص ا�"أداء ا�"�S�^�.�S</span>
+              </span>
+            </button>
+          </div>
+        </div>
+
+        <div class="nav-group">
+          <div class="nav-group-label">ا�"ع�.�"�Sات</div>
+          <div class="nav-list">
+            <button class="nav-item" type="button" onclick="go('shipments.html?type=approval')">
+              <span class="nav-icon">AP</span>
+              <span class="nav-copy">
+                <strong>ا�"�.�^اف�,ات</strong>
+                <span>شح�?ات تحتاج �.راجعة</span>
+              </span>
+              <span class="nav-badge">-</span>
+            </button>
+            <button class="nav-item" type="button" onclick="go('shipments.html?type=segmentation')">
+              <span class="nav-icon">SG</span>
+              <span class="nav-copy">
+                <strong>ا�"ت�^ج�S�? �^ا�"ت�,س�S�.</strong>
+                <span>جا�?زة �"�"تشغ�S�"</span>
+              </span>
+              <span class="nav-badge">-</span>
+            </button>
+            <button class="nav-item active" type="button">
+              <span class="nav-icon">VH</span>
+              <span class="nav-copy">
+                <strong>ا�"عرب�Sات</strong>
+                <span>إدارة ا�"أسط�^�"</span>
+              </span>
+            </button>
+            <button class="nav-item" type="button" onclick="go('factories-management.html')">
+              <span class="nav-icon">FC</span>
+              <span class="nav-copy">
+                <strong>ا�"�.صا�?ع</strong>
+                <span>ا�"تغط�Sة �^ا�"است�,با�"</span>
+              </span>
+            </button>
+          </div>
+        </div>
+
+        <div class="nav-group">
+          <div class="nav-group-label">الإدارة</div>
+          <div class="nav-list">
+            <button class="nav-item" type="button" onclick="go('finance-management.html')">
+              <span class="nav-icon">FN</span>
+              <span class="nav-copy">
+                <strong>المالية</strong>
+                <span>تسويات وتحويلات</span>
+              </span>
+            </button>
+            <button class="nav-item" type="button" onclick="go('dosh-management.html')">
+              <span class="nav-icon">DS</span>
+              <span class="nav-copy">
+                <strong>أنواع وأسعار الدوش</strong>
+                <span>التسعير والفئات</span>
+              </span>
+            </button>
+            <button class="nav-item" type="button" onclick="go('contact-management.html')">
+              <span class="nav-icon">CX</span>
+              <span class="nav-copy">
+                <strong>الرسائل الواردة</strong>
+                <span>متابعة العملاء</span>
+              </span>
+            </button>
+            <button class="nav-item" type="button" onclick="go('contracts-create.html')">
+              <span class="nav-icon">CT</span>
+              <span class="nav-copy">
+                <strong>العقود</strong>
+                <span>إنشاء متعاقدين جدد</span>
+              </span>
+            </button>
+          </div>
+        </div>
+        <div class="nav-group">
+          <div class="nav-group-label">ا�"�.�?ظ�^�.ة ا�"ب�Sئ�Sة</div>
+          <div class="nav-list">
+            <button class="nav-item" type="button" onclick="go('eco-participants.html')">
+              <span class="nav-icon">EP</span>
+              <span class="nav-copy">
+                <strong>ا�"�.شار�f�^�? ا�"ب�Sئ�S�^�?</strong>
+                <span>إدارة ا�"ا�?ض�.ا�.</span>
+              </span>
+            </button>
+            <button class="nav-item" type="button" onclick="go('eco-redeems.html')">
+              <span class="nav-icon">RD</span>
+              <span class="nav-copy">
+                <strong>ط�"بات ا�"استبدا�"</strong>
+                <span>�.راجعة �^ت�?ف�Sذ</span>
+              </span>
+            </button>
+          </div>
+        </div>
+
+        <div class="sidebar-footer">
+          <div class="sidebar-avatar">AD</div>
+          <div>
+            <strong>�.سؤ�^�" ا�"�?ظا�.</strong>
+            <span>Admin Control</span>
+          </div>
+        </div>
+      </aside>
+
+      <div class="page">
       <header class="topbar">
         <div class="topbar-title">
-          <h1>إدارة العربيات</h1>
-          <p>لوحة أسطول مبسطة لعرض الإحصائيات ومتابعة العربيات وإدخال عربية جديدة عند الحاجة.</p>
+          <h1>إدارة ا�"عرب�Sات</h1>
+          <p>�"�^حة أسط�^�" �.بسطة �"عرض ا�"إحصائ�Sات �^�.تابعة ا�"عرب�Sات �^إدخا�" عرب�Sة جد�Sدة ع�?د ا�"حاجة.</p>
         </div>
         <div class="topbar-actions">
           <div class="pill" id="todayLabel">-</div>
-          <button class="icon-button" type="button" onclick="refreshAll()">↻</button>
-          <button class="ghost-btn" type="button" onclick="goBack()">الرجوع للرئيسية</button>
-          <button class="primary-btn" type="button" onclick="logout()">تسجيل الخروج</button>
+          <button class="icon-button" type="button" onclick="refreshAll()">�?�</button>
+          <button class="ghost-btn" type="button" onclick="goBack()">ا�"رج�^ع �"�"رئ�Sس�Sة</button>
+          <button class="primary-btn" type="button" onclick="logout()">تسج�S�" ا�"خر�^ج</button>
         </div>
       </header>
 
@@ -675,28 +999,28 @@
       <section class="hero">
         <div class="hero-top">
           <div>
-            <div class="hero-note">الأسطول التشغيلي</div>
-            <h2>إدارة العربيات</h2>
-            <p>متابعة الأسطول وعرض العربيات الحالية وإدارة بياناتها التشغيلية.</p>
+            <div class="hero-note">ا�"أسط�^�" ا�"تشغ�S�"�S</div>
+            <h2>إدارة ا�"عرب�Sات</h2>
+            <p>�.تابعة ا�"أسط�^�" �^عرض ا�"عرب�Sات ا�"حا�"�Sة �^إدارة ب�Sا�?ات�?ا ا�"تشغ�S�"�Sة.</p>
           </div>
           <div class="hero-actions">
             <button class="primary-btn" type="button" onclick="openCreateVehicleModal()">
-              إدخال عربية
+              إدخا�" عرب�Sة
             </button>
             <button class="ghost-btn" type="button" id="openVehicleInspectorBtn" onclick="openSelectedVehicleView()" disabled>
-              عرض التفاصيل
+              عرض ا�"تفاص�S�"
             </button>
             <button class="ghost-btn" type="button" id="editSelectedVehicleBtn" onclick="editSelectedVehicle()" disabled>
-              تعديل العربية
+              تعد�S�" ا�"عرب�Sة
             </button>
           </div>
         </div>
 
         <div class="summary-strip">
           <div class="selection-card">
-            <strong>وضع المتابعة</strong>
+            <strong>�^ضع ا�"�.تابعة</strong>
             <div class="summary-value" id="selectionVehicleCount">-</div>
-            <div class="summary-caption">عدد العربيات الظاهر حاليًا في الصفحة الحالية بعد الفلاتر.</div>
+            <div class="summary-caption">عدد ا�"عرب�Sات ا�"ظا�?ر حا�"�S�<ا ف�S ا�"صفحة ا�"حا�"�Sة بعد ا�"ف�"اتر.</div>
           </div>
         </div>
       </section>
@@ -705,82 +1029,82 @@
         <article class="stat-card">
           <div class="stat-top">
             <div class="stat-icon" style="background: var(--primary-soft); color: var(--primary)">VH</div>
-            <div class="stat-tag" style="background: var(--primary-soft); color: var(--primary)">الأسطول</div>
+            <div class="stat-tag" style="background: var(--primary-soft); color: var(--primary)">ا�"أسط�^�"</div>
           </div>
           <div class="stat-value" id="vehiclesTotal">0</div>
-          <div class="stat-label">إجمالي العربيات</div>
-          <div class="stat-foot">كل السجلات المتاحة في النظام</div>
+          <div class="stat-label">إج�.ا�"�S ا�"عرب�Sات</div>
+          <div class="stat-foot">�f�" ا�"سج�"ات ا�"�.تاحة ف�S ا�"�?ظا�.</div>
         </article>
 
         <article class="stat-card">
           <div class="stat-top">
             <div class="stat-icon" style="background: var(--info-soft); color: var(--info)">OK</div>
-            <div class="stat-tag" style="background: var(--info-soft); color: var(--info)">جاهز</div>
+            <div class="stat-tag" style="background: var(--info-soft); color: var(--info)">جا�?ز</div>
           </div>
           <div class="stat-value" id="vehiclesAvailable">0</div>
-          <div class="stat-label">متاحة الآن</div>
-          <div class="stat-foot">جاهزة للإسناد أو التشغيل</div>
+          <div class="stat-label">�.تاحة ا�"آ�?</div>
+          <div class="stat-foot">جا�?زة �"�"إس�?اد أ�^ ا�"تشغ�S�"</div>
         </article>
 
         <article class="stat-card">
           <div class="stat-top">
             <div class="stat-icon" style="background: var(--violet-soft); color: var(--violet)">GO</div>
-            <div class="stat-tag" style="background: var(--violet-soft); color: var(--violet)">حركة</div>
+            <div class="stat-tag" style="background: var(--violet-soft); color: var(--violet)">حر�fة</div>
           </div>
           <div class="stat-value" id="vehiclesActive">0</div>
-          <div class="stat-label">نشطة تشغيليًا</div>
-          <div class="stat-foot">كل ما هو غير معطل أو متوقف</div>
+          <div class="stat-label">�?شطة تشغ�S�"�S�<ا</div>
+          <div class="stat-foot">�f�" �.ا �?�^ غ�Sر �.عط�" أ�^ �.ت�^�,ف</div>
         </article>
 
         <article class="stat-card">
           <div class="stat-top">
             <div class="stat-icon" style="background: var(--warning-soft); color: #a16207">KG</div>
-            <div class="stat-tag" style="background: var(--warning-soft); color: #a16207">حمولة</div>
+            <div class="stat-tag" style="background: var(--warning-soft); color: #a16207">ح�.�^�"ة</div>
           </div>
           <div class="stat-value" id="vehiclesLoad">0</div>
-          <div class="stat-label">إجمالي الحمولة</div>
-          <div class="stat-foot">مجموع السعات بالكيلو جرام</div>
+          <div class="stat-label">إج�.ا�"�S ا�"ح�.�^�"ة</div>
+          <div class="stat-foot">�.ج�.�^ع ا�"سعات با�"�f�S�"�^ جرا�.</div>
         </article>
       </section>
 
       <section class="panel">
         <div class="panel-header">
           <div>
-            <h3>جدول العربيات</h3>
-            <p>ابحث وفلتر ثم افتح العربية التي تحتاج مراجعة أو تحديث.</p>
+            <h3>جد�^�" ا�"عرب�Sات</h3>
+            <p>ابحث �^ف�"تر ث�. افتح ا�"عرب�Sة ا�"ت�S تحتاج �.راجعة أ�^ تحد�Sث.</p>
           </div>
           <div class="panel-actions">
             <button class="ghost-btn" type="button" onclick="resetFilters()">إعادة ضبط</button>
-            <button class="primary-btn" type="button" onclick="loadVehicles(1)">تحديث النتائج</button>
+            <button class="primary-btn" type="button" onclick="loadVehicles(1)">تحد�Sث ا�"�?تائج</button>
           </div>
         </div>
 
         <div class="filter-grid">
           <div class="field">
             <label for="vehicleSearch">بحث</label>
-            <input id="vehicleSearch" placeholder="رقم اللوحة، السائق، الهاتف، النوع" />
+            <input id="vehicleSearch" placeholder="ر�,�. ا�"�"�^حة�O ا�"سائ�,�O ا�"�?اتف�O ا�"�?�^ع" />
           </div>
           <div class="field">
-            <label for="filterStatus">الحالة</label>
+            <label for="filterStatus">ا�"حا�"ة</label>
             <select id="filterStatus">
-              <option value="">الكل</option>
-              <option value="available">متاحة</option>
-              <option value="assigned">مسندة</option>
-              <option value="in_transit">في الطريق</option>
-              <option value="maintenance">صيانة</option>
-              <option value="inactive">غير نشطة</option>
+              <option value="">ا�"�f�"</option>
+              <option value="available">�.تاحة</option>
+              <option value="assigned">�.س�?دة</option>
+              <option value="in_transit">ف�S ا�"طر�S�,</option>
+              <option value="maintenance">ص�Sا�?ة</option>
+              <option value="inactive">غ�Sر �?شطة</option>
             </select>
           </div>
           <div class="field">
-            <label for="filterVehicleType">نوع العربية</label>
-            <input id="filterVehicleType" placeholder="مثال: دبابة، نقل" />
+            <label for="filterVehicleType">�?�^ع ا�"عرب�Sة</label>
+            <input id="filterVehicleType" placeholder="�.ثا�": دبابة�O �?�,�"" />
           </div>
           <div class="field">
-            <label for="filterMinLoadKg">أقل حمولة</label>
+            <label for="filterMinLoadKg">أ�,�" ح�.�^�"ة</label>
             <input id="filterMinLoadKg" type="number" min="0" step="0.01" placeholder="0" />
           </div>
           <div class="field">
-            <label for="filterLimit">حجم الصفحة</label>
+            <label for="filterLimit">حج�. ا�"صفحة</label>
             <select id="filterLimit">
               <option value="10">10</option>
               <option value="20">20</option>
@@ -789,18 +1113,18 @@
           </div>
         </div>
 
-        <div id="vehiclesState" class="loading-state">جاري تحميل العربيات...</div>
+        <div id="vehiclesState" class="loading-state">جار�S تح�.�S�" ا�"عرب�Sات...</div>
 
         <div class="table-shell">
           <table id="vehiclesTable" hidden>
             <thead>
               <tr>
-                <th>العربية</th>
-                <th>السائق</th>
-                <th>الحمولة</th>
-                <th>الحالة</th>
-                <th>بيانات سريعة</th>
-                <th>الإجراءات</th>
+                <th>ا�"عرب�Sة</th>
+                <th>ا�"سائ�,</th>
+                <th>ا�"ح�.�^�"ة</th>
+                <th>ا�"حا�"ة</th>
+                <th>ب�Sا�?ات سر�Sعة</th>
+                <th>ا�"إجراءات</th>
               </tr>
             </thead>
             <tbody id="vehiclesRows"></tbody>
@@ -808,82 +1132,83 @@
         </div>
 
         <div class="pagination">
-          <div class="subtle" id="paginationLabel">صفحة 1 من 1</div>
+          <div class="subtle" id="paginationLabel">صفحة 1 �.�? 1</div>
           <div class="row-actions">
-            <button class="ghost-btn" id="prevPageBtn" type="button" onclick="changePage(-1)">السابق</button>
-            <button class="ghost-btn" id="nextPageBtn" type="button" onclick="changePage(1)">التالي</button>
+            <button class="ghost-btn" id="prevPageBtn" type="button" onclick="changePage(-1)">ا�"ساب�,</button>
+            <button class="ghost-btn" id="nextPageBtn" type="button" onclick="changePage(1)">ا�"تا�"�S</button>
           </div>
         </div>
       </section>
+      </div>
     </div>
 
     <div id="createVehicleModal" class="modal" onclick="closeCreateVehicleModal(event)">
       <div class="modal-content" onclick="event.stopPropagation()">
         <div class="modal-header">
           <div>
-            <h3 id="vehicleFormTitle">إدخال عربية جديدة</h3>
-            <p class="subtle">أدخل بيانات العربية والسائق مرة واحدة من خلال نموذج واضح ومركز.</p>
+            <h3 id="vehicleFormTitle">إدخا�" عرب�Sة جد�Sدة</h3>
+            <p class="subtle">أدخ�" ب�Sا�?ات ا�"عرب�Sة �^ا�"سائ�, �.رة �^احدة �.�? خ�"ا�" �?�.�^ذج �^اضح �^�.ر�fز.</p>
           </div>
-          <button class="ghost-btn" type="button" onclick="closeCreateVehicleModal()">إغلاق</button>
+          <button class="ghost-btn" type="button" onclick="closeCreateVehicleModal()">إغ�"ا�,</button>
         </div>
         <div class="modal-body">
           <form id="vehicleForm" onsubmit="submitVehicleForm(event)">
             <div class="form-grid">
               <div class="field">
-                <label for="vehicleType">نوع العربية</label>
+                <label for="vehicleType">�?�^ع ا�"عرب�Sة</label>
                 <input id="vehicleType" />
                 <div class="field-error" data-error-for="vehicle.vehicleType"></div>
               </div>
               <div class="field">
-                <label for="licensePlate">رقم اللوحة</label>
+                <label for="licensePlate">ر�,�. ا�"�"�^حة</label>
                 <input id="licensePlate" />
                 <div class="field-error" data-error-for="vehicle.licensePlate"></div>
               </div>
               <div class="field">
-                <label for="maxLoadKg">أقصى حمولة بالكيلو</label>
+                <label for="maxLoadKg">أ�,ص�? ح�.�^�"ة با�"�f�S�"�^</label>
                 <input id="maxLoadKg" type="number" min="0" step="0.01" />
                 <div class="field-error" data-error-for="vehicle.maxLoadKg"></div>
               </div>
               <div class="field">
-                <label for="vehicleStatus">الحالة</label>
+                <label for="vehicleStatus">ا�"حا�"ة</label>
                 <select id="vehicleStatus">
-                  <option value="available">متاحة</option>
-                  <option value="assigned">مسندة</option>
-                  <option value="in_transit">في الطريق</option>
-                  <option value="maintenance">صيانة</option>
-                  <option value="inactive">غير نشطة</option>
+                  <option value="available">�.تاحة</option>
+                  <option value="assigned">�.س�?دة</option>
+                  <option value="in_transit">ف�S ا�"طر�S�,</option>
+                  <option value="maintenance">ص�Sا�?ة</option>
+                  <option value="inactive">غ�Sر �?شطة</option>
                 </select>
                 <div class="field-error" data-error-for="vehicle.status"></div>
               </div>
               <div class="field">
-                <label for="driverName">اسم السائق</label>
+                <label for="driverName">اس�. ا�"سائ�,</label>
                 <input id="driverName" />
                 <div class="field-error" data-error-for="vehicle.driverName"></div>
               </div>
               <div class="field">
-                <label for="driverPhone">رقم السائق</label>
+                <label for="driverPhone">ر�,�. ا�"سائ�,</label>
                 <input id="driverPhone" />
                 <div class="field-error" data-error-for="vehicle.driverPhone"></div>
               </div>
               <div class="field">
-                <label for="driverNationalId">الرقم القومي</label>
+                <label for="driverNationalId">ا�"ر�,�. ا�"�,�^�.�S</label>
                 <input id="driverNationalId" />
                 <div class="field-error" data-error-for="vehicle.driverNationalId"></div>
               </div>
               <div class="field">
-                <label for="driverNationalIdPic">رابط صورة البطاقة</label>
+                <label for="driverNationalIdPic">رابط ص�^رة ا�"بطا�,ة</label>
                 <input id="driverNationalIdPic" placeholder="https://..." />
                 <div class="field-error" data-error-for="vehicle.driverNationalIdPic"></div>
               </div>
               <div class="field full">
-                <label for="driverAddress">العنوان</label>
+                <label for="driverAddress">ا�"ع�?�^ا�?</label>
                 <textarea id="driverAddress"></textarea>
                 <div class="field-error" data-error-for="vehicle.driverAddress"></div>
               </div>
             </div>
             <div class="modal-footer">
-              <button class="ghost-btn" type="button" onclick="resetVehicleForm()">مسح البيانات</button>
-              <button class="primary-btn" id="vehicleSubmitBtn" type="submit">حفظ العربية</button>
+              <button class="ghost-btn" type="button" onclick="resetVehicleForm()">�.سح ا�"ب�Sا�?ات</button>
+              <button class="primary-btn" id="vehicleSubmitBtn" type="submit">حفظ ا�"عرب�Sة</button>
             </div>
           </form>
         </div>
@@ -894,69 +1219,69 @@
       <div class="modal-content" onclick="event.stopPropagation()">
         <div class="modal-header">
           <div>
-            <h3>تعديل بيانات العربية</h3>
-            <p class="subtle">حدث بيانات العربية والسائق من نافذة مركزة بدون مغادرة الصفحة.</p>
+            <h3>تعد�S�" ب�Sا�?ات ا�"عرب�Sة</h3>
+            <p class="subtle">حدث ب�Sا�?ات ا�"عرب�Sة �^ا�"سائ�, �.�? �?افذة �.ر�fزة بد�^�? �.غادرة ا�"صفحة.</p>
           </div>
-          <button class="ghost-btn" type="button" onclick="closeVehicleEditModal()">إغلاق</button>
+          <button class="ghost-btn" type="button" onclick="closeVehicleEditModal()">إغ�"ا�,</button>
         </div>
         <div class="modal-body">
           <div class="form-grid">
             <div class="field">
-              <label for="modalVehicleType">نوع العربية</label>
+              <label for="modalVehicleType">�?�^ع ا�"عرب�Sة</label>
               <input id="modalVehicleType" />
               <div class="field-error" data-modal-error-for="vehicle.vehicleType"></div>
             </div>
             <div class="field">
-              <label for="modalLicensePlate">رقم اللوحة</label>
+              <label for="modalLicensePlate">ر�,�. ا�"�"�^حة</label>
               <input id="modalLicensePlate" />
               <div class="field-error" data-modal-error-for="vehicle.licensePlate"></div>
             </div>
             <div class="field">
-              <label for="modalMaxLoadKg">أقصى حمولة بالكيلو</label>
+              <label for="modalMaxLoadKg">أ�,ص�? ح�.�^�"ة با�"�f�S�"�^</label>
               <input id="modalMaxLoadKg" type="number" min="0" step="0.01" />
               <div class="field-error" data-modal-error-for="vehicle.maxLoadKg"></div>
             </div>
             <div class="field">
-              <label for="modalVehicleStatus">الحالة</label>
+              <label for="modalVehicleStatus">ا�"حا�"ة</label>
               <select id="modalVehicleStatus">
-                <option value="available">متاحة</option>
-                <option value="assigned">مسندة</option>
-                <option value="in_transit">في الطريق</option>
-                <option value="maintenance">صيانة</option>
-                <option value="inactive">غير نشطة</option>
+                <option value="available">�.تاحة</option>
+                <option value="assigned">�.س�?دة</option>
+                <option value="in_transit">ف�S ا�"طر�S�,</option>
+                <option value="maintenance">ص�Sا�?ة</option>
+                <option value="inactive">غ�Sر �?شطة</option>
               </select>
               <div class="field-error" data-modal-error-for="vehicle.status"></div>
             </div>
             <div class="field">
-              <label for="modalDriverName">اسم السائق</label>
+              <label for="modalDriverName">اس�. ا�"سائ�,</label>
               <input id="modalDriverName" />
               <div class="field-error" data-modal-error-for="vehicle.driverName"></div>
             </div>
             <div class="field">
-              <label for="modalDriverPhone">رقم السائق</label>
+              <label for="modalDriverPhone">ر�,�. ا�"سائ�,</label>
               <input id="modalDriverPhone" />
               <div class="field-error" data-modal-error-for="vehicle.driverPhone"></div>
             </div>
             <div class="field">
-              <label for="modalDriverNationalId">الرقم القومي</label>
+              <label for="modalDriverNationalId">ا�"ر�,�. ا�"�,�^�.�S</label>
               <input id="modalDriverNationalId" />
               <div class="field-error" data-modal-error-for="vehicle.driverNationalId"></div>
             </div>
             <div class="field">
-              <label for="modalDriverNationalIdPic">رابط صورة البطاقة</label>
+              <label for="modalDriverNationalIdPic">رابط ص�^رة ا�"بطا�,ة</label>
               <input id="modalDriverNationalIdPic" placeholder="https://..." />
               <div class="field-error" data-modal-error-for="vehicle.driverNationalIdPic"></div>
             </div>
             <div class="field full">
-              <label for="modalDriverAddress">العنوان</label>
+              <label for="modalDriverAddress">ا�"ع�?�^ا�?</label>
               <textarea id="modalDriverAddress"></textarea>
               <div class="field-error" data-modal-error-for="vehicle.driverAddress"></div>
             </div>
           </div>
         </div>
         <div class="modal-footer">
-          <button class="ghost-btn" type="button" onclick="closeVehicleEditModal()">إلغاء</button>
-          <button class="primary-btn" type="button" onclick="submitVehicleEditModal()">حفظ التعديلات</button>
+          <button class="ghost-btn" type="button" onclick="closeVehicleEditModal()">إ�"غاء</button>
+          <button class="primary-btn" type="button" onclick="submitVehicleEditModal()">حفظ ا�"تعد�S�"ات</button>
         </div>
       </div>
     </div>
@@ -965,36 +1290,36 @@
       <div class="modal-content" onclick="event.stopPropagation()">
         <div class="modal-header">
           <div>
-            <h3>ملف العربية</h3>
-            <p class="subtle">عرض مركزي لبيانات العربية مع التحكم في حالتها التشغيلية.</p>
+            <h3>�.�"ف ا�"عرب�Sة</h3>
+            <p class="subtle">عرض �.ر�fز�S �"ب�Sا�?ات ا�"عرب�Sة �.ع ا�"تح�f�. ف�S حا�"ت�?ا ا�"تشغ�S�"�Sة.</p>
           </div>
-          <button class="ghost-btn" type="button" onclick="closeVehicleViewModal()">إغلاق</button>
+          <button class="ghost-btn" type="button" onclick="closeVehicleViewModal()">إغ�"ا�,</button>
         </div>
         <div class="modal-body">
           <div class="detail-grid">
-            <div class="detail-item"><strong>العربية</strong><span id="vehicleViewVehicle">-</span></div>
-            <div class="detail-item"><strong>الحالة</strong><span id="vehicleViewStatus">-</span></div>
-            <div class="detail-item"><strong>السائق</strong><span id="vehicleViewDriver">-</span></div>
-            <div class="detail-item"><strong>الهاتف</strong><span id="vehicleViewPhone">-</span></div>
-            <div class="detail-item"><strong>الرقم القومي</strong><span id="vehicleViewNationalId">-</span></div>
-            <div class="detail-item"><strong>الحمولة</strong><span id="vehicleViewLoad">-</span></div>
-            <div class="detail-item"><strong>العنوان</strong><span id="vehicleViewAddress">-</span></div>
-            <div class="detail-item"><strong>المعرف</strong><span id="vehicleViewId">-</span></div>
+            <div class="detail-item"><strong>ا�"عرب�Sة</strong><span id="vehicleViewVehicle">-</span></div>
+            <div class="detail-item"><strong>ا�"حا�"ة</strong><span id="vehicleViewStatus">-</span></div>
+            <div class="detail-item"><strong>ا�"سائ�,</strong><span id="vehicleViewDriver">-</span></div>
+            <div class="detail-item"><strong>ا�"�?اتف</strong><span id="vehicleViewPhone">-</span></div>
+            <div class="detail-item"><strong>ا�"ر�,�. ا�"�,�^�.�S</strong><span id="vehicleViewNationalId">-</span></div>
+            <div class="detail-item"><strong>ا�"ح�.�^�"ة</strong><span id="vehicleViewLoad">-</span></div>
+            <div class="detail-item"><strong>ا�"ع�?�^ا�?</strong><span id="vehicleViewAddress">-</span></div>
+            <div class="detail-item"><strong>ا�"�.عرف</strong><span id="vehicleViewId">-</span></div>
           </div>
           <div class="modal-actions" style="margin-top: 18px">
-            <button class="primary-btn" type="button" onclick="editSelectedVehicle()">تعديل العربية</button>
-            <button class="ghost-btn" type="button" onclick="activateSelectedVehicle()">تفعيل</button>
-            <button class="ghost-btn" type="button" onclick="deactivateSelectedVehicle()">إيقاف</button>
+            <button class="primary-btn" type="button" onclick="editSelectedVehicle()">تعد�S�" ا�"عرب�Sة</button>
+            <button class="ghost-btn" type="button" onclick="activateSelectedVehicle()">تفع�S�"</button>
+            <button class="ghost-btn" type="button" onclick="deactivateSelectedVehicle()">إ�S�,اف</button>
           </div>
           <div class="modal-actions" style="margin-top: 12px">
             <select id="selectedVehicleStatus">
-              <option value="available">متاحة</option>
-              <option value="assigned">مسندة</option>
-              <option value="in_transit">في الطريق</option>
-              <option value="maintenance">صيانة</option>
-              <option value="inactive">غير نشطة</option>
+              <option value="available">�.تاحة</option>
+              <option value="assigned">�.س�?دة</option>
+              <option value="in_transit">ف�S ا�"طر�S�,</option>
+              <option value="maintenance">ص�Sا�?ة</option>
+              <option value="inactive">غ�Sر �?شطة</option>
             </select>
-            <button class="ghost-btn" type="button" onclick="updateSelectedVehicleStatus()">تحديث الحالة</button>
+            <button class="ghost-btn" type="button" onclick="updateSelectedVehicleStatus()">تحد�Sث ا�"حا�"ة</button>
           </div>
         </div>
       </div>
@@ -1014,6 +1339,490 @@
         selectedVehicle: null,
         modalVehicleId: null,
       };
+
+      const vehicleI18n = {
+        en: {
+          pageTitle: "SuperCycle - Vehicles Management",
+          brandSub: "Admin control workspace",
+          sidebarAdmin: "System Administrator",
+          sidebarAdminSub: "Admin Control",
+          navOperations: "Operations",
+          navAdminGroup: "Administration",
+          navEcoGroup: "Eco Program",
+          navHomeTitle: "Dashboard",
+          navHomeSub: "Business overview and live KPIs",
+          navApprovalsTitle: "Pending Approvals",
+          navApprovalsSub: "Shipments waiting for review",
+          navSegmentationTitle: "Segmentation & Routing",
+          navSegmentationSub: "Loads ready for dispatch planning",
+          navVehiclesTitle: "Vehicles",
+          navVehiclesSub: "Fleet and assignment control",
+          navFactoriesTitle: "Factories",
+          navFactoriesSub: "Receiving network and coverage",
+          navFinanceTitle: "Finance",
+          navFinanceSub: "Settlements and transfers",
+          navDoshTitle: "Dosh Management",
+          navDoshSub: "Types, tiers, and pricing",
+          navContactsTitle: "Contact Management",
+          navContactsSub: "Customer follow-up",
+          navContractsTitle: "Contracts",
+          navContractsSub: "Create and manage traders",
+          navParticipantsTitle: "Eco Participants",
+          navParticipantsSub: "Participant directory",
+          navRedeemsTitle: "Redemption Requests",
+          navRedeemsSub: "Review and fulfillment",
+          headerTitle: "Vehicles Management",
+          headerText:
+            "Monitor the fleet, review operating status, and update vehicle records without leaving the page.",
+          refreshIcon: "↻",
+          backToDashboard: "Back to Dashboard",
+          logout: "Logout",
+          heroNote: "Operational Fleet",
+          heroTitle: "Vehicles Management",
+          heroText:
+            "Track the full fleet, review each driver profile, and keep vehicle status up to date.",
+          addVehicle: "Add Vehicle",
+          viewDetails: "View Details",
+          editVehicle: "Edit Vehicle",
+          selectionTitle: "Current View",
+          selectionText: "Number of vehicles visible on the current page after filters.",
+          statFleetTag: "Fleet",
+          totalVehicles: "Total Vehicles",
+          totalVehiclesText: "All registered vehicles currently available in the system.",
+          statReadyTag: "Ready",
+          availableNow: "Available Now",
+          availableNowText: "Vehicles ready to be assigned to active operations.",
+          statActiveTag: "Active",
+          activeOperational: "Operational Vehicles",
+          activeOperationalText: "Vehicles that are not currently inactive.",
+          statLoadTag: "Capacity",
+          totalLoad: "Total Capacity",
+          totalLoadText: "Combined maximum load in kilograms across the visible fleet.",
+          directoryTitle: "Vehicles Directory",
+          directoryText: "Search, filter, then open the vehicle that needs review or an update.",
+          resetFilters: "Reset Filters",
+          refreshResults: "Refresh Results",
+          filterSearch: "Search",
+          filterSearchPlaceholder:
+            "License plate, driver name, phone, or vehicle type",
+          filterStatus: "Status",
+          allStatuses: "All statuses",
+          filterVehicleType: "Vehicle Type",
+          filterVehicleTypePlaceholder: "Example: Truck, pickup",
+          filterMinLoadKg: "Minimum Capacity",
+          filterLimit: "Page Size",
+          tableVehicle: "Vehicle",
+          tableDriver: "Driver",
+          tableLoad: "Capacity",
+          tableStatus: "Status",
+          tableQuickInfo: "Quick Info",
+          tableActions: "Actions",
+          previous: "Previous",
+          next: "Next",
+          paginationLabel: "Page {page} of {totalPages}",
+          createModalTitle: "Add New Vehicle",
+          createModalHint:
+            "Enter the vehicle and driver details once using a focused and clear form.",
+          close: "Close",
+          fieldVehicleType: "Vehicle Type",
+          fieldLicensePlate: "License Plate",
+          fieldMaxLoadKg: "Maximum Load (KG)",
+          fieldStatus: "Status",
+          fieldDriverName: "Driver Name",
+          fieldDriverPhone: "Driver Phone",
+          fieldDriverNationalId: "National ID",
+          fieldDriverNationalIdPic: "National ID Image URL",
+          fieldDriverAddress: "Address",
+          clearData: "Clear Data",
+          saveVehicle: "Save Vehicle",
+          editModalTitle: "Edit Vehicle Details",
+          editModalHint:
+            "Update vehicle and driver details from a focused modal without leaving the page.",
+          cancel: "Cancel",
+          saveChanges: "Save Changes",
+          viewModalTitle: "Vehicle Profile",
+          viewModalHint:
+            "Focused view for vehicle information and current operating status.",
+          detailVehicle: "Vehicle",
+          detailStatus: "Status",
+          detailDriver: "Driver",
+          detailPhone: "Phone",
+          detailNationalId: "National ID",
+          detailLoad: "Capacity",
+          detailAddress: "Address",
+          detailId: "Identifier",
+          activate: "Activate",
+          deactivate: "Deactivate",
+          updateStatus: "Update Status",
+          statusAvailable: "Available",
+          statusAssigned: "Assigned",
+          statusInTransit: "In Transit",
+          statusMaintenance: "Maintenance",
+          statusInactive: "Inactive",
+          loadingVehicles: "Loading vehicles...",
+          failedToLoadVehicles: "Failed to load vehicles",
+          noVehicles: "No vehicles match the current filters",
+          weightUnit: "KG",
+          nationalIdLabel: "National ID",
+          identifierLabel: "Identifier",
+          view: "View",
+          requiredVehicleType: "Vehicle type is required",
+          requiredLicensePlate: "License plate is required",
+          requiredLoad: "Maximum load is required",
+          requiredDriverName: "Driver name is required",
+          requiredDriverPhone: "Driver phone is required",
+          requiredNationalId: "National ID is required",
+          validUrl: "Enter a valid URL",
+          vehicleCreated: "Vehicle created successfully",
+          failedToSaveVehicle: "Failed to save vehicle",
+          vehicleUpdated: "Vehicle updated successfully",
+          failedToSaveChanges: "Failed to save changes",
+          statusUpdated: "Vehicle status updated successfully",
+          failedToUpdateStatus: "Failed to update vehicle status",
+          vehicleActivated: "Vehicle activated successfully",
+          failedToActivateVehicle: "Failed to activate vehicle",
+          vehicleDeactivated: "Vehicle deactivated successfully",
+          failedToDeactivateVehicle: "Failed to deactivate vehicle",
+          failedToLoadVehicleDetails: "Failed to load vehicle details",
+        },
+        ar: {
+          pageTitle: "سوبر سايكل - إدارة العربيات",
+          brandSub: "لوحة تحكم الإدارة",
+          sidebarAdmin: "مسؤول النظام",
+          sidebarAdminSub: "تحكم إداري",
+          navOperations: "العمليات",
+          navAdminGroup: "الإدارة",
+          navEcoGroup: "المنظومة البيئية",
+          navHomeTitle: "الرئيسية",
+          navHomeSub: "ملخص الأداء والمؤشرات",
+          navApprovalsTitle: "الموافقات",
+          navApprovalsSub: "شحنات بانتظار المراجعة",
+          navSegmentationTitle: "التوجيه والتقسيم",
+          navSegmentationSub: "حمولات جاهزة للتشغيل",
+          navVehiclesTitle: "العربيات",
+          navVehiclesSub: "إدارة الأسطول والتكليفات",
+          navFactoriesTitle: "المصانع",
+          navFactoriesSub: "شبكة الاستلام والتغطية",
+          navFinanceTitle: "المالية",
+          navFinanceSub: "التسويات والتحويلات",
+          navDoshTitle: "إدارة الدشت",
+          navDoshSub: "الأنواع والفئات والأسعار",
+          navContactsTitle: "إدارة التواصل",
+          navContactsSub: "متابعة العملاء",
+          navContractsTitle: "العقود",
+          navContractsSub: "إنشاء وإدارة المتعاقدين",
+          navParticipantsTitle: "المشاركون البيئيون",
+          navParticipantsSub: "دليل المشاركين",
+          navRedeemsTitle: "طلبات الاستبدال",
+          navRedeemsSub: "المراجعة والتنفيذ",
+          headerTitle: "إدارة العربيات",
+          headerText:
+            "تابع الأسطول، راجع الحالة التشغيلية، وعدّل بيانات العربيات بدون مغادرة الصفحة.",
+          refreshIcon: "↻",
+          backToDashboard: "الرجوع للداشبورد",
+          logout: "تسجيل الخروج",
+          heroNote: "الأسطول التشغيلي",
+          heroTitle: "إدارة العربيات",
+          heroText:
+            "تابع جميع العربيات، راجع بيانات السائقين، وحدث حالة التشغيل بسهولة.",
+          addVehicle: "إضافة عربية",
+          viewDetails: "عرض التفاصيل",
+          editVehicle: "تعديل العربية",
+          selectionTitle: "وضع المتابعة",
+          selectionText: "عدد العربيات الظاهرة في الصفحة الحالية بعد تطبيق الفلاتر.",
+          statFleetTag: "الأسطول",
+          totalVehicles: "إجمالي العربيات",
+          totalVehiclesText: "كل العربيات المسجلة والمتاحة حاليًا داخل النظام.",
+          statReadyTag: "جاهز",
+          availableNow: "المتاحة الآن",
+          availableNowText: "عربيات جاهزة للتكليف في العمليات الحالية.",
+          statActiveTag: "نشطة",
+          activeOperational: "العربيات التشغيلية",
+          activeOperationalText: "العربيات التي لا تحمل حالة غير نشطة.",
+          statLoadTag: "حمولة",
+          totalLoad: "إجمالي الحمولة",
+          totalLoadText: "إجمالي السعات القصوى بالكيلو للعربيات الظاهرة.",
+          directoryTitle: "جدول العربيات",
+          directoryText: "ابحث وفلتر، ثم افتح العربية التي تحتاج مراجعة أو تعديل.",
+          resetFilters: "إعادة ضبط",
+          refreshResults: "تحديث النتائج",
+          filterSearch: "بحث",
+          filterSearchPlaceholder: "رقم اللوحة أو اسم السائق أو الهاتف أو نوع العربية",
+          filterStatus: "الحالة",
+          allStatuses: "كل الحالات",
+          filterVehicleType: "نوع العربية",
+          filterVehicleTypePlaceholder: "مثال: نقل، نصف نقل",
+          filterMinLoadKg: "أقل حمولة",
+          filterLimit: "حجم الصفحة",
+          tableVehicle: "العربية",
+          tableDriver: "السائق",
+          tableLoad: "الحمولة",
+          tableStatus: "الحالة",
+          tableQuickInfo: "بيانات سريعة",
+          tableActions: "الإجراءات",
+          previous: "السابق",
+          next: "التالي",
+          paginationLabel: "صفحة {page} من {totalPages}",
+          createModalTitle: "إضافة عربية جديدة",
+          createModalHint:
+            "أدخل بيانات العربية والسائق مرة واحدة من خلال نموذج واضح ومركز.",
+          close: "إغلاق",
+          fieldVehicleType: "نوع العربية",
+          fieldLicensePlate: "رقم اللوحة",
+          fieldMaxLoadKg: "أقصى حمولة بالكيلو",
+          fieldStatus: "الحالة",
+          fieldDriverName: "اسم السائق",
+          fieldDriverPhone: "رقم السائق",
+          fieldDriverNationalId: "الرقم القومي",
+          fieldDriverNationalIdPic: "رابط صورة البطاقة",
+          fieldDriverAddress: "العنوان",
+          clearData: "مسح البيانات",
+          saveVehicle: "حفظ العربية",
+          editModalTitle: "تعديل بيانات العربية",
+          editModalHint:
+            "حدّث بيانات العربية والسائق من نافذة مركزة بدون مغادرة الصفحة.",
+          cancel: "إلغاء",
+          saveChanges: "حفظ التعديلات",
+          viewModalTitle: "ملف العربية",
+          viewModalHint: "عرض مركز لبيانات العربية والحالة التشغيلية الحالية.",
+          detailVehicle: "العربية",
+          detailStatus: "الحالة",
+          detailDriver: "السائق",
+          detailPhone: "الهاتف",
+          detailNationalId: "الرقم القومي",
+          detailLoad: "الحمولة",
+          detailAddress: "العنوان",
+          detailId: "المعرف",
+          activate: "تفعيل",
+          deactivate: "إيقاف",
+          updateStatus: "تحديث الحالة",
+          statusAvailable: "متاحة",
+          statusAssigned: "مسندة",
+          statusInTransit: "في الطريق",
+          statusMaintenance: "صيانة",
+          statusInactive: "غير نشطة",
+          loadingVehicles: "جارٍ تحميل العربيات...",
+          failedToLoadVehicles: "تعذر تحميل العربيات",
+          noVehicles: "لا توجد عربيات مطابقة للفلاتر الحالية",
+          weightUnit: "كجم",
+          nationalIdLabel: "الرقم القومي",
+          identifierLabel: "المعرف",
+          view: "عرض",
+          requiredVehicleType: "نوع العربية مطلوب",
+          requiredLicensePlate: "رقم اللوحة مطلوب",
+          requiredLoad: "الحمولة مطلوبة",
+          requiredDriverName: "اسم السائق مطلوب",
+          requiredDriverPhone: "رقم السائق مطلوب",
+          requiredNationalId: "الرقم القومي مطلوب",
+          validUrl: "أدخل رابطًا صحيحًا",
+          vehicleCreated: "تم حفظ العربية بنجاح",
+          failedToSaveVehicle: "تعذر حفظ العربية",
+          vehicleUpdated: "تم تحديث العربية بنجاح",
+          failedToSaveChanges: "تعذر حفظ التعديلات",
+          statusUpdated: "تم تحديث الحالة بنجاح",
+          failedToUpdateStatus: "تعذر تحديث الحالة",
+          vehicleActivated: "تم تفعيل العربية بنجاح",
+          failedToActivateVehicle: "تعذر تفعيل العربية",
+          vehicleDeactivated: "تم إيقاف العربية بنجاح",
+          failedToDeactivateVehicle: "تعذر إيقاف العربية",
+          failedToLoadVehicleDetails: "تعذر تحميل بيانات العربية",
+        },
+      };
+
+      function vehicleText(key, vars = {}) {
+        const lang = typeof window.__lang === "function" ? window.__lang() : "ar";
+        const template = vehicleI18n[lang]?.[key] || vehicleI18n.ar[key] || key;
+        return template.replace(/\{(\w+)\}/g, (_, token) => vars[token] ?? "");
+      }
+
+      function setNodeText(selector, value) {
+        const node = document.querySelector(selector);
+        if (node) node.textContent = value;
+      }
+
+      function translateVehicles() {
+        document.title = vehicleText("pageTitle");
+        setNodeText(".brand p", vehicleText("brandSub"));
+        setNodeText(".sidebar-footer strong", vehicleText("sidebarAdmin"));
+        setNodeText(".sidebar-footer span", vehicleText("sidebarAdminSub"));
+
+        const navItems = document.querySelectorAll(".sidebar .nav-item");
+        const navMap = [
+          ["DB", "navHomeTitle", "navHomeSub"],
+          ["AP", "navApprovalsTitle", "navApprovalsSub"],
+          ["SG", "navSegmentationTitle", "navSegmentationSub"],
+          ["VH", "navVehiclesTitle", "navVehiclesSub"],
+          ["FC", "navFactoriesTitle", "navFactoriesSub"],
+          ["FN", "navFinanceTitle", "navFinanceSub"],
+          ["DS", "navDoshTitle", "navDoshSub"],
+          ["CX", "navContactsTitle", "navContactsSub"],
+          ["CT", "navContractsTitle", "navContractsSub"],
+          ["EP", "navParticipantsTitle", "navParticipantsSub"],
+          ["RD", "navRedeemsTitle", "navRedeemsSub"],
+        ];
+        navItems.forEach((item, index) => {
+          const map = navMap[index];
+          if (!map) return;
+          const [iconText, titleKey, subKey] = map;
+          const icon = item.querySelector(".nav-icon");
+          const title = item.querySelector(".nav-copy strong");
+          const sub = item.querySelector(".nav-copy span");
+          if (icon) icon.textContent = iconText;
+          if (title) title.textContent = vehicleText(titleKey);
+          if (sub) sub.textContent = vehicleText(subKey);
+        });
+
+        const navGroups = document.querySelectorAll(".nav-group-label");
+        if (navGroups[0]) navGroups[0].textContent = vehicleText("navOperations");
+        if (navGroups[1]) navGroups[1].textContent = vehicleText("navAdminGroup");
+        if (navGroups[2]) navGroups[2].textContent = vehicleText("navEcoGroup");
+
+        setNodeText(".topbar-title h1", vehicleText("headerTitle"));
+        setNodeText(".topbar-title p", vehicleText("headerText"));
+        setNodeText(".topbar-actions .icon-button", vehicleText("refreshIcon"));
+        setNodeText(".topbar-actions .ghost-btn", vehicleText("backToDashboard"));
+        setNodeText(".topbar-actions .primary-btn", vehicleText("logout"));
+
+        setNodeText(".hero-note", vehicleText("heroNote"));
+        setNodeText(".hero-top h2", vehicleText("heroTitle"));
+        setNodeText(".hero-top p", vehicleText("heroText"));
+        setNodeText(".hero-actions .primary-btn", vehicleText("addVehicle"));
+        setNodeText("#openVehicleInspectorBtn", vehicleText("viewDetails"));
+        setNodeText("#editSelectedVehicleBtn", vehicleText("editVehicle"));
+        setNodeText(".selection-card strong", vehicleText("selectionTitle"));
+        setNodeText(".summary-caption", vehicleText("selectionText"));
+
+        const statTags = document.querySelectorAll(".stat-tag");
+        const statLabels = document.querySelectorAll(".stat-label");
+        const statFooters = document.querySelectorAll(".stat-foot");
+        if (statTags[0]) statTags[0].textContent = vehicleText("statFleetTag");
+        if (statTags[1]) statTags[1].textContent = vehicleText("statReadyTag");
+        if (statTags[2]) statTags[2].textContent = vehicleText("statActiveTag");
+        if (statTags[3]) statTags[3].textContent = vehicleText("statLoadTag");
+        if (statLabels[0]) statLabels[0].textContent = vehicleText("totalVehicles");
+        if (statLabels[1]) statLabels[1].textContent = vehicleText("availableNow");
+        if (statLabels[2]) statLabels[2].textContent = vehicleText("activeOperational");
+        if (statLabels[3]) statLabels[3].textContent = vehicleText("totalLoad");
+        if (statFooters[0]) statFooters[0].textContent = vehicleText("totalVehiclesText");
+        if (statFooters[1]) statFooters[1].textContent = vehicleText("availableNowText");
+        if (statFooters[2]) statFooters[2].textContent = vehicleText("activeOperationalText");
+        if (statFooters[3]) statFooters[3].textContent = vehicleText("totalLoadText");
+
+        setNodeText(".panel-header h3", vehicleText("directoryTitle"));
+        setNodeText(".panel-header p", vehicleText("directoryText"));
+        setNodeText(".panel-actions .ghost-btn", vehicleText("resetFilters"));
+        setNodeText(".panel-actions .primary-btn", vehicleText("refreshResults"));
+        setNodeText("label[for='vehicleSearch']", vehicleText("filterSearch"));
+        const searchInput = document.getElementById("vehicleSearch");
+        if (searchInput) searchInput.placeholder = vehicleText("filterSearchPlaceholder");
+        setNodeText("label[for='filterStatus']", vehicleText("filterStatus"));
+        setNodeText("label[for='filterVehicleType']", vehicleText("filterVehicleType"));
+        const vehicleTypeInput = document.getElementById("filterVehicleType");
+        if (vehicleTypeInput) vehicleTypeInput.placeholder = vehicleText("filterVehicleTypePlaceholder");
+        setNodeText("label[for='filterMinLoadKg']", vehicleText("filterMinLoadKg"));
+        setNodeText("label[for='filterLimit']", vehicleText("filterLimit"));
+
+        const filterStatus = document.getElementById("filterStatus");
+        if (filterStatus) {
+          filterStatus.options[0].text = vehicleText("allStatuses");
+          filterStatus.options[1].text = vehicleText("statusAvailable");
+          filterStatus.options[2].text = vehicleText("statusAssigned");
+          filterStatus.options[3].text = vehicleText("statusInTransit");
+          filterStatus.options[4].text = vehicleText("statusMaintenance");
+          filterStatus.options[5].text = vehicleText("statusInactive");
+        }
+
+        const tableHeaders = document.querySelectorAll("#vehiclesTable th");
+        const tableTexts = [
+          vehicleText("tableVehicle"),
+          vehicleText("tableDriver"),
+          vehicleText("tableLoad"),
+          vehicleText("tableStatus"),
+          vehicleText("tableQuickInfo"),
+          vehicleText("tableActions"),
+        ];
+        tableHeaders.forEach((node, index) => {
+          node.textContent = tableTexts[index] || node.textContent;
+        });
+
+        setNodeText("#prevPageBtn", vehicleText("previous"));
+        setNodeText("#nextPageBtn", vehicleText("next"));
+
+        setNodeText("#vehicleFormTitle", vehicleText("createModalTitle"));
+        setNodeText("#createVehicleModal .modal-header .subtle", vehicleText("createModalHint"));
+        setNodeText("#createVehicleModal .modal-header .ghost-btn", vehicleText("close"));
+        setNodeText("label[for='vehicleType']", vehicleText("fieldVehicleType"));
+        setNodeText("label[for='licensePlate']", vehicleText("fieldLicensePlate"));
+        setNodeText("label[for='maxLoadKg']", vehicleText("fieldMaxLoadKg"));
+        setNodeText("label[for='vehicleStatus']", vehicleText("fieldStatus"));
+        setNodeText("label[for='driverName']", vehicleText("fieldDriverName"));
+        setNodeText("label[for='driverPhone']", vehicleText("fieldDriverPhone"));
+        setNodeText("label[for='driverNationalId']", vehicleText("fieldDriverNationalId"));
+        setNodeText("label[for='driverNationalIdPic']", vehicleText("fieldDriverNationalIdPic"));
+        setNodeText("label[for='driverAddress']", vehicleText("fieldDriverAddress"));
+        setNodeText("#createVehicleModal .modal-footer .ghost-btn", vehicleText("clearData"));
+        setNodeText("#vehicleSubmitBtn", vehicleText("saveVehicle"));
+
+        setNodeText("#vehicleEditModal .modal-header h3", vehicleText("editModalTitle"));
+        setNodeText("#vehicleEditModal .modal-header .subtle", vehicleText("editModalHint"));
+        setNodeText("#vehicleEditModal .modal-header .ghost-btn", vehicleText("close"));
+        setNodeText("label[for='modalVehicleType']", vehicleText("fieldVehicleType"));
+        setNodeText("label[for='modalLicensePlate']", vehicleText("fieldLicensePlate"));
+        setNodeText("label[for='modalMaxLoadKg']", vehicleText("fieldMaxLoadKg"));
+        setNodeText("label[for='modalVehicleStatus']", vehicleText("fieldStatus"));
+        setNodeText("label[for='modalDriverName']", vehicleText("fieldDriverName"));
+        setNodeText("label[for='modalDriverPhone']", vehicleText("fieldDriverPhone"));
+        setNodeText("label[for='modalDriverNationalId']", vehicleText("fieldDriverNationalId"));
+        setNodeText("label[for='modalDriverNationalIdPic']", vehicleText("fieldDriverNationalIdPic"));
+        setNodeText("label[for='modalDriverAddress']", vehicleText("fieldDriverAddress"));
+        const editStatus = document.getElementById("modalVehicleStatus");
+        if (editStatus) {
+          editStatus.options[0].text = vehicleText("statusAvailable");
+          editStatus.options[1].text = vehicleText("statusAssigned");
+          editStatus.options[2].text = vehicleText("statusInTransit");
+          editStatus.options[3].text = vehicleText("statusMaintenance");
+          editStatus.options[4].text = vehicleText("statusInactive");
+        }
+        setNodeText("#vehicleEditModal .modal-footer .ghost-btn", vehicleText("cancel"));
+        setNodeText("#vehicleEditModal .modal-footer .primary-btn", vehicleText("saveChanges"));
+
+        setNodeText("#vehicleViewModal .modal-header h3", vehicleText("viewModalTitle"));
+        setNodeText("#vehicleViewModal .modal-header .subtle", vehicleText("viewModalHint"));
+        setNodeText("#vehicleViewModal .modal-header .ghost-btn", vehicleText("close"));
+        const detailLabels = document.querySelectorAll("#vehicleViewModal .detail-item strong");
+        const detailTexts = [
+          vehicleText("detailVehicle"),
+          vehicleText("detailStatus"),
+          vehicleText("detailDriver"),
+          vehicleText("detailPhone"),
+          vehicleText("detailNationalId"),
+          vehicleText("detailLoad"),
+          vehicleText("detailAddress"),
+          vehicleText("detailId"),
+        ];
+        detailLabels.forEach((node, index) => {
+          node.textContent = detailTexts[index] || node.textContent;
+        });
+        setNodeText("#vehicleViewModal .modal-actions .primary-btn", vehicleText("editVehicle"));
+        const modalGhostButtons = document.querySelectorAll("#vehicleViewModal .modal-actions .ghost-btn");
+        if (modalGhostButtons[0]) modalGhostButtons[0].textContent = vehicleText("activate");
+        if (modalGhostButtons[1]) modalGhostButtons[1].textContent = vehicleText("deactivate");
+        const selectedStatus = document.getElementById("selectedVehicleStatus");
+        if (selectedStatus) {
+          selectedStatus.options[0].text = vehicleText("statusAvailable");
+          selectedStatus.options[1].text = vehicleText("statusAssigned");
+          selectedStatus.options[2].text = vehicleText("statusInTransit");
+          selectedStatus.options[3].text = vehicleText("statusMaintenance");
+          selectedStatus.options[4].text = vehicleText("statusInactive");
+        }
+        setNodeText("#vehicleViewModal .modal-actions:last-child .ghost-btn", vehicleText("updateStatus"));
+
+        updatePagination();
+      }
+
+      function go(path) {
+        location.href = path;
+      }
 
       function goBack() {
         location.href = "dashboard.html";
@@ -1074,16 +1883,20 @@
 
       function formatNumber(value) {
         if (value == null || value === "" || Number.isNaN(Number(value))) return "-";
-        return Number(value).toLocaleString("ar-EG");
+        const locale =
+          typeof window.__lang === "function" && window.__lang() === "en"
+            ? "en-US"
+            : "ar-EG";
+        return Number(value).toLocaleString(locale);
       }
 
       function statusLabel(status) {
         const labels = {
-          available: "متاحة",
-          assigned: "مسندة",
-          in_transit: "في الطريق",
-          maintenance: "صيانة",
-          inactive: "غير نشطة",
+          available: vehicleText("statusAvailable"),
+          assigned: vehicleText("statusAssigned"),
+          in_transit: vehicleText("statusInTransit"),
+          maintenance: vehicleText("statusMaintenance"),
+          inactive: vehicleText("statusInactive"),
         };
         return labels[status] || status || "-";
       }
@@ -1204,7 +2017,7 @@
         const vehiclesTable = document.getElementById("vehiclesTable");
 
         vehiclesState.className = "loading-state";
-        vehiclesState.textContent = "جاري تحميل العربيات...";
+        vehiclesState.textContent = vehicleText("loadingVehicles");
         vehiclesState.hidden = false;
         vehiclesTable.hidden = true;
 
@@ -1222,7 +2035,7 @@
         } catch (error) {
           state.vehicles = [];
           vehiclesState.className = "empty-state";
-          vehiclesState.textContent = error.message || "تعذر تحميل العربيات";
+          vehiclesState.textContent = error.message || vehicleText("failedToLoadVehicles");
           updatePagination();
           updateOverview();
         }
@@ -1236,7 +2049,7 @@
         if (!state.vehicles.length) {
           rows.innerHTML = "";
           vehiclesState.className = "empty-state";
-          vehiclesState.textContent = "لا توجد عربيات مطابقة للفلاتر الحالية";
+          vehiclesState.textContent = vehicleText("noVehicles");
           vehiclesState.hidden = false;
           vehiclesTable.hidden = true;
           updatePagination();
@@ -1260,18 +2073,18 @@
                     <span class="subtle">${escapeHtml(item.driverPhone || "-")}</span>
                   </div>
                 </td>
-                <td>${formatNumber(item.maxLoadKg)} كجم</td>
+                <td>${formatNumber(item.maxLoadKg)} ${escapeHtml(vehicleText("weightUnit"))}</td>
                 <td>${statusPill(item.status)}</td>
                 <td>
                   <div class="driver-cell">
-                    <span class="subtle">الرقم القومي: ${escapeHtml(item.driverNationalId || "-")}</span>
-                    <span class="subtle">المعرف: ${escapeHtml(id || "-")}</span>
+                    <span class="subtle">${escapeHtml(vehicleText("nationalIdLabel"))}: ${escapeHtml(item.driverNationalId || "-")}</span>
+                    <span class="subtle">${escapeHtml(vehicleText("identifierLabel"))}: ${escapeHtml(id || "-")}</span>
                   </div>
                 </td>
                 <td>
                   <div class="row-actions">
-                    <button class="table-link" type="button" onclick="selectVehicle('${escapeHtml(id)}', true)">عرض</button>
-                    <button class="table-link" type="button" onclick="quickEditVehicle('${escapeHtml(id)}')">تعديل</button>
+                    <button class="table-link" type="button" onclick="selectVehicle('${escapeHtml(id)}', true)">${escapeHtml(vehicleText("view"))}</button>
+                    <button class="table-link" type="button" onclick="quickEditVehicle('${escapeHtml(id)}')">${escapeHtml(vehicleText("editVehicle"))}</button>
                   </div>
                 </td>
               </tr>
@@ -1288,7 +2101,10 @@
         const page = state.meta.page || 1;
         const totalPages = state.meta.totalPages || 1;
         document.getElementById("paginationLabel").textContent =
-          `صفحة ${formatNumber(page)} من ${formatNumber(totalPages)}`;
+          vehicleText("paginationLabel", {
+            page: formatNumber(page),
+            totalPages: formatNumber(totalPages),
+          });
         document.getElementById("prevPageBtn").disabled = page <= 1;
         document.getElementById("nextPageBtn").disabled = page >= totalPages;
       }
@@ -1305,7 +2121,7 @@
         } catch (error) {
           state.selectedVehicle = null;
           renderSelectedVehicle();
-          showBanner("error", error.message || "تعذر تحميل بيانات العربية");
+          showBanner("error", error.message || vehicleText("failedToLoadVehicleDetails"));
         }
       }
 
@@ -1320,7 +2136,7 @@
         }
 
         document.getElementById("vehicleViewVehicle").textContent =
-          `${item.vehicleType || "-"} • ${item.licensePlate || "-"}`;
+          `${item.vehicleType || "-"} - ${item.licensePlate || "-"}`;
         document.getElementById("vehicleViewStatus").innerHTML = statusPill(item.status);
         document.getElementById("vehicleViewDriver").textContent =
           item.driverName || "-";
@@ -1329,7 +2145,7 @@
         document.getElementById("vehicleViewNationalId").textContent =
           item.driverNationalId || "-";
         document.getElementById("vehicleViewLoad").textContent =
-          `${formatNumber(item.maxLoadKg)} كجم`;
+          `${formatNumber(item.maxLoadKg)} ${vehicleText("weightUnit")}`;
         document.getElementById("vehicleViewAddress").textContent =
           item.driverAddress || "-";
         document.getElementById("vehicleViewId").textContent = getId(item) || "-";
@@ -1363,8 +2179,8 @@
         document.getElementById("vehicleForm").reset();
         document.getElementById("vehicleStatus").value = "available";
         document.getElementById("vehicleFormTitle").textContent =
-          "إدخال عربية جديدة";
-        document.getElementById("vehicleSubmitBtn").textContent = "حفظ العربية";
+          vehicleText("createModalTitle");
+        document.getElementById("vehicleSubmitBtn").textContent = vehicleText("saveVehicle");
       }
 
       function openVehicleEditModal(item) {
@@ -1414,31 +2230,31 @@
         let valid = true;
 
         if (!vehicleType) {
-          setFieldError("vehicle.vehicleType", "نوع العربية مطلوب");
+          setFieldError("vehicle.vehicleType", vehicleText("requiredVehicleType"));
           valid = false;
         }
         if (!licensePlate) {
-          setFieldError("vehicle.licensePlate", "رقم اللوحة مطلوب");
+          setFieldError("vehicle.licensePlate", vehicleText("requiredLicensePlate"));
           valid = false;
         }
         if (maxLoadKg == null || Number.isNaN(maxLoadKg)) {
-          setFieldError("vehicle.maxLoadKg", "الحمولة مطلوبة");
+          setFieldError("vehicle.maxLoadKg", vehicleText("requiredLoad"));
           valid = false;
         }
         if (!driverName) {
-          setFieldError("vehicle.driverName", "اسم السائق مطلوب");
+          setFieldError("vehicle.driverName", vehicleText("requiredDriverName"));
           valid = false;
         }
         if (!driverPhone) {
-          setFieldError("vehicle.driverPhone", "رقم السائق مطلوب");
+          setFieldError("vehicle.driverPhone", vehicleText("requiredDriverPhone"));
           valid = false;
         }
         if (!driverNationalId) {
-          setFieldError("vehicle.driverNationalId", "الرقم القومي مطلوب");
+          setFieldError("vehicle.driverNationalId", vehicleText("requiredNationalId"));
           valid = false;
         }
         if (driverNationalIdPic && !isValidUrl(driverNationalIdPic)) {
-          setFieldError("vehicle.driverNationalIdPic", "أدخل رابطًا صحيحًا");
+          setFieldError("vehicle.driverNationalIdPic", vehicleText("validUrl"));
           valid = false;
         }
 
@@ -1487,31 +2303,31 @@
         let valid = true;
 
         if (!vehicleType) {
-          setVehicleModalError("vehicle.vehicleType", "نوع العربية مطلوب");
+          setVehicleModalError("vehicle.vehicleType", vehicleText("requiredVehicleType"));
           valid = false;
         }
         if (!licensePlate) {
-          setVehicleModalError("vehicle.licensePlate", "رقم اللوحة مطلوب");
+          setVehicleModalError("vehicle.licensePlate", vehicleText("requiredLicensePlate"));
           valid = false;
         }
         if (maxLoadKg == null || Number.isNaN(maxLoadKg)) {
-          setVehicleModalError("vehicle.maxLoadKg", "الحمولة مطلوبة");
+          setVehicleModalError("vehicle.maxLoadKg", vehicleText("requiredLoad"));
           valid = false;
         }
         if (!driverName) {
-          setVehicleModalError("vehicle.driverName", "اسم السائق مطلوب");
+          setVehicleModalError("vehicle.driverName", vehicleText("requiredDriverName"));
           valid = false;
         }
         if (!driverPhone) {
-          setVehicleModalError("vehicle.driverPhone", "رقم السائق مطلوب");
+          setVehicleModalError("vehicle.driverPhone", vehicleText("requiredDriverPhone"));
           valid = false;
         }
         if (!driverNationalId) {
-          setVehicleModalError("vehicle.driverNationalId", "الرقم القومي مطلوب");
+          setVehicleModalError("vehicle.driverNationalId", vehicleText("requiredNationalId"));
           valid = false;
         }
         if (driverNationalIdPic && !isValidUrl(driverNationalIdPic)) {
-          setVehicleModalError("vehicle.driverNationalIdPic", "أدخل رابطًا صحيحًا");
+          setVehicleModalError("vehicle.driverNationalIdPic", vehicleText("validUrl"));
           valid = false;
         }
 
@@ -1542,10 +2358,10 @@
           });
           closeCreateVehicleModal();
           resetVehicleForm();
-          showBanner("success", getMessage(json, "تم حفظ العربية بنجاح"));
+          showBanner("success", getMessage(json, vehicleText("vehicleCreated")));
           await loadVehicles(1);
         } catch (error) {
-          showBanner("error", error.message || "تعذر حفظ العربية");
+          showBanner("error", error.message || vehicleText("failedToSaveVehicle"));
         }
       }
 
@@ -1561,13 +2377,13 @@
             body: JSON.stringify(payload),
           });
           closeVehicleEditModal();
-          showBanner("success", getMessage(json, "تم تحديث العربية بنجاح"));
+          showBanner("success", getMessage(json, vehicleText("vehicleUpdated")));
           await Promise.all([
             loadVehicles(state.meta.page || 1),
             selectVehicle(currentId),
           ]);
         } catch (error) {
-          showBanner("error", error.message || "تعذر حفظ التعديلات");
+          showBanner("error", error.message || vehicleText("failedToSaveChanges"));
         }
       }
 
@@ -1596,13 +2412,13 @@
               }),
             },
           );
-          showBanner("success", getMessage(json, "تم تحديث الحالة بنجاح"));
+          showBanner("success", getMessage(json, vehicleText("statusUpdated")));
           await Promise.all([
             loadVehicles(state.meta.page || 1),
             selectVehicle(getId(state.selectedVehicle), true),
           ]);
         } catch (error) {
-          showBanner("error", error.message || "تعذر تحديث الحالة");
+          showBanner("error", error.message || vehicleText("failedToUpdateStatus"));
         }
       }
 
@@ -1614,13 +2430,13 @@
             `/admin/vehicles/${getId(state.selectedVehicle)}/activate`,
             { method: "PATCH" },
           );
-          showBanner("success", getMessage(json, "تم تفعيل العربية"));
+          showBanner("success", getMessage(json, vehicleText("vehicleActivated")));
           await Promise.all([
             loadVehicles(state.meta.page || 1),
             selectVehicle(getId(state.selectedVehicle), true),
           ]);
         } catch (error) {
-          showBanner("error", error.message || "تعذر تفعيل العربية");
+          showBanner("error", error.message || vehicleText("failedToActivateVehicle"));
         }
       }
 
@@ -1632,13 +2448,13 @@
             `/admin/vehicles/${getId(state.selectedVehicle)}/deactivate`,
             { method: "PATCH" },
           );
-          showBanner("success", getMessage(json, "تم إيقاف العربية"));
+          showBanner("success", getMessage(json, vehicleText("vehicleDeactivated")));
           await Promise.all([
             loadVehicles(state.meta.page || 1),
             selectVehicle(getId(state.selectedVehicle), true),
           ]);
         } catch (error) {
-          showBanner("error", error.message || "تعذر إيقاف العربية");
+          showBanner("error", error.message || vehicleText("failedToDeactivateVehicle"));
         }
       }
 
@@ -1666,7 +2482,11 @@
       }
 
       function initMeta() {
-        const formatted = new Date().toLocaleDateString("ar-EG", {
+        const locale =
+          typeof window.__lang === "function" && window.__lang() === "en"
+            ? "en-US"
+            : "ar-EG";
+        const formatted = new Date().toLocaleDateString(locale, {
           weekday: "long",
           day: "numeric",
           month: "long",
@@ -1675,9 +2495,11 @@
         document.getElementById("todayLabel").textContent = formatted;
       }
 
+      translateVehicles();
       initMeta();
       loadVehicles(1);
       window.onLanguageChange = () => {
+        translateVehicles();
         initMeta();
         loadVehicles(state.meta.page || 1);
       };
@@ -1685,3 +2507,5 @@
     <script src="./site-i18n.js"></script>
   </body>
 </html>
+
+

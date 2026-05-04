@@ -141,10 +141,83 @@
         padding: 30px;
         font-style: italic;
       }
+
+      :root {
+        --bg: #f3f7f2;
+        --sidebar: #0f2516;
+        --sidebar-text: #d6e5d5;
+        --sidebar-muted: #88a18e;
+        --border: #dce9de;
+        --gray-100: #f3f7f2;
+        --gray-200: #dce9de;
+        --gray-700: #5b7160;
+        --gray-900: #162418;
+        --shadow: 0 20px 45px rgba(24, 49, 31, 0.08);
+        --shadow-soft: 0 10px 25px rgba(24, 49, 31, 0.06);
+      }
+
+      body {
+        min-height: 100vh;
+        background:
+          radial-gradient(circle at top right, rgba(46, 160, 91, 0.12), transparent 24%),
+          radial-gradient(circle at bottom left, rgba(15, 155, 168, 0.08), transparent 26%),
+          linear-gradient(180deg, #f8fbf8 0%, var(--bg) 100%);
+      }
+
+      .app-shell { display: flex; min-height: 100vh; }
+      .sidebar { width: 264px; flex-shrink: 0; background: linear-gradient(180deg, rgba(46,160,91,.08), transparent 12%), linear-gradient(180deg, var(--sidebar) 0%, #102819 100%); color: var(--sidebar-text); padding: 22px 16px 18px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+      .brand { display: flex; align-items: center; gap: 14px; padding: 10px 10px 18px; }
+      .brand-mark { width: 46px; height: 46px; border-radius: 15px; background: linear-gradient(135deg, #33a65f, #17653c); display: grid; place-items: center; color: #fff; font-size: 22px; font-weight: 900; }
+      .brand h1 { font-size: 26px; line-height: 1; font-weight: 900; letter-spacing: -0.03em; }
+      .brand p { margin-top: 4px; color: var(--sidebar-muted); font-size: 12px; }
+      .nav-group { margin-top: 18px; }
+      .nav-group-label { color: #6d8472; font-size: 11px; font-weight: 800; margin: 0 12px 10px; }
+      .nav-list { display: grid; gap: 6px; }
+      .nav-item { border: 0; background: transparent; color: inherit; width: 100%; display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-radius: 14px; cursor: pointer; text-align: right; }
+      .nav-item:hover { background: rgba(255,255,255,.06); }
+      .nav-item.active { background: linear-gradient(135deg, rgba(46,160,91,.28), rgba(33,115,70,.56)); color: #fff; }
+      .nav-icon { width: 34px; height: 34px; border-radius: 10px; display: grid; place-items: center; background: rgba(255,255,255,.06); color: #fff; font-size: 13px; font-weight: 800; flex-shrink: 0; }
+      .nav-copy { flex: 1; }
+      .nav-copy strong { display: block; font-size: 13px; }
+      .nav-copy span { display: block; margin-top: 2px; color: var(--sidebar-muted); font-size: 11px; }
+      .nav-item.active .nav-copy span { color: rgba(255,255,255,.8); }
+      .sidebar-footer { margin-top: 18px; padding: 14px; border-radius: 18px; background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.06); display: flex; align-items: center; gap: 12px; }
+      .sidebar-avatar { width: 42px; height: 42px; border-radius: 14px; background: linear-gradient(135deg, #2ea05b, #1c6b42); display: grid; place-items: center; color: #fff; font-size: 16px; font-weight: 900; }
+      .main-content { flex: 1; min-width: 0; padding: 22px; }
+      .header { background: rgba(255,255,255,.78); color: var(--gray-900); padding: 20px 22px; border: 1px solid rgba(220,233,222,.9); box-shadow: var(--shadow-soft); border-radius: 26px; backdrop-filter: blur(12px); }
+      .logout-btn { background: var(--gray-100); color: var(--gray-700); border: 1px solid var(--gray-200); padding: 10px 16px; border-radius: 12px; }
+      .container { max-width: none; margin: 0; padding: 22px 0 8px; }
+      .table-card { background: rgba(255,255,255,.96); border: 1px solid rgba(220,233,222,.92); border-radius: 24px; box-shadow: var(--shadow); overflow: hidden; }
+      .table-head { padding: 18px 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; gap: 16px; }
+      table { box-shadow: none; border-radius: 0; }
+
+      @media (max-width: 760px) {
+        .app-shell { display: block; }
+        .sidebar { width: 100%; height: auto; position: relative; }
+        .main-content { padding: 14px; }
+        .header { flex-direction: column; align-items: stretch; }
+        .container { padding: 18px 0 28px; }
+        .filter-bar { flex-direction: column; align-items: stretch; }
+        .filter-bar select { width: 100%; }
+        .table-head { padding: 16px 14px; }
+        th, td { padding: 12px 10px; font-size: 13px; }
+        button.action,
+        .logout-btn { width: 100%; margin-right: 0; margin-bottom: 6px; }
+      }
     </style>
   </head>
 
   <body>
+    <div class="app-shell">
+      <aside class="sidebar">
+        <div class="brand"><div class="brand-mark">SC</div><div><h1>SuperCycle</h1><p>لوحة تحكم المسؤول</p></div></div>
+        <div class="nav-group"><div class="nav-list"><button class="nav-item" type="button" onclick="go('dashboard.html')"><span class="nav-icon">DB</span><span class="nav-copy"><strong>الرئيسية</strong><span>ملخص الأداء اليومي</span></span></button></div></div>
+        <div class="nav-group"><div class="nav-group-label">العمليات</div><div class="nav-list"><button class="nav-item" type="button" onclick="go('shipments.html?type=approval')"><span class="nav-icon">AP</span><span class="nav-copy"><strong>الموافقات</strong><span>شحنات تحتاج مراجعة</span></span></button><button class="nav-item" type="button" onclick="go('shipments.html?type=segmentation')"><span class="nav-icon">SG</span><span class="nav-copy"><strong>التوجيه والتقسيم</strong><span>جاهزة للتشغيل</span></span></button><button class="nav-item" type="button" onclick="go('vehicles-management.html')"><span class="nav-icon">VH</span><span class="nav-copy"><strong>العربيات</strong><span>إدارة الأسطول</span></span></button><button class="nav-item" type="button" onclick="go('factories-management.html')"><span class="nav-icon">FC</span><span class="nav-copy"><strong>المصانع</strong><span>التغطية والاستقبال</span></span></button></div></div>
+        <div class="nav-group"><div class="nav-group-label">الإدارة</div><div class="nav-list"><button class="nav-item" type="button" onclick="go('finance-management.html')"><span class="nav-icon">FN</span><span class="nav-copy"><strong>المالية</strong><span>تسويات وتحويلات</span></span></button><button class="nav-item" type="button" onclick="go('dosh-management.html')"><span class="nav-icon">DS</span><span class="nav-copy"><strong>أنواع وأسعار الدشت</strong><span>التسعير والفئات</span></span></button><button class="nav-item" type="button" onclick="go('contact-management.html')"><span class="nav-icon">CX</span><span class="nav-copy"><strong>الرسائل الواردة</strong><span>متابعة العملاء</span></span></button><button class="nav-item" type="button" onclick="go('contracts-create.html')"><span class="nav-icon">CT</span><span class="nav-copy"><strong>العقود</strong><span>إنشاء متعاقدين جدد</span></span></button></div></div>
+        <div class="nav-group"><div class="nav-group-label">المنظومة البيئية</div><div class="nav-list"><button class="nav-item" type="button" onclick="go('eco-participants.html')"><span class="nav-icon">EP</span><span class="nav-copy"><strong>المشاركون البيئيون</strong><span>إدارة الانضمام</span></span></button><button class="nav-item active" type="button"><span class="nav-icon">RD</span><span class="nav-copy"><strong>طلبات الاستبدال</strong><span>مراجعة وتنفيذ</span></span></button></div></div>
+        <div class="sidebar-footer"><div class="sidebar-avatar">AD</div><div><strong>مسؤول النظام</strong><span>Admin Control</span></div></div>
+      </aside>
+      <main class="main-content">
     <!-- ===== Header ===== -->
     <div class="header">
       <h1>🌱 Eco Redemption Requests</h1>
@@ -165,6 +238,8 @@
       </div>
 
       <!-- ===== Table ===== -->
+      <div class="table-card">
+      <div class="table-head"><strong>Redeem Queue</strong></div>
       <table>
         <thead>
           <tr>
@@ -178,6 +253,9 @@
         </thead>
         <tbody id="rows"></tbody>
       </table>
+      </div>
+    </div>
+      </main>
     </div>
 
     <script>
@@ -188,6 +266,10 @@
       let ALL_REDEEMS = [];
 
       if (!token) location.href = "index.html";
+
+      function go(path) {
+        location.href = path;
+      }
 
       function logout() {
         localStorage.removeItem("token");

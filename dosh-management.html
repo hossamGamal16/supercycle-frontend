@@ -1,8 +1,8 @@
-<!doctype html>
-<html lang="en">
+﻿<!doctype html>
+<html lang="ar" dir="rtl">
   <head>
     <meta charset="UTF-8" />
-    <title>SuperCycle - Dosht Management</title>
+    <title>SuperCycle - Dosh Management</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <style>
       * {
@@ -12,41 +12,248 @@
       }
 
       :root {
-        --primary: #1a7f4f;
-        --primary-light: #2ba572;
-        --primary-dark: #155d3b;
-        --gray-50: #f8fafc;
-        --gray-100: #f1f5f9;
-        --gray-200: #e2e8f0;
-        --gray-300: #cbd5e1;
-        --gray-500: #64748b;
-        --gray-700: #334155;
-        --gray-900: #0f172a;
-        --danger: #c0392b;
-        --danger-bg: #fdecea;
-        --warning: #b45309;
-        --warning-bg: #fef3c7;
-        --success: #166534;
-        --success-bg: #dcfce7;
-        --info: #1d4ed8;
-        --info-bg: #dbeafe;
+        --bg: #f3f7f2;
+        --surface: rgba(255, 255, 255, 0.95);
+        --surface-strong: #ffffff;
+        --surface-soft: #f8fcf8;
+        --sidebar: #0f2516;
+        --sidebar-2: #173220;
+        --sidebar-text: #d6e5d5;
+        --sidebar-muted: #88a18e;
+        --primary: #217346;
+        --primary-light: #2ea05b;
+        --primary-dark: #17653c;
+        --primary-soft: #e7f5eb;
+        --primary-border: #cfe7d5;
+        --gray-50: #f8fcf8;
+        --gray-100: #f3f7f2;
+        --gray-200: #dce9de;
+        --gray-300: #cfe0d2;
+        --gray-500: #829486;
+        --gray-700: #5b7160;
+        --gray-900: #162418;
+        --danger: #d43f58;
+        --danger-bg: #fdecef;
+        --warning: #a16207;
+        --warning-bg: #fff4d9;
+        --success: #138a4b;
+        --success-bg: #e5f7eb;
+        --info: #2563eb;
+        --info-bg: #e8f0ff;
+        --border: #dce9de;
+        --shadow: 0 20px 45px rgba(24, 49, 31, 0.08);
+        --shadow-soft: 0 10px 25px rgba(24, 49, 31, 0.06);
+        --radius-xl: 26px;
+        --radius-lg: 20px;
+        --radius-md: 16px;
+        --radius-sm: 12px;
         --white: #ffffff;
       }
 
       body {
-        font-family: "Segoe UI", Tahoma, sans-serif;
-        background: #f5f7fa;
+        min-height: 100vh;
+        font-family: "Segoe UI", Tahoma, Arial, sans-serif;
+        background:
+          radial-gradient(
+            circle at top right,
+            rgba(46, 160, 91, 0.12),
+            transparent 24%
+          ),
+          radial-gradient(
+            circle at bottom left,
+            rgba(15, 155, 168, 0.08),
+            transparent 26%
+          ),
+          linear-gradient(180deg, #f8fbf8 0%, var(--bg) 100%);
         color: var(--gray-900);
       }
 
+      .app-shell {
+        display: flex;
+        min-height: 100vh;
+      }
+
+      .sidebar {
+        width: 264px;
+        flex-shrink: 0;
+        background:
+          linear-gradient(180deg, rgba(46, 160, 91, 0.08), transparent 12%),
+          linear-gradient(180deg, var(--sidebar) 0%, #102819 100%);
+        color: var(--sidebar-text);
+        padding: 22px 16px 18px;
+        position: sticky;
+        top: 0;
+        height: 100vh;
+        overflow-y: auto;
+        border-left: 1px solid rgba(255, 255, 255, 0.04);
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 10px 10px 18px;
+      }
+
+      .brand-mark {
+        width: 46px;
+        height: 46px;
+        border-radius: 15px;
+        background: linear-gradient(135deg, #33a65f, #17653c);
+        display: grid;
+        place-items: center;
+        color: #fff;
+        font-size: 22px;
+        font-weight: 900;
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.24);
+      }
+
+      .brand h1 {
+        font-size: 26px;
+        line-height: 1;
+        font-weight: 900;
+        letter-spacing: -0.03em;
+      }
+
+      .brand p {
+        margin-top: 4px;
+        color: var(--sidebar-muted);
+        font-size: 12px;
+      }
+
+      .nav-group {
+        margin-top: 18px;
+      }
+
+      .nav-group-label {
+        color: #6d8472;
+        font-size: 11px;
+        font-weight: 800;
+        margin: 0 12px 10px;
+      }
+
+      .nav-list {
+        display: grid;
+        gap: 6px;
+      }
+
+      .nav-item {
+        border: 0;
+        background: transparent;
+        color: inherit;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 14px;
+        border-radius: 14px;
+        cursor: pointer;
+        transition:
+          background 0.2s ease,
+          transform 0.2s ease;
+        text-align: right;
+      }
+
+      .nav-item:hover {
+        background: rgba(255, 255, 255, 0.06);
+        transform: translateX(-2px);
+      }
+
+      .nav-item.active {
+        background: linear-gradient(
+          135deg,
+          rgba(46, 160, 91, 0.28),
+          rgba(33, 115, 70, 0.56)
+        );
+        color: #fff;
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12);
+      }
+
+      .nav-icon {
+        width: 34px;
+        height: 34px;
+        border-radius: 10px;
+        display: grid;
+        place-items: center;
+        background: rgba(255, 255, 255, 0.06);
+        color: #fff;
+        font-size: 13px;
+        font-weight: 800;
+        flex-shrink: 0;
+      }
+
+      .nav-copy {
+        flex: 1;
+      }
+
+      .nav-copy strong {
+        display: block;
+        font-size: 13px;
+      }
+
+      .nav-copy span {
+        display: block;
+        margin-top: 2px;
+        color: var(--sidebar-muted);
+        font-size: 11px;
+      }
+
+      .nav-item.active .nav-copy span {
+        color: rgba(255, 255, 255, 0.8);
+      }
+
+      .sidebar-footer {
+        margin-top: 18px;
+        padding: 14px;
+        border-radius: 18px;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .sidebar-avatar {
+        width: 42px;
+        height: 42px;
+        border-radius: 14px;
+        background: linear-gradient(135deg, #2ea05b, #1c6b42);
+        display: grid;
+        place-items: center;
+        color: #fff;
+        font-size: 16px;
+        font-weight: 900;
+      }
+
+      .sidebar-footer strong {
+        display: block;
+        color: #fff;
+        font-size: 13px;
+      }
+
+      .sidebar-footer span {
+        color: var(--sidebar-muted);
+        font-size: 11px;
+      }
+
+      .main-content {
+        flex: 1;
+        min-width: 0;
+        padding: 22px;
+      }
+
       .header {
-        background: linear-gradient(135deg, var(--primary), var(--primary-light));
-        color: var(--white);
-        padding: 20px 32px;
+        background: rgba(255, 255, 255, 0.78);
+        color: var(--gray-900);
+        padding: 20px 22px;
         display: flex;
         justify-content: space-between;
         align-items: center;
         gap: 16px;
+        border: 1px solid rgba(220, 233, 222, 0.9);
+        box-shadow: var(--shadow-soft);
+        border-radius: var(--radius-xl);
+        backdrop-filter: blur(12px);
       }
 
       .header h1 {
@@ -60,19 +267,20 @@
       }
 
       .header-btn {
-        background: rgba(255, 255, 255, 0.16);
-        color: var(--white);
-        border: 1px solid rgba(255, 255, 255, 0.3);
-        padding: 9px 16px;
-        border-radius: 8px;
+        background: var(--surface-strong);
+        color: var(--gray-900);
+        border: 1px solid var(--border);
+        padding: 11px 16px;
+        border-radius: 15px;
         cursor: pointer;
         font-weight: 600;
+        box-shadow: var(--shadow-soft);
       }
 
       .container {
         max-width: 1440px;
         margin: 0 auto;
-        padding: 28px 20px 40px;
+        padding: 18px 0 40px;
       }
 
       .page-intro {
@@ -82,10 +290,12 @@
 
       .banner {
         padding: 14px 16px;
-        border-radius: 10px;
+        border-radius: var(--radius-md);
         margin-bottom: 18px;
         display: none;
         font-weight: 600;
+        border: 1px solid var(--border);
+        box-shadow: var(--shadow-soft);
       }
 
       .banner.error {
@@ -110,18 +320,19 @@
       }
 
       .tab-btn {
-        border: 1px solid var(--gray-200);
-        background: var(--white);
+        border: 1px solid var(--border);
+        background: var(--surface-strong);
         color: var(--gray-700);
         padding: 12px 16px;
-        border-radius: 10px;
+        border-radius: 15px;
         cursor: pointer;
         font-weight: 700;
+        box-shadow: var(--shadow-soft);
       }
 
       .tab-btn.active {
-        background: var(--primary);
-        border-color: var(--primary);
+        background: linear-gradient(135deg, var(--primary), var(--primary-light));
+        border-color: transparent;
         color: var(--white);
       }
 
@@ -141,9 +352,10 @@
       }
 
       .card {
-        background: var(--white);
-        border-radius: 14px;
-        box-shadow: 0 4px 18px rgba(15, 23, 42, 0.06);
+        background: var(--surface);
+        border-radius: var(--radius-xl);
+        box-shadow: var(--shadow);
+        border: 1px solid rgba(220, 233, 222, 0.92);
         overflow: hidden;
       }
 
@@ -179,8 +391,8 @@
 
       .stat {
         background: var(--gray-50);
-        border: 1px solid var(--gray-200);
-        border-radius: 12px;
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
         padding: 12px 14px;
         min-width: 110px;
       }
@@ -215,18 +427,18 @@
       .field label {
         font-size: 13px;
         font-weight: 700;
-        color: var(--gray-700);
+        color: var(--gray-900);
       }
 
       .field input,
       .field textarea,
       .field select {
         width: 100%;
-        border: 1px solid var(--gray-300);
-        border-radius: 10px;
-        padding: 11px 12px;
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        padding: 11px 14px;
         font-size: 14px;
-        background: var(--white);
+        background: var(--surface-strong);
       }
 
       .field textarea {
@@ -272,22 +484,46 @@
         margin-top: 18px;
       }
 
+      .action-card {
+        padding: 24px;
+        background:
+          radial-gradient(
+            circle at top right,
+            rgba(46, 160, 91, 0.18),
+            transparent 26%
+          ),
+          linear-gradient(135deg, #ffffff 0%, #f6fbf6 100%);
+      }
+
+      .action-card h2 {
+        font-size: 24px;
+        letter-spacing: -0.04em;
+        margin-bottom: 8px;
+      }
+
+      .action-card p {
+        color: var(--gray-700);
+        margin-bottom: 18px;
+      }
+
       button {
-        border: none;
-        border-radius: 10px;
+        border: 1px solid transparent;
+        border-radius: 15px;
         padding: 10px 14px;
         cursor: pointer;
         font-weight: 700;
       }
 
       .btn-primary {
-        background: var(--primary-light);
+        background: linear-gradient(135deg, var(--primary), var(--primary-light));
         color: var(--white);
       }
 
       .btn-secondary {
-        background: var(--gray-100);
+        background: var(--surface-strong);
         color: var(--gray-700);
+        border-color: var(--border);
+        box-shadow: var(--shadow-soft);
       }
 
       .btn-link {
@@ -308,8 +544,8 @@
         align-items: center;
         gap: 8px;
         background: var(--gray-50);
-        border: 1px solid var(--gray-200);
-        border-radius: 10px;
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
         padding: 11px 12px;
         font-size: 14px;
         font-weight: 600;
@@ -325,7 +561,7 @@
       td {
         padding: 14px 12px;
         text-align: left;
-        border-bottom: 1px solid var(--gray-200);
+        border-bottom: 1px solid var(--border);
         vertical-align: top;
         font-size: 14px;
       }
@@ -389,7 +625,7 @@
       .section-note {
         margin-bottom: 14px;
         padding: 12px 14px;
-        border-radius: 10px;
+        border-radius: var(--radius-sm);
         background: var(--info-bg);
         color: var(--info);
         font-size: 13px;
@@ -414,15 +650,16 @@
         width: min(720px, 100%);
         max-height: calc(100vh - 40px);
         overflow: auto;
-        background: var(--white);
-        border-radius: 18px;
+        background: var(--surface-strong);
+        border-radius: var(--radius-xl);
         box-shadow: 0 24px 70px rgba(15, 23, 42, 0.2);
+        border: 1px solid rgba(220, 233, 222, 0.92);
       }
 
       .modal-header,
       .modal-footer {
         padding: 18px 20px;
-        border-bottom: 1px solid var(--gray-200);
+        border-bottom: 1px solid var(--border);
       }
 
       .modal-header {
@@ -442,7 +679,7 @@
 
       .modal-footer {
         border-bottom: none;
-        border-top: 1px solid var(--gray-200);
+        border-top: 1px solid var(--border);
         display: flex;
         justify-content: flex-end;
         gap: 10px;
@@ -450,6 +687,16 @@
       }
 
       @media (max-width: 1080px) {
+        .app-shell {
+          display: block;
+        }
+
+        .sidebar {
+          width: 100%;
+          height: auto;
+          position: static;
+        }
+
         .layout {
           grid-template-columns: 1fr;
         }
@@ -460,6 +707,10 @@
       }
 
       @media (max-width: 720px) {
+        .main-content {
+          padding: 14px;
+        }
+
         .header {
           flex-direction: column;
           align-items: stretch;
@@ -473,9 +724,21 @@
           width: 100%;
         }
 
+        .tab-btn,
+        .inline-actions button,
+        .pagination button,
+        .modal-footer button,
+        .actions button {
+          width: 100%;
+        }
+
         .form-grid,
         .filters {
           grid-template-columns: 1fr;
+        }
+
+        .container {
+          padding: 20px 0 32px;
         }
 
         th,
@@ -486,94 +749,169 @@
     </style>
   </head>
   <body>
-    <div class="header">
-      <h1>Dosht Management</h1>
-      <div class="header-actions">
-        <button class="header-btn" onclick="goBack()">Back to Dashboard</button>
-        <button class="header-btn" onclick="logout()">Logout</button>
-      </div>
-    </div>
+    <div class="app-shell">
+      <aside class="sidebar">
+        <div class="brand">
+          <div class="brand-mark">SC</div>
+          <div>
+            <h1>SuperCycle</h1>
+            <p>Ù„ÙˆØ­Ø© ØªØ­ÙƒÙ… Ø§Ù„Ù…Ø³Ø¤ÙˆÙ„</p>
+          </div>
+        </div>
 
-    <div class="container">
+        <div class="nav-group">
+          <div class="nav-list">
+            <button class="nav-item" type="button" onclick="go('dashboard.html')">
+              <span class="nav-icon">DB</span>
+              <span class="nav-copy">
+                <strong>Ø§Ù„Ø±Ø¦ÙŠØ³ÙŠØ©</strong>
+                <span>Ù…Ù„Ø®Øµ Ø§Ù„Ø£Ø¯Ø§Ø¡ Ø§Ù„ÙŠÙˆÙ…ÙŠ</span>
+              </span>
+            </button>
+          </div>
+        </div>
+
+        <div class="nav-group">
+          <div class="nav-group-label">Ø§Ù„Ø¹Ù…Ù„ÙŠØ§Øª</div>
+          <div class="nav-list">
+            <button class="nav-item" type="button" onclick="go('shipments.html?type=approval')">
+              <span class="nav-icon">AP</span>
+              <span class="nav-copy">
+                <strong>Ø§Ù„Ù…ÙˆØ§ÙÙ‚Ø§Øª</strong>
+                <span>Ø´Ø­Ù†Ø§Øª ØªØ­ØªØ§Ø¬ Ù…Ø±Ø§Ø¬Ø¹Ø©</span>
+              </span>
+            </button>
+            <button class="nav-item" type="button" onclick="go('shipments.html?type=segmentation')">
+              <span class="nav-icon">SG</span>
+              <span class="nav-copy">
+                <strong>Ø§Ù„ØªÙˆØ¬ÙŠÙ‡ ÙˆØ§Ù„ØªÙ‚Ø³ÙŠÙ…</strong>
+                <span>Ø¬Ø§Ù‡Ø²Ø© Ù„Ù„ØªØ´ØºÙŠÙ„</span>
+              </span>
+            </button>
+            <button class="nav-item" type="button" onclick="go('vehicles-management.html')">
+              <span class="nav-icon">VH</span>
+              <span class="nav-copy">
+                <strong>Ø§Ù„Ø¹Ø±Ø¨ÙŠØ§Øª</strong>
+                <span>Ø¥Ø¯Ø§Ø±Ø© Ø§Ù„Ø£Ø³Ø·ÙˆÙ„</span>
+              </span>
+            </button>
+            <button class="nav-item" type="button" onclick="go('factories-management.html')">
+              <span class="nav-icon">FC</span>
+              <span class="nav-copy">
+                <strong>Ø§Ù„Ù…ØµØ§Ù†Ø¹</strong>
+                <span>Ø§Ù„ØªØºØ·ÙŠØ© ÙˆØ§Ù„Ø§Ø³ØªÙ‚Ø¨Ø§Ù„</span>
+              </span>
+            </button>
+          </div>
+        </div>
+
+        <div class="nav-group">
+          <div class="nav-group-label">الإدارة</div>
+          <div class="nav-list">
+            <button class="nav-item" type="button" onclick="go('finance-management.html')">
+              <span class="nav-icon">FN</span>
+              <span class="nav-copy">
+                <strong>المالية</strong>
+                <span>تسويات وتحويلات</span>
+              </span>
+            </button>
+            <button class="nav-item active" type="button">
+              <span class="nav-icon">DS</span>
+              <span class="nav-copy">
+                <strong>أنواع وأسعار الدوش</strong>
+                <span>التسعير والفئات</span>
+              </span>
+            </button>
+            <button class="nav-item" type="button" onclick="go('contact-management.html')">
+              <span class="nav-icon">CX</span>
+              <span class="nav-copy">
+                <strong>الرسائل الواردة</strong>
+                <span>متابعة العملاء</span>
+              </span>
+            </button>
+            <button class="nav-item" type="button" onclick="go('contracts-create.html')">
+              <span class="nav-icon">CT</span>
+              <span class="nav-copy">
+                <strong>العقود</strong>
+                <span>إنشاء متعاقدين جدد</span>
+              </span>
+            </button>
+          </div>
+        </div>
+        <div class="nav-group">
+          <div class="nav-group-label">Ø§Ù„Ù…Ù†Ø¸ÙˆÙ…Ø© Ø§Ù„Ø¨ÙŠØ¦ÙŠØ©</div>
+          <div class="nav-list">
+            <button class="nav-item" type="button" onclick="go('eco-participants.html')">
+              <span class="nav-icon">EP</span>
+              <span class="nav-copy">
+                <strong>Ø§Ù„Ù…Ø´Ø§Ø±ÙƒÙˆÙ† Ø§Ù„Ø¨ÙŠØ¦ÙŠÙˆÙ†</strong>
+                <span>Ø¥Ø¯Ø§Ø±Ø© Ø§Ù„Ø§Ù†Ø¶Ù…Ø§Ù…</span>
+              </span>
+            </button>
+            <button class="nav-item" type="button" onclick="go('eco-redeems.html')">
+              <span class="nav-icon">RD</span>
+              <span class="nav-copy">
+                <strong>Ø·Ù„Ø¨Ø§Øª Ø§Ù„Ø§Ø³ØªØ¨Ø¯Ø§Ù„</strong>
+                <span>Ù…Ø±Ø§Ø¬Ø¹Ø© ÙˆØªÙ†ÙÙŠØ°</span>
+              </span>
+            </button>
+          </div>
+        </div>
+
+        <div class="sidebar-footer">
+          <div class="sidebar-avatar">AD</div>
+          <div>
+            <strong>Ù…Ø³Ø¤ÙˆÙ„ Ø§Ù„Ù†Ø¸Ø§Ù…</strong>
+            <span>Admin Control</span>
+          </div>
+        </div>
+      </aside>
+
+      <main class="main-content">
+        <div class="header">
+          <h1>Ø¥Ø¯Ø§Ø±Ø© Ø£Ù†ÙˆØ§Ø¹ ÙˆØ£Ø³Ø¹Ø§Ø± Ø§Ù„Ø¯Ø´Øª</h1>
+          <div class="header-actions">
+            <button class="header-btn" onclick="goBack()">Ø§Ù„Ø¹ÙˆØ¯Ø© Ø¥Ù„Ù‰ Ø§Ù„Ø±Ø¦ÙŠØ³ÙŠØ©</button>
+            <button class="header-btn" onclick="logout()">ØªØ³Ø¬ÙŠÙ„ Ø§Ù„Ø®Ø±ÙˆØ¬</button>
+          </div>
+        </div>
+
+        <div class="container">
       <p class="page-intro">
-        Manage reusable Dosht configuration for admin pricing workflows.
+        Ø¥Ø¯Ø§Ø±Ø© Ø§Ø­ØªØ±Ø§ÙÙŠØ© Ù„Ø£Ù†ÙˆØ§Ø¹ Ø§Ù„Ø¯Ø´Øª ÙˆØ§Ù„ÙØ¦Ø§Øª Ø§Ù„ÙƒÙ…ÙŠØ© ÙˆØ³Ø¬Ù„Ø§Øª Ø§Ù„ØªØ³Ø¹ÙŠØ± Ù…Ù† Ø®Ù„Ø§Ù„ Ù†ÙˆØ§ÙØ° Ù…Ù†Ø¨Ø«Ù‚Ø© Ù…Ù†Ø¸Ù…Ø© ÙˆØ³Ø±ÙŠØ¹Ø©.
       </p>
 
       <div id="pageBanner" class="banner"></div>
 
       <div class="tabs">
         <button class="tab-btn active" data-tab="types" onclick="setTab('types')">
-          Dosht Types
+          Ø£Ù†ÙˆØ§Ø¹ Ø§Ù„Ø¯Ø´Øª
         </button>
         <button class="tab-btn" data-tab="tiers" onclick="setTab('tiers')">
-          Quantity Tiers
+          Ø§Ù„ÙØ¦Ø§Øª Ø§Ù„ÙƒÙ…ÙŠØ©
         </button>
         <button class="tab-btn" data-tab="prices" onclick="setTab('prices')">
-          Dosht Prices
+          Ø£Ø³Ø¹Ø§Ø± Ø§Ù„Ø¯Ø´Øª
         </button>
       </div>
 
       <section id="panel-types" class="tab-panel active">
         <div class="layout">
           <div class="card">
-            <div class="card-header">
-              <div>
-                <h2 id="typeFormTitle">Create Dosht Type</h2>
-                <p class="card-hint">
-                  Names must stay unique across all Dosht types.
-                </p>
+            <div class="card-body action-card">
+              <h2>Ø¥Ø¶Ø§ÙØ© Ù†ÙˆØ¹ Ø¯Ø´Øª</h2>
+              <p>Ø§ÙØªØ­ Ù†Ù…ÙˆØ°Ø¬Ù‹Ø§ Ù…Ù†Ø¨Ø«Ù‚Ù‹Ø§ Ù…Ù†Ø¸Ù…Ù‹Ø§ Ù„Ø¥Ø¶Ø§ÙØ© Ù†ÙˆØ¹ Ø¬Ø¯ÙŠØ¯ Ø¨Ø¯ÙˆÙ† ØªØ´ØªÙŠØª Ø³ÙŠØ± Ø§Ù„Ù…Ø±Ø§Ø¬Ø¹Ø© Ø¯Ø§Ø®Ù„ Ø§Ù„ØµÙØ­Ø©.</p>
+              <div class="actions">
+                <button class="btn-primary" type="button" onclick="openTypeCreateModal()">Ø¥Ø¶Ø§ÙØ© Ù†ÙˆØ¹ Ø¯Ø´Øª</button>
               </div>
-            </div>
-            <div class="card-body">
-              <form id="typeForm" onsubmit="submitTypeForm(event)">
-                <div class="form-grid">
-                  <div class="field">
-                    <label for="typeName">Name</label>
-                    <input id="typeName" name="name" />
-                    <div class="field-error" data-error-for="type.name"></div>
-                  </div>
-
-                  <div class="field">
-                    <label for="typeUnit">Unit</label>
-                    <input id="typeUnit" name="unit" placeholder="kg" />
-                    <div class="field-error" data-error-for="type.unit"></div>
-                  </div>
-
-                  <div class="field full">
-                    <label for="typeDescription">Description</label>
-                    <textarea id="typeDescription" name="description"></textarea>
-                    <div class="field-error" data-error-for="type.description"></div>
-                  </div>
-
-                  <div class="field full">
-                    <label for="typeImageUrl">Image URL</label>
-                    <input id="typeImageUrl" name="imageUrl" placeholder="https://..." />
-                    <div class="field-error" data-error-for="type.imageUrl"></div>
-                  </div>
-
-                  <label class="field checkbox">
-                    <input id="typeIsActive" name="isActive" type="checkbox" checked />
-                    <span>Active and selectable</span>
-                  </label>
-                </div>
-
-                <div class="actions">
-                  <button id="typeSubmitBtn" class="btn-primary" type="submit">
-                    Create Type
-                  </button>
-                  <button class="btn-secondary" type="button" onclick="resetTypeForm()">
-                    Clear
-                  </button>
-                </div>
-              </form>
             </div>
           </div>
 
           <div class="card">
             <div class="card-header">
               <div>
-                <h3>Types List</h3>
-                <p class="card-hint">Edit active status, copy, and descriptive details.</p>
+                <h3>Ù‚Ø§Ø¦Ù…Ø© Ø§Ù„Ø£Ù†ÙˆØ§Ø¹</h3>
+                <p class="card-hint">Ø±Ø§Ø¬Ø¹ Ø§Ù„Ø­Ø§Ù„Ø© ÙˆØ§Ù„ÙˆØµÙ ÙˆØ§Ù„ØªÙØ§ØµÙŠÙ„ Ø§Ù„ØªØ¹Ø±ÙŠÙÙŠØ© Ù„ÙƒÙ„ Ù†ÙˆØ¹.</p>
               </div>
               <div class="stats">
                 <div class="stat">
@@ -587,15 +925,15 @@
               </div>
             </div>
             <div class="card-body">
-              <div id="typesState" class="loading-state">Loading Dosht types...</div>
+              <div id="typesState" class="loading-state">Ø¬Ø§Ø±Ù ØªØ­Ù…ÙŠÙ„ Ø£Ù†ÙˆØ§Ø¹ Ø§Ù„Ø¯Ø´Øª...</div>
               <table id="typesTable" hidden>
                 <thead>
                   <tr>
-                    <th>Name</th>
-                    <th>Description</th>
-                    <th>Unit</th>
-                    <th>Status</th>
-                    <th>Actions</th>
+                    <th>Ø§Ù„Ø§Ø³Ù…</th>
+                    <th>Ø§Ù„ÙˆØµÙ</th>
+                    <th>Ø§Ù„ÙˆØ­Ø¯Ø©</th>
+                    <th>Ø§Ù„Ø­Ø§Ù„Ø©</th>
+                    <th>Ø§Ù„Ø¥Ø¬Ø±Ø§Ø¡Ø§Øª</th>
                   </tr>
                 </thead>
                 <tbody id="typesRows"></tbody>
@@ -608,78 +946,21 @@
       <section id="panel-tiers" class="tab-panel">
         <div class="layout">
           <div class="card">
-            <div class="card-header">
-              <div>
-                <h2 id="tierFormTitle">Create Quantity Tier</h2>
-                <p class="card-hint">
-                  Tier order must be unique and quantity range must be valid.
-                </p>
+            <div class="card-body action-card">
+              <h2>Ø¥Ø¶Ø§ÙØ© ÙØ¦Ø© ÙƒÙ…ÙŠØ©</h2>
+              <p>Ø§ÙØªØ­ Ù†Ù…ÙˆØ°Ø¬Ù‹Ø§ Ø§Ø­ØªØ±Ø§ÙÙŠÙ‹Ø§ Ù„ØªØ­Ø¯ÙŠØ¯ Ø§Ù„ÙØ¦Ø© Ø§Ù„ÙƒÙ…ÙŠØ© Ø§Ù„Ø¬Ø¯ÙŠØ¯Ø© Ù…Ø¹ ØªØ±ØªÙŠØ¨ ÙˆØ§Ø¶Ø­ ÙˆÙ†Ø·Ø§Ù‚ Ø§Ø³ØªØ®Ø¯Ø§Ù… Ù…Ø¶Ø¨ÙˆØ·.</p>
+              <div class="actions">
+                <button class="btn-primary" type="button" onclick="openTierCreateModal()">Ø¥Ø¶Ø§ÙØ© ÙØ¦Ø© ÙƒÙ…ÙŠØ©</button>
               </div>
-            </div>
-            <div class="card-body">
-              <form id="tierForm" onsubmit="submitTierForm(event)">
-                <div class="form-grid">
-                  <div class="field">
-                    <label for="tierName">Name</label>
-                    <input id="tierName" name="name" />
-                    <div class="field-error" data-error-for="tier.name"></div>
-                  </div>
-
-                  <div class="field">
-                    <label for="tierOrder">Display Order</label>
-                    <input id="tierOrder" name="order" type="number" min="1" step="1" />
-                    <div class="field-error" data-error-for="tier.order"></div>
-                  </div>
-
-                  <div class="field">
-                    <label for="tierMinQuantity">Min Quantity</label>
-                    <input
-                      id="tierMinQuantity"
-                      name="minQuantity"
-                      type="number"
-                      min="0"
-                      step="0.01"
-                    />
-                    <div class="field-error" data-error-for="tier.minQuantity"></div>
-                  </div>
-
-                  <div class="field">
-                    <label for="tierMaxQuantity">Max Quantity</label>
-                    <input
-                      id="tierMaxQuantity"
-                      name="maxQuantity"
-                      type="number"
-                      min="0"
-                      step="0.01"
-                    />
-                    <div class="field-error" data-error-for="tier.maxQuantity"></div>
-                    <div class="helper-text">Leave empty for an open-ended tier.</div>
-                  </div>
-
-                  <label class="field checkbox">
-                    <input id="tierIsActive" name="isActive" type="checkbox" checked />
-                    <span>Active and selectable</span>
-                  </label>
-                </div>
-
-                <div class="actions">
-                  <button id="tierSubmitBtn" class="btn-primary" type="submit">
-                    Create Tier
-                  </button>
-                  <button class="btn-secondary" type="button" onclick="resetTierForm()">
-                    Clear
-                  </button>
-                </div>
-              </form>
             </div>
           </div>
 
           <div class="card">
             <div class="card-header">
               <div>
-                <h3>Tiers List</h3>
+                <h3>Ù‚Ø§Ø¦Ù…Ø© Ø§Ù„ÙØ¦Ø§Øª</h3>
                 <p class="card-hint">
-                  Quantity tiers are used to scope price records by range.
+                  ØªÙØ³ØªØ®Ø¯Ù… Ø§Ù„ÙØ¦Ø§Øª Ø§Ù„ÙƒÙ…ÙŠØ© Ù„ØªÙ†Ø¸ÙŠÙ… Ø§Ù„ØªØ³Ø¹ÙŠØ± Ø­Ø³Ø¨ Ø§Ù„Ù†Ø·Ø§Ù‚ Ø§Ù„Ù…Ù†Ø§Ø³Ø¨ Ù„ÙƒÙ„ ÙƒÙ…ÙŠØ©.
                 </p>
               </div>
               <div class="stats">
@@ -694,15 +975,15 @@
               </div>
             </div>
             <div class="card-body">
-              <div id="tiersState" class="loading-state">Loading quantity tiers...</div>
+              <div id="tiersState" class="loading-state">Ø¬Ø§Ø±Ù ØªØ­Ù…ÙŠÙ„ Ø§Ù„ÙØ¦Ø§Øª Ø§Ù„ÙƒÙ…ÙŠØ©...</div>
               <table id="tiersTable" hidden>
                 <thead>
                   <tr>
-                    <th>Name</th>
-                    <th>Range</th>
-                    <th>Order</th>
-                    <th>Status</th>
-                    <th>Actions</th>
+                    <th>Ø§Ù„Ø§Ø³Ù…</th>
+                    <th>Ø§Ù„Ù†Ø·Ø§Ù‚</th>
+                    <th>Ø§Ù„ØªØ±ØªÙŠØ¨</th>
+                    <th>Ø§Ù„Ø­Ø§Ù„Ø©</th>
+                    <th>Ø§Ù„Ø¥Ø¬Ø±Ø§Ø¡Ø§Øª</th>
                   </tr>
                 </thead>
                 <tbody id="tiersRows"></tbody>
@@ -715,111 +996,64 @@
       <section id="panel-prices" class="tab-panel">
         <div class="layout">
           <div class="card">
-            <div class="card-header">
-              <div>
-                <h2 id="priceFormTitle">Create Price Record</h2>
-                <p class="card-hint">
-                  A type + tier cannot have overlapping effective periods.
-                </p>
-              </div>
-            </div>
-            <div class="card-body">
+            <div class="card-body action-card">
+              <h2>Ø¥Ø¶Ø§ÙØ© Ø³Ø¬Ù„ Ø³Ø¹Ø±</h2>
+              <p>Ø£Ù†Ø´Ø¦ Ù†Ø§ÙØ°Ø© ØªØ³Ø¹ÙŠØ± Ø¬Ø¯ÙŠØ¯Ø© Ù…Ù† Ø®Ù„Ø§Ù„ Ù†Ù…ÙˆØ°Ø¬ Ù…Ù†Ø¨Ø«Ù‚ ÙˆØ§Ø¶Ø­ Ù…Ø¹ ØªØ­Ù‚Ù‚ Ø£ÙØ¶Ù„ ÙˆØ¥Ø±Ø´Ø§Ø¯ Ù…Ø¨Ø§Ø´Ø± Ù‚Ø¨Ù„ Ø§Ù„Ø­ÙØ¸.</p>
               <div id="priceSetupNote" class="section-note" hidden>
-                Create at least one active type and one active tier before adding prices.
+                Ø£Ø¶Ù Ù†ÙˆØ¹Ù‹Ø§ Ù†Ø´Ø·Ù‹Ø§ ÙˆØ§Ø­Ø¯Ù‹Ø§ ÙˆÙØ¦Ø© ÙƒÙ…ÙŠØ© Ù†Ø´Ø·Ø© ÙˆØ§Ø­Ø¯Ø© Ø¹Ù„Ù‰ Ø§Ù„Ø£Ù‚Ù„ Ù‚Ø¨Ù„ Ø¥Ù†Ø´Ø§Ø¡ Ø§Ù„Ø£Ø³Ø¹Ø§Ø±.
               </div>
-
-              <form id="priceForm" onsubmit="submitPriceForm(event)">
-                <div class="form-grid">
-                  <div class="field">
-                    <label for="priceTypeId">Dosht Type</label>
-                    <select id="priceTypeId" name="doshTypeId"></select>
-                    <div class="field-error" data-error-for="price.doshTypeId"></div>
-                  </div>
-
-                  <div class="field">
-                    <label for="priceTierId">Quantity Tier</label>
-                    <select id="priceTierId" name="quantityTierId"></select>
-                    <div class="field-error" data-error-for="price.quantityTierId"></div>
-                  </div>
-
-                  <div class="field">
-                    <label for="pricePerKg">Price Per KG</label>
-                    <input id="pricePerKg" name="pricePerKg" type="number" min="0" step="0.01" />
-                    <div class="field-error" data-error-for="price.pricePerKg"></div>
-                  </div>
-
-                  <div class="field">
-                    <label for="priceEffectiveFrom">Effective From</label>
-                    <input id="priceEffectiveFrom" name="effectiveFrom" type="datetime-local" />
-                    <div class="field-error" data-error-for="price.effectiveFrom"></div>
-                  </div>
-
-                  <div class="field">
-                    <label for="priceEffectiveTo">Effective To</label>
-                    <input id="priceEffectiveTo" name="effectiveTo" type="datetime-local" />
-                    <div class="field-error" data-error-for="price.effectiveTo"></div>
-                    <div class="helper-text">Leave empty to keep the price open-ended.</div>
-                  </div>
-                </div>
-
-                <div class="actions">
-                  <button id="priceSubmitBtn" class="btn-primary" type="submit">
-                    Create Price
-                  </button>
-                  <button class="btn-secondary" type="button" onclick="resetPriceForm()">
-                    Clear
-                  </button>
-                </div>
-              </form>
+              <div class="actions">
+                <button class="btn-primary" type="button" onclick="openPriceCreateModal()" id="openPriceCreateBtn">Ø¥Ø¶Ø§ÙØ© Ø³Ø¬Ù„ Ø³Ø¹Ø±</button>
+              </div>
             </div>
           </div>
 
           <div class="card">
             <div class="card-header">
               <div>
-                <h3>Price Records</h3>
-                <p class="card-hint">Filter by type, tier, or active period window.</p>
+                <h3>Ø³Ø¬Ù„Ø§Øª Ø§Ù„Ø£Ø³Ø¹Ø§Ø±</h3>
+                <p class="card-hint">Ø±Ø´Ù‘Ø­ Ø§Ù„Ù†ØªØ§Ø¦Ø¬ Ø­Ø³Ø¨ Ø§Ù„Ù†ÙˆØ¹ Ø£Ùˆ Ø§Ù„ÙØ¦Ø© Ø£Ùˆ ÙØªØ±Ø© Ø§Ù„Ø³Ø±ÙŠØ§Ù†.</p>
               </div>
               <button class="btn-secondary" type="button" onclick="loadPrices(true)">
-                Refresh
+                ØªØ­Ø¯ÙŠØ«
               </button>
             </div>
             <div class="card-body">
               <div class="filters">
                 <div class="field">
-                  <label for="priceFilterType">Type</label>
+                  <label for="priceFilterType">Ø§Ù„Ù†ÙˆØ¹</label>
                   <select id="priceFilterType"></select>
                 </div>
 
                 <div class="field">
-                  <label for="priceFilterTier">Tier</label>
+                  <label for="priceFilterTier">Ø§Ù„ÙØ¦Ø©</label>
                   <select id="priceFilterTier"></select>
                 </div>
 
                 <label class="checkbox-inline">
                   <input id="priceFilterCurrentOnly" type="checkbox" />
-                  <span>Current prices only</span>
+                  <span>Ø§Ù„Ø£Ø³Ø¹Ø§Ø± Ø§Ù„Ø³Ø§Ø±ÙŠØ© ÙÙ‚Ø·</span>
                 </label>
 
                 <div class="actions" style="margin-top: 24px">
                   <button class="btn-primary" type="button" onclick="loadPrices(true)">
-                    Apply Filters
+                    ØªØ·Ø¨ÙŠÙ‚ Ø§Ù„ÙÙ„Ø§ØªØ±
                   </button>
                   <button class="btn-secondary" type="button" onclick="resetPriceFilters()">
-                    Reset
+                    Ø¥Ø¹Ø§Ø¯Ø© Ø¶Ø¨Ø·
                   </button>
                 </div>
               </div>
 
-              <div id="pricesState" class="loading-state">Loading prices...</div>
+              <div id="pricesState" class="loading-state">Ø¬Ø§Ø±Ù ØªØ­Ù…ÙŠÙ„ Ø§Ù„Ø£Ø³Ø¹Ø§Ø±...</div>
               <table id="pricesTable" hidden>
                 <thead>
                   <tr>
-                    <th>Type</th>
-                    <th>Tier</th>
-                    <th>Price</th>
-                    <th>Effective Window</th>
-                    <th>Actions</th>
+                    <th>Ø§Ù„Ù†ÙˆØ¹</th>
+                    <th>Ø§Ù„ÙØ¦Ø©</th>
+                    <th>Ø§Ù„Ø³Ø¹Ø±</th>
+                    <th>ÙØªØ±Ø© Ø§Ù„Ø³Ø±ÙŠØ§Ù†</th>
+                    <th>Ø§Ù„Ø¥Ø¬Ø±Ø§Ø¡Ø§Øª</th>
                   </tr>
                 </thead>
                 <tbody id="pricesRows"></tbody>
@@ -828,6 +1062,149 @@
           </div>
         </div>
       </section>
+        </div>
+      </main>
+    </div>
+
+    <div id="typeCreateModal" class="modal" onclick="closeTypeCreateModal(event)">
+      <div class="modal-content" onclick="event.stopPropagation()">
+        <div class="modal-header">
+          <div>
+            <h3 id="typeFormTitle">Ø¥Ø¶Ø§ÙØ© Ù†ÙˆØ¹ Ø¯Ø´Øª</h3>
+            <p class="card-hint">ÙŠØ¬Ø¨ Ø£Ù† ÙŠÙƒÙˆÙ† Ø§Ø³Ù… Ø§Ù„Ù†ÙˆØ¹ ÙØ±ÙŠØ¯Ù‹Ø§ ÙˆØºÙŠØ± Ù…ÙƒØ±Ø± Ø¨ÙŠÙ† Ø¬Ù…ÙŠØ¹ Ø§Ù„Ø£Ù†ÙˆØ§Ø¹.</p>
+          </div>
+          <button class="btn-secondary" type="button" onclick="closeTypeCreateModal()">Ø¥ØºÙ„Ø§Ù‚</button>
+        </div>
+        <div class="modal-body">
+          <form id="typeForm" onsubmit="submitTypeForm(event)">
+            <div class="form-grid">
+              <div class="field">
+                <label for="typeName">Ø§Ù„Ø§Ø³Ù…</label>
+                <input id="typeName" name="name" />
+                <div class="field-error" data-error-for="type.name"></div>
+              </div>
+              <div class="field">
+                <label for="typeUnit">Ø§Ù„ÙˆØ­Ø¯Ø©</label>
+                <input id="typeUnit" name="unit" placeholder="kg" />
+                <div class="field-error" data-error-for="type.unit"></div>
+              </div>
+              <div class="field full">
+                <label for="typeDescription">Ø§Ù„ÙˆØµÙ</label>
+                <textarea id="typeDescription" name="description"></textarea>
+                <div class="field-error" data-error-for="type.description"></div>
+              </div>
+              <div class="field full">
+                <label for="typeImageUrl">Ø±Ø§Ø¨Ø· Ø§Ù„ØµÙˆØ±Ø©</label>
+                <input id="typeImageUrl" name="imageUrl" placeholder="https://..." />
+                <div class="field-error" data-error-for="type.imageUrl"></div>
+              </div>
+              <label class="field checkbox">
+                <input id="typeIsActive" name="isActive" type="checkbox" checked />
+                <span>Ù†Ø´Ø· ÙˆÙ…ØªØ§Ø­ Ù„Ù„Ø§Ø®ØªÙŠØ§Ø±</span>
+              </label>
+            </div>
+            <div class="modal-footer">
+              <button class="btn-secondary" type="button" onclick="closeTypeCreateModal()">Ø¥Ù„ØºØ§Ø¡</button>
+              <button id="typeSubmitBtn" class="btn-primary" type="submit">Ø¥Ø¶Ø§ÙØ© Ø§Ù„Ù†ÙˆØ¹</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div id="tierCreateModal" class="modal" onclick="closeTierCreateModal(event)">
+      <div class="modal-content" onclick="event.stopPropagation()">
+        <div class="modal-header">
+          <div>
+            <h3 id="tierFormTitle">Ø¥Ø¶Ø§ÙØ© ÙØ¦Ø© ÙƒÙ…ÙŠØ©</h3>
+            <p class="card-hint">ÙŠØ¬Ø¨ Ø£Ù† ÙŠÙƒÙˆÙ† ØªØ±ØªÙŠØ¨ Ø§Ù„ÙØ¦Ø© ÙØ±ÙŠØ¯Ù‹Ø§ ÙˆØ£Ù† ÙŠÙƒÙˆÙ† Ù†Ø·Ø§Ù‚ Ø§Ù„ÙƒÙ…ÙŠØ© ØµØ§Ù„Ø­Ù‹Ø§.</p>
+          </div>
+          <button class="btn-secondary" type="button" onclick="closeTierCreateModal()">Ø¥ØºÙ„Ø§Ù‚</button>
+        </div>
+        <div class="modal-body">
+          <form id="tierForm" onsubmit="submitTierForm(event)">
+            <div class="form-grid">
+              <div class="field">
+                <label for="tierName">Ø§Ù„Ø§Ø³Ù…</label>
+                <input id="tierName" name="name" />
+                <div class="field-error" data-error-for="tier.name"></div>
+              </div>
+              <div class="field">
+                <label for="tierOrder">ØªØ±ØªÙŠØ¨ Ø§Ù„Ø¹Ø±Ø¶</label>
+                <input id="tierOrder" name="order" type="number" min="1" step="1" />
+                <div class="field-error" data-error-for="tier.order"></div>
+              </div>
+              <div class="field">
+                <label for="tierMinQuantity">Ø§Ù„Ø­Ø¯ Ø§Ù„Ø£Ø¯Ù†Ù‰ Ù„Ù„ÙƒÙ…ÙŠØ©</label>
+                <input id="tierMinQuantity" name="minQuantity" type="number" min="0" step="0.01" />
+                <div class="field-error" data-error-for="tier.minQuantity"></div>
+              </div>
+              <div class="field">
+                <label for="tierMaxQuantity">Ø§Ù„Ø­Ø¯ Ø§Ù„Ø£Ù‚ØµÙ‰ Ù„Ù„ÙƒÙ…ÙŠØ©</label>
+                <input id="tierMaxQuantity" name="maxQuantity" type="number" min="0" step="0.01" />
+                <div class="field-error" data-error-for="tier.maxQuantity"></div>
+                <div class="helper-text">Ø§ØªØ±ÙƒÙ‡ ÙØ§Ø±ØºÙ‹Ø§ Ø¥Ø°Ø§ ÙƒØ§Ù†Øª Ø§Ù„ÙØ¦Ø© Ø¨Ø¯ÙˆÙ† Ø­Ø¯ Ø£Ù‚ØµÙ‰.</div>
+              </div>
+              <label class="field checkbox">
+                <input id="tierIsActive" name="isActive" type="checkbox" checked />
+                <span>Ù†Ø´Ø·Ø© ÙˆÙ…ØªØ§Ø­Ø© Ù„Ù„Ø§Ø®ØªÙŠØ§Ø±</span>
+              </label>
+            </div>
+            <div class="modal-footer">
+              <button class="btn-secondary" type="button" onclick="closeTierCreateModal()">Ø¥Ù„ØºØ§Ø¡</button>
+              <button id="tierSubmitBtn" class="btn-primary" type="submit">Ø¥Ø¶Ø§ÙØ© Ø§Ù„ÙØ¦Ø©</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div id="priceCreateModal" class="modal" onclick="closePriceCreateModal(event)">
+      <div class="modal-content" onclick="event.stopPropagation()">
+        <div class="modal-header">
+          <div>
+            <h3 id="priceFormTitle">Ø¥Ø¶Ø§ÙØ© Ø³Ø¬Ù„ Ø³Ø¹Ø±</h3>
+            <p class="card-hint">Ù„Ø§ ÙŠÙ…ÙƒÙ† ØªÙƒØ±Ø§Ø± ÙØªØ±Ø§Øª Ø³Ø±ÙŠØ§Ù† Ù…ØªØ¯Ø§Ø®Ù„Ø© Ù„Ù†ÙØ³ Ø§Ù„Ù†ÙˆØ¹ ÙˆÙ†ÙØ³ Ø§Ù„ÙØ¦Ø©.</p>
+          </div>
+          <button class="btn-secondary" type="button" onclick="closePriceCreateModal()">Ø¥ØºÙ„Ø§Ù‚</button>
+        </div>
+        <div class="modal-body">
+          <form id="priceForm" onsubmit="submitPriceForm(event)">
+            <div class="form-grid">
+              <div class="field">
+                <label for="priceTypeId">Ù†ÙˆØ¹ Ø§Ù„Ø¯Ø´Øª</label>
+                <select id="priceTypeId" name="doshTypeId"></select>
+                <div class="field-error" data-error-for="price.doshTypeId"></div>
+              </div>
+              <div class="field">
+                <label for="priceTierId">Ø§Ù„ÙØ¦Ø© Ø§Ù„ÙƒÙ…ÙŠØ©</label>
+                <select id="priceTierId" name="quantityTierId"></select>
+                <div class="field-error" data-error-for="price.quantityTierId"></div>
+              </div>
+              <div class="field">
+                <label for="pricePerKg">Ø§Ù„Ø³Ø¹Ø± Ù„ÙƒÙ„ ÙƒØ¬Ù…</label>
+                <input id="pricePerKg" name="pricePerKg" type="number" min="0" step="0.01" />
+                <div class="field-error" data-error-for="price.pricePerKg"></div>
+              </div>
+              <div class="field">
+                <label for="priceEffectiveFrom">Ø³Ø§Ø±ÙŠ Ù…Ù†</label>
+                <input id="priceEffectiveFrom" name="effectiveFrom" type="datetime-local" />
+                <div class="field-error" data-error-for="price.effectiveFrom"></div>
+              </div>
+              <div class="field">
+                <label for="priceEffectiveTo">Ø³Ø§Ø±ÙŠ Ø¥Ù„Ù‰</label>
+                <input id="priceEffectiveTo" name="effectiveTo" type="datetime-local" />
+                <div class="field-error" data-error-for="price.effectiveTo"></div>
+                <div class="helper-text">Ø§ØªØ±ÙƒÙ‡ ÙØ§Ø±ØºÙ‹Ø§ Ø¥Ø°Ø§ ÙƒØ§Ù† Ø§Ù„Ø³Ø¹Ø± Ù…ÙØªÙˆØ­ Ø§Ù„Ù…Ø¯Ø©.</div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button class="btn-secondary" type="button" onclick="closePriceCreateModal()">Ø¥Ù„ØºØ§Ø¡</button>
+              <button id="priceSubmitBtn" class="btn-primary" type="submit">Ø¥Ø¶Ø§ÙØ© Ø§Ù„Ø³Ø¹Ø±</button>
+            </div>
+          </form>
+        </div>
+      </div>
     </div>
 
     <div id="typeEditModal" class="modal" onclick="closeTypeEditModal(event)">
@@ -1007,6 +1384,343 @@
         modalEditingTierId: null,
         modalEditingPriceId: null,
       };
+
+      const doshI18n = {
+        en: {
+          pageTitle: "SuperCycle - Dosh Management",
+          brandSub: "Admin control workspace",
+          sidebarAdmin: "System Administrator",
+          sidebarAdminSub: "Admin Control",
+          navOperations: "Operations",
+          navAdminGroup: "Administration",
+          navEcoGroup: "Eco Program",
+          navHomeTitle: "Dashboard",
+          navHomeSub: "Business overview and live KPIs",
+          navApprovalsTitle: "Pending Approvals",
+          navApprovalsSub: "Shipments waiting for review",
+          navSegmentationTitle: "Segmentation & Routing",
+          navSegmentationSub: "Loads ready for dispatch planning",
+          navVehiclesTitle: "Vehicles",
+          navVehiclesSub: "Fleet and assignment control",
+          navFactoriesTitle: "Factories",
+          navFactoriesSub: "Receiving network and coverage",
+          navFinanceTitle: "Finance",
+          navFinanceSub: "Settlements and transfers",
+          navDoshTitle: "Dosh Management",
+          navDoshSub: "Types, tiers, and pricing",
+          navContactsTitle: "Contact Management",
+          navContactsSub: "Customer follow-up",
+          navContractsTitle: "Contracts",
+          navContractsSub: "Create and manage traders",
+          navParticipantsTitle: "Eco Participants",
+          navParticipantsSub: "Participant directory",
+          navRedeemsTitle: "Redemption Requests",
+          navRedeemsSub: "Review and fulfillment",
+          headerTitle: "Dosh Types and Pricing",
+          backToDashboard: "Back to Dashboard",
+          logout: "Logout",
+          pageIntro:
+            "Professional management for dosh types, quantity tiers, and pricing records through clean and focused modal workflows.",
+          tabTypes: "Dosh Types",
+          tabTiers: "Quantity Tiers",
+          tabPrices: "Dosh Prices",
+          addTypeTitle: "Add Dosh Type",
+          addTypeText:
+            "Open a focused modal to create a new type without interrupting the review flow on the page.",
+          addTypeButton: "Add Dosh Type",
+          typeListTitle: "Types List",
+          typeListHint: "Review status, description, and reference details for each type.",
+          total: "Total",
+          active: "Active",
+          addTierTitle: "Add Quantity Tier",
+          addTierText:
+            "Open a clear modal to define a new quantity tier with clean ordering and a precise operating range.",
+          addTierButton: "Add Quantity Tier",
+          tierListTitle: "Tiers List",
+          tierListHint:
+            "Quantity tiers are used to organize pricing by the proper quantity range.",
+          addPriceTitle: "Add Price Record",
+          addPriceText:
+            "Create a new pricing window through a guided modal with direct validation before saving.",
+          priceSetupNote:
+            "Add at least one active dosh type and one active quantity tier before creating price records.",
+          addPriceButton: "Add Price Record",
+          priceListTitle: "Price Records",
+          priceListHint: "Filter results by type, tier, or effective period.",
+          refresh: "Refresh",
+          filterType: "Type",
+          filterTier: "Tier",
+          currentOnly: "Current prices only",
+          applyFilters: "Apply Filters",
+          resetFilters: "Reset",
+          typeCreateTitle: "Add Dosh Type",
+          typeCreateHint: "Type names must remain unique across all dosh types.",
+          close: "Close",
+          fieldName: "Name",
+          fieldUnit: "Unit",
+          fieldDescription: "Description",
+          fieldImageUrl: "Image URL",
+          activeSelectable: "Active and available for selection",
+          cancel: "Cancel",
+          createType: "Create Type",
+          tierCreateTitle: "Add Quantity Tier",
+          tierCreateHint: "Tier order must stay unique and the quantity range must be valid.",
+          fieldDisplayOrder: "Display Order",
+          fieldMinQuantity: "Minimum Quantity",
+          fieldMaxQuantity: "Maximum Quantity",
+          openEndedTierHint: "Leave it empty if the tier has no maximum limit.",
+          activeTierSelectable: "Active and available for selection",
+          createTier: "Create Tier",
+          priceCreateTitle: "Add Price Record",
+          priceCreateHint:
+            "Effective periods cannot overlap for the same dosh type and quantity tier.",
+          fieldDoshType: "Dosh Type",
+          fieldPricePerKg: "Price per KG",
+          fieldEffectiveFrom: "Effective From",
+          fieldEffectiveTo: "Effective To",
+          openEndedPriceHint: "Leave it empty if the price has no end date.",
+          createPrice: "Create Price",
+        },
+        ar: {
+          pageTitle: "سوبر سايكل - إدارة الدشت",
+          brandSub: "لوحة تحكم الإدارة",
+          sidebarAdmin: "مسؤول النظام",
+          sidebarAdminSub: "تحكم إداري",
+          navOperations: "العمليات",
+          navAdminGroup: "الإدارة",
+          navEcoGroup: "المنظومة البيئية",
+          navHomeTitle: "الرئيسية",
+          navHomeSub: "ملخص الأداء والمؤشرات",
+          navApprovalsTitle: "الموافقات",
+          navApprovalsSub: "شحنات بانتظار المراجعة",
+          navSegmentationTitle: "التوجيه والتقسيم",
+          navSegmentationSub: "حمولات جاهزة للتشغيل",
+          navVehiclesTitle: "العربيات",
+          navVehiclesSub: "إدارة الأسطول والتكليفات",
+          navFactoriesTitle: "المصانع",
+          navFactoriesSub: "شبكة الاستلام والتغطية",
+          navFinanceTitle: "المالية",
+          navFinanceSub: "التسويات والتحويلات",
+          navDoshTitle: "إدارة الدشت",
+          navDoshSub: "الأنواع والفئات والأسعار",
+          navContactsTitle: "إدارة التواصل",
+          navContactsSub: "متابعة العملاء",
+          navContractsTitle: "العقود",
+          navContractsSub: "إنشاء وإدارة المتعاقدين",
+          navParticipantsTitle: "المشاركون البيئيون",
+          navParticipantsSub: "دليل المشاركين",
+          navRedeemsTitle: "طلبات الاستبدال",
+          navRedeemsSub: "المراجعة والتنفيذ",
+          headerTitle: "إدارة أنواع وأسعار الدشت",
+          backToDashboard: "الرجوع للداشبورد",
+          logout: "تسجيل الخروج",
+          pageIntro:
+            "إدارة احترافية لأنواع الدشت والفئات الكمية وسجلات التسعير من خلال نوافذ منبثقة منظمة وسريعة.",
+          tabTypes: "أنواع الدشت",
+          tabTiers: "الفئات الكمية",
+          tabPrices: "أسعار الدشت",
+          addTypeTitle: "إضافة نوع دشت",
+          addTypeText:
+            "افتح نموذجًا منبثقًا منظمًا لإضافة نوع جديد بدون تشتيت سير المراجعة داخل الصفحة.",
+          addTypeButton: "إضافة نوع دشت",
+          typeListTitle: "قائمة الأنواع",
+          typeListHint: "راجع الحالة والوصف والتفاصيل التعريفية لكل نوع.",
+          total: "الإجمالي",
+          active: "النشطة",
+          addTierTitle: "إضافة فئة كمية",
+          addTierText:
+            "افتح نموذجًا احترافيًا لتحديد الفئة الكمية الجديدة مع ترتيب واضح ونطاق استخدام مضبوط.",
+          addTierButton: "إضافة فئة كمية",
+          tierListTitle: "قائمة الفئات",
+          tierListHint:
+            "تُستخدم الفئات الكمية لتنظيم التسعير حسب النطاق المناسب لكل كمية.",
+          addPriceTitle: "إضافة سجل سعر",
+          addPriceText:
+            "أنشئ نافذة تسعير جديدة من خلال نموذج واضح مع تحقق أفضل وإرشاد مباشر قبل الحفظ.",
+          priceSetupNote:
+            "أضف نوعًا نشطًا واحدًا وفئة كمية نشطة واحدة على الأقل قبل إنشاء الأسعار.",
+          addPriceButton: "إضافة سجل سعر",
+          priceListTitle: "سجلات الأسعار",
+          priceListHint: "رشّح النتائج حسب النوع أو الفئة أو فترة السريان.",
+          refresh: "تحديث",
+          filterType: "النوع",
+          filterTier: "الفئة",
+          currentOnly: "الأسعار السارية فقط",
+          applyFilters: "تطبيق الفلاتر",
+          resetFilters: "إعادة ضبط",
+          typeCreateTitle: "إضافة نوع دشت",
+          typeCreateHint: "يجب أن يكون اسم النوع فريدًا وغير مكرر بين جميع الأنواع.",
+          close: "إغلاق",
+          fieldName: "الاسم",
+          fieldUnit: "الوحدة",
+          fieldDescription: "الوصف",
+          fieldImageUrl: "رابط الصورة",
+          activeSelectable: "نشط ومتاح للاختيار",
+          cancel: "إلغاء",
+          createType: "إضافة النوع",
+          tierCreateTitle: "إضافة فئة كمية",
+          tierCreateHint: "يجب أن يكون ترتيب الفئة فريدًا وأن يكون نطاق الكمية صالحًا.",
+          fieldDisplayOrder: "ترتيب العرض",
+          fieldMinQuantity: "الحد الأدنى للكمية",
+          fieldMaxQuantity: "الحد الأقصى للكمية",
+          openEndedTierHint: "اتركه فارغًا إذا كانت الفئة بدون حد أقصى.",
+          activeTierSelectable: "نشطة ومتاحة للاختيار",
+          createTier: "إضافة الفئة",
+          priceCreateTitle: "إضافة سجل سعر",
+          priceCreateHint: "لا يمكن تكرار فترات سريان متداخلة لنفس النوع ونفس الفئة.",
+          fieldDoshType: "نوع الدشت",
+          fieldPricePerKg: "السعر لكل كجم",
+          fieldEffectiveFrom: "ساري من",
+          fieldEffectiveTo: "ساري إلى",
+          openEndedPriceHint: "اتركه فارغًا إذا كان السعر مفتوح المدة.",
+          createPrice: "إضافة السعر",
+        },
+      };
+
+      function doshText(key) {
+        const lang = typeof window.__lang === "function" ? window.__lang() : "ar";
+        return doshI18n[lang]?.[key] || doshI18n.ar[key] || key;
+      }
+
+      function setNodeText(selector, value) {
+        const node = document.querySelector(selector);
+        if (node) node.textContent = value;
+      }
+
+      function translateDoshPage() {
+        document.title = doshText("pageTitle");
+        setNodeText(".brand p", doshText("brandSub"));
+        setNodeText(".sidebar-footer strong", doshText("sidebarAdmin"));
+        setNodeText(".sidebar-footer span", doshText("sidebarAdminSub"));
+
+        const navItems = document.querySelectorAll(".sidebar .nav-item");
+        const navMap = [
+          ["DB", "navHomeTitle", "navHomeSub"],
+          ["AP", "navApprovalsTitle", "navApprovalsSub"],
+          ["SG", "navSegmentationTitle", "navSegmentationSub"],
+          ["VH", "navVehiclesTitle", "navVehiclesSub"],
+          ["FC", "navFactoriesTitle", "navFactoriesSub"],
+          ["FN", "navFinanceTitle", "navFinanceSub"],
+          ["DS", "navDoshTitle", "navDoshSub"],
+          ["CX", "navContactsTitle", "navContactsSub"],
+          ["CT", "navContractsTitle", "navContractsSub"],
+          ["EP", "navParticipantsTitle", "navParticipantsSub"],
+          ["RD", "navRedeemsTitle", "navRedeemsSub"],
+        ];
+        navItems.forEach((item, index) => {
+          const map = navMap[index];
+          if (!map) return;
+          const [iconText, titleKey, subKey] = map;
+          const icon = item.querySelector(".nav-icon");
+          const title = item.querySelector(".nav-copy strong");
+          const sub = item.querySelector(".nav-copy span");
+          if (icon) icon.textContent = iconText;
+          if (title) title.textContent = doshText(titleKey);
+          if (sub) sub.textContent = doshText(subKey);
+        });
+
+        const navGroups = document.querySelectorAll(".nav-group-label");
+        if (navGroups[0]) navGroups[0].textContent = doshText("navOperations");
+        if (navGroups[1]) navGroups[1].textContent = doshText("navAdminGroup");
+        if (navGroups[2]) navGroups[2].textContent = doshText("navEcoGroup");
+
+        setNodeText(".header h1", doshText("headerTitle"));
+        setNodeText(".header-actions .header-btn:first-child", doshText("backToDashboard"));
+        setNodeText(".header-actions .header-btn:last-child", doshText("logout"));
+        setNodeText(".page-intro", doshText("pageIntro"));
+
+        const tabs = document.querySelectorAll(".tab-btn");
+        if (tabs[0]) tabs[0].textContent = doshText("tabTypes");
+        if (tabs[1]) tabs[1].textContent = doshText("tabTiers");
+        if (tabs[2]) tabs[2].textContent = doshText("tabPrices");
+
+        setNodeText("#panel-types .action-card h2", doshText("addTypeTitle"));
+        setNodeText("#panel-types .action-card p", doshText("addTypeText"));
+        setNodeText("#panel-types .action-card .btn-primary", doshText("addTypeButton"));
+        setNodeText("#panel-types .card-header h3", doshText("typeListTitle"));
+        setNodeText("#panel-types .card-header .card-hint", doshText("typeListHint"));
+        const typeStats = document.querySelectorAll("#panel-types .stat span");
+        if (typeStats[0]) typeStats[0].textContent = doshText("total");
+        if (typeStats[1]) typeStats[1].textContent = doshText("active");
+
+        setNodeText("#panel-tiers .action-card h2", doshText("addTierTitle"));
+        setNodeText("#panel-tiers .action-card p", doshText("addTierText"));
+        setNodeText("#panel-tiers .action-card .btn-primary", doshText("addTierButton"));
+        setNodeText("#panel-tiers .card-header h3", doshText("tierListTitle"));
+        setNodeText("#panel-tiers .card-header .card-hint", doshText("tierListHint"));
+        const tierStats = document.querySelectorAll("#panel-tiers .stat span");
+        if (tierStats[0]) tierStats[0].textContent = doshText("total");
+        if (tierStats[1]) tierStats[1].textContent = doshText("active");
+
+        setNodeText("#panel-prices .action-card h2", doshText("addPriceTitle"));
+        setNodeText("#panel-prices .action-card p", doshText("addPriceText"));
+        setNodeText("#priceSetupNote", doshText("priceSetupNote"));
+        setNodeText("#openPriceCreateBtn", doshText("addPriceButton"));
+        setNodeText("#panel-prices .card-header h3", doshText("priceListTitle"));
+        setNodeText("#panel-prices .card-header .card-hint", doshText("priceListHint"));
+        setNodeText("#panel-prices .card-header .btn-secondary", doshText("refresh"));
+        setNodeText("label[for='priceFilterType']", doshText("filterType"));
+        setNodeText("label[for='priceFilterTier']", doshText("filterTier"));
+        document.querySelector("#priceFilterCurrentOnly + span") &&
+          (document.querySelector("#priceFilterCurrentOnly + span").textContent = doshText("currentOnly"));
+        setNodeText("#panel-prices .actions .btn-primary", doshText("applyFilters"));
+        setNodeText("#panel-prices .actions .btn-secondary", doshText("resetFilters"));
+
+        const typeHeaders = document.querySelectorAll("#typesTable th");
+        ["Name", "Description", "Unit", "Status", "Actions"].forEach((text, index) => {
+          if (typeHeaders[index]) typeHeaders[index].textContent = __t(text);
+        });
+        const tierHeaders = document.querySelectorAll("#tiersTable th");
+        ["Name", "Range", "Order", "Status", "Actions"].forEach((text, index) => {
+          if (tierHeaders[index]) tierHeaders[index].textContent = __t(text);
+        });
+        const priceHeaders = document.querySelectorAll("#pricesTable th");
+        ["Type", "Tier", "Price", "Effective Window", "Actions"].forEach((text, index) => {
+          if (priceHeaders[index]) priceHeaders[index].textContent = __t(text);
+        });
+
+        setNodeText("#typeFormTitle", doshText("typeCreateTitle"));
+        setNodeText("#typeCreateModal .modal-header .card-hint", doshText("typeCreateHint"));
+        setNodeText("#typeCreateModal .modal-header .btn-secondary", doshText("close"));
+        setNodeText("label[for='typeName']", doshText("fieldName"));
+        setNodeText("label[for='typeUnit']", doshText("fieldUnit"));
+        setNodeText("label[for='typeDescription']", doshText("fieldDescription"));
+        setNodeText("label[for='typeImageUrl']", doshText("fieldImageUrl"));
+        document.querySelector("#typeIsActive + span") &&
+          (document.querySelector("#typeIsActive + span").textContent = doshText("activeSelectable"));
+        setNodeText("#typeCreateModal .modal-footer .btn-secondary", doshText("cancel"));
+        setNodeText("#typeSubmitBtn", state.editingTypeId ? __t("Save Changes") : doshText("createType"));
+
+        setNodeText("#tierFormTitle", doshText("tierCreateTitle"));
+        setNodeText("#tierCreateModal .modal-header .card-hint", doshText("tierCreateHint"));
+        setNodeText("#tierCreateModal .modal-header .btn-secondary", doshText("close"));
+        setNodeText("label[for='tierName']", doshText("fieldName"));
+        setNodeText("label[for='tierOrder']", doshText("fieldDisplayOrder"));
+        setNodeText("label[for='tierMinQuantity']", doshText("fieldMinQuantity"));
+        setNodeText("label[for='tierMaxQuantity']", doshText("fieldMaxQuantity"));
+        setNodeText("#tierCreateModal .helper-text", doshText("openEndedTierHint"));
+        document.querySelector("#tierIsActive + span") &&
+          (document.querySelector("#tierIsActive + span").textContent = doshText("activeTierSelectable"));
+        setNodeText("#tierCreateModal .modal-footer .btn-secondary", doshText("cancel"));
+        setNodeText("#tierSubmitBtn", state.editingTierId ? __t("Save Changes") : doshText("createTier"));
+
+        setNodeText("#priceFormTitle", doshText("priceCreateTitle"));
+        setNodeText("#priceCreateModal .modal-header .card-hint", doshText("priceCreateHint"));
+        setNodeText("#priceCreateModal .modal-header .btn-secondary", doshText("close"));
+        setNodeText("label[for='priceTypeId']", doshText("fieldDoshType"));
+        setNodeText("label[for='priceTierId']", doshText("filterTier"));
+        setNodeText("label[for='pricePerKg']", doshText("fieldPricePerKg"));
+        setNodeText("label[for='priceEffectiveFrom']", doshText("fieldEffectiveFrom"));
+        setNodeText("label[for='priceEffectiveTo']", doshText("fieldEffectiveTo"));
+        const priceHelpers = document.querySelectorAll("#priceCreateModal .helper-text");
+        if (priceHelpers[0]) priceHelpers[0].textContent = doshText("openEndedPriceHint");
+        setNodeText("#priceCreateModal .modal-footer .btn-secondary", doshText("cancel"));
+        setNodeText("#priceSubmitBtn", state.editingPriceId ? __t("Save Changes") : doshText("createPrice"));
+      }
+
+      function go(path) {
+        location.href = path;
+      }
 
       function goBack() {
         location.href = "dashboard.html";
@@ -1363,10 +2077,20 @@
       function resetTypeForm() {
         state.editingTypeId = null;
         clearErrors("type");
-        document.getElementById("typeFormTitle").textContent = __t("Create Dosh Type");
-        document.getElementById("typeSubmitBtn").textContent = __t("Create Type");
+        document.getElementById("typeFormTitle").textContent = doshText("typeCreateTitle");
+        document.getElementById("typeSubmitBtn").textContent = doshText("createType");
         document.getElementById("typeForm").reset();
         document.getElementById("typeIsActive").checked = true;
+      }
+
+      function openTypeCreateModal() {
+        resetTypeForm();
+        document.getElementById("typeCreateModal").classList.add("open");
+      }
+
+      function closeTypeCreateModal(event) {
+        if (event && event.target !== event.currentTarget) return;
+        document.getElementById("typeCreateModal").classList.remove("open");
       }
 
       function openTypeEditModal(item) {
@@ -1449,10 +2173,20 @@
       function resetTierForm() {
         state.editingTierId = null;
         clearErrors("tier");
-        document.getElementById("tierFormTitle").textContent = __t("Create Quantity Tier");
-        document.getElementById("tierSubmitBtn").textContent = __t("Create Tier");
+        document.getElementById("tierFormTitle").textContent = doshText("tierCreateTitle");
+        document.getElementById("tierSubmitBtn").textContent = doshText("createTier");
         document.getElementById("tierForm").reset();
         document.getElementById("tierIsActive").checked = true;
+      }
+
+      function openTierCreateModal() {
+        resetTierForm();
+        document.getElementById("tierCreateModal").classList.add("open");
+      }
+
+      function closeTierCreateModal(event) {
+        if (event && event.target !== event.currentTarget) return;
+        document.getElementById("tierCreateModal").classList.remove("open");
       }
 
       function openTierEditModal(item) {
@@ -1551,9 +2285,22 @@
       function resetPriceForm() {
         state.editingPriceId = null;
         clearErrors("price");
-        document.getElementById("priceFormTitle").textContent = __t("Create Price Record");
-        document.getElementById("priceSubmitBtn").textContent = __t("Create Price");
+        document.getElementById("priceFormTitle").textContent = doshText("priceCreateTitle");
+        document.getElementById("priceSubmitBtn").textContent = doshText("createPrice");
         document.getElementById("priceForm").reset();
+      }
+
+      function openPriceCreateModal() {
+        const hasSetup = state.types.length > 0 && state.tiers.length > 0;
+        if (!hasSetup) return;
+        resetPriceForm();
+        renderTypeAndTierSelects();
+        document.getElementById("priceCreateModal").classList.add("open");
+      }
+
+      function closePriceCreateModal(event) {
+        if (event && event.target !== event.currentTarget) return;
+        document.getElementById("priceCreateModal").classList.remove("open");
       }
 
       function openPriceEditModal(item) {
@@ -1708,6 +2455,8 @@
         document.querySelectorAll("#priceForm select, #priceForm input, #priceForm button").forEach((el) => {
           el.disabled = !hasSetup;
         });
+        const createPriceBtn = document.getElementById("openPriceCreateBtn");
+        if (createPriceBtn) createPriceBtn.disabled = !hasSetup;
       }
 
       function renderTypes() {
@@ -1952,6 +2701,7 @@
           );
 
           resetTypeForm();
+          closeTypeCreateModal();
           await loadTypes();
           showBanner(
             "success",
@@ -1984,6 +2734,7 @@
           );
 
           resetTierForm();
+          closeTierCreateModal();
           await loadTiers();
           showBanner(
             "success",
@@ -2016,6 +2767,7 @@
           );
 
           resetPriceForm();
+          closePriceCreateModal();
           await loadPrices();
           showBanner(
             "success",
@@ -2117,12 +2869,16 @@
       }
 
       window.onLanguageChange = () => {
+        translateDoshPage();
         renderTypes();
         renderTiers();
         renderPrices(state.filteredPrices);
+        renderTypeAndTierSelects();
       };
 
+      translateDoshPage();
       init();
     </script>
   </body>
 </html>
+

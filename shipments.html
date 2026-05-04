@@ -1191,6 +1191,11 @@
         if (node) node.textContent = value == null || value === "" ? "-" : value;
       }
 
+      function setNodeText(selector, value) {
+        const node = document.querySelector(selector);
+        if (node) node.textContent = value;
+      }
+
       function setBanner(message) {
         const banner = document.getElementById("errorBanner");
         if (!message) {
@@ -1204,14 +1209,22 @@
       }
 
       function formatNumber(value) {
-        return Number(value || 0).toLocaleString("ar-EG");
+        const locale =
+          typeof window.__lang === "function" && window.__lang() === "ar"
+            ? "ar-EG"
+            : "en-US";
+        return Number(value || 0).toLocaleString(locale);
       }
 
       function formatDateTime(value) {
         if (!value) return "-";
         const date = new Date(value);
         if (Number.isNaN(date.getTime())) return "-";
-        return date.toLocaleString("ar-EG", {
+        const locale =
+          typeof window.__lang === "function" && window.__lang() === "ar"
+            ? "ar-EG"
+            : "en-US";
+        return date.toLocaleString(locale, {
           day: "numeric",
           month: "long",
           year: "numeric",
@@ -1453,13 +1466,364 @@
         setText("todayDate", formatted);
       }
 
-      applyPageTypeShell();
-      initMeta();
-      loadShipments();
+      function statusLabel(status) {
+        const map = {
+          pending: "Pending Approval",
+          pending_approval: "Pending Approval",
+          pending_admin_review: "Pending Segmentation",
+          pending_segmentation: "Pending Segmentation",
+          delivered: "Delivered",
+          rejected: "Rejected",
+        };
+
+        if (typeof window.__status === "function") {
+          const translated = window.__status(map[status] || status || "Unknown");
+          if (translated) return translated;
+        }
+
+        return map[status] || status || "-";
+      }
+
+      function pageModeLabel() {
+        if (pageType === "approval") return __t("Approvals Only");
+        if (pageType === "segmentation") return __t("Segmentation Only");
+        return __t("All Queues");
+      }
+
+      function visiblePriorityLabel() {
+        if (pageType === "approval") return __t("Approve Shipments First");
+        if (pageType === "segmentation") {
+          return __t("Accelerate Routing Assignment");
+        }
+        return __t("Parallel Review");
+      }
+
+      function translateShipments() {
+        document.title = __t("SuperCycle - Shipments Management");
+
+        setNodeText(".brand p", __t("Admin Dashboard"));
+        setNodeText(".nav-group:first-of-type .nav-copy strong", __t("Dashboard"));
+        setNodeText(".nav-group:first-of-type .nav-copy span", __t("Daily performance summary"));
+
+        const navGroupLabels = document.querySelectorAll(".nav-group-label");
+        if (navGroupLabels[0]) navGroupLabels[0].textContent = __t("Operations");
+        if (navGroupLabels[1]) navGroupLabels[1].textContent = __t("Administration");
+        if (navGroupLabels[2]) navGroupLabels[2].textContent = __t("Environmental Ecosystem");
+
+        setNodeText("#navApproval .nav-copy strong", __t("Approvals"));
+        setNodeText("#navApproval .nav-copy span", __t("Shipments pending review"));
+        setNodeText("#navSegmentation .nav-copy strong", __t("Routing & Segmentation"));
+        setNodeText("#navSegmentation .nav-copy span", __t("Ready for operations"));
+
+        const navCopies = document.querySelectorAll(".nav-item .nav-copy");
+        if (navCopies[3]) {
+          navCopies[3].querySelector("strong").textContent = __t("Vehicles");
+          navCopies[3].querySelector("span").textContent = __t("Fleet management");
+        }
+        if (navCopies[4]) {
+          navCopies[4].querySelector("strong").textContent = __t("Factories");
+          navCopies[4].querySelector("span").textContent = __t("Coverage and intake");
+        }
+        if (navCopies[5]) {
+          navCopies[5].querySelector("strong").textContent = __t("Finance");
+          navCopies[5].querySelector("span").textContent = __t("Settlements and transfers");
+        }
+        if (navCopies[6]) {
+          navCopies[6].querySelector("strong").textContent = __t("Dosh Types & Prices");
+          navCopies[6].querySelector("span").textContent = __t("Pricing and tiers");
+        }
+        if (navCopies[7]) {
+          navCopies[7].querySelector("strong").textContent = __t("Inbox");
+          navCopies[7].querySelector("span").textContent = __t("Customer follow-up");
+        }
+        if (navCopies[8]) {
+          navCopies[8].querySelector("strong").textContent = __t("Eco Participants");
+          navCopies[8].querySelector("span").textContent = __t("Enrollment management");
+        }
+        if (navCopies[9]) {
+          navCopies[9].querySelector("strong").textContent = __t("Redeem Requests");
+          navCopies[9].querySelector("span").textContent = __t("Review and execution");
+        }
+
+        setNodeText(".sidebar-footer strong", __t("System Admin"));
+        setNodeText(".sidebar-footer span", __t("Admin Control"));
+        document.querySelector(".icon-button")?.setAttribute("title", __t("Refresh"));
+        setNodeText(".logout-btn", __t("Logout"));
+
+        setNodeText("#quickWorkflowSection .panel-header h3", __t("Quick Workflows"));
+        setNodeText(
+          "#quickWorkflowSection .panel-header p",
+          __t("Jump directly between the approval queue and the routing queue without leaving this page."),
+        );
+        setNodeText("#approvalCard h4", __t("Approvals"));
+        setNodeText(
+          "#approvalCard p",
+          __t("Inspect a shipment, approve it, or adjust it before it moves to the next operational stage."),
+        );
+        setNodeText("#approvalCard .queue-foot span", __t("Path"));
+        setNodeText("#approvalCard .queue-foot strong", __t("Approval and review"));
+        setNodeText("#segmentationCard h4", __t("Routing & Segmentation"));
+        setNodeText(
+          "#segmentationCard p",
+          __t("Prepare the shipment for the right vehicle and route before logistics movement starts."),
+        );
+        setNodeText("#segmentationCard .queue-foot span", __t("Path"));
+        setNodeText("#segmentationCard .queue-foot strong", __t("Segmentation and routes"));
+
+        setNodeText("#approvalSection .panel-header h3", __t("Approval Queue"));
+        setNodeText(
+          "#approvalSection .panel-header p",
+          __t("Click any row to open the shipment directly and move to the approval screen."),
+        );
+        setNodeText("#approvalSection .panel-link", __t("Open First Shipment"));
+        setNodeText("#segmentationSection .panel-header h3", __t("Routing & Segmentation Queue"));
+        setNodeText(
+          "#segmentationSection .panel-header p",
+          __t("Open the shipment from the table to start assigning load and route."),
+        );
+        setNodeText("#segmentationSection .panel-link", __t("Open First Shipment"));
+
+        const approvalHeaders = document.querySelectorAll("#approvalSection th");
+        if (approvalHeaders[1]) approvalHeaders[1].textContent = __t("Shipment No");
+        if (approvalHeaders[2]) approvalHeaders[2].textContent = __t("Quantity");
+        if (approvalHeaders[3]) approvalHeaders[3].textContent = __t("Status");
+        if (approvalHeaders[4]) approvalHeaders[4].textContent = __t("Created At");
+
+        const segmentationHeaders = document.querySelectorAll("#segmentationSection th");
+        if (segmentationHeaders[1]) segmentationHeaders[1].textContent = __t("Shipment No");
+        if (segmentationHeaders[2]) segmentationHeaders[2].textContent = __t("Quantity");
+        if (segmentationHeaders[3]) segmentationHeaders[3].textContent = __t("Status");
+        if (segmentationHeaders[4]) segmentationHeaders[4].textContent = __t("Created At");
+
+        setText("approvalEmpty", __t("No pending shipments for approval"));
+        setText("segmentationEmpty", __t("No pending shipments for segmentation"));
+
+        setNodeText(".side-stack .panel:first-child h3", __t("Follow-up Priority"));
+        setNodeText(
+          ".side-stack .panel:first-child p",
+          __t("Fast indicators to support the operational decision before opening shipment details."),
+        );
+        const focusLabels = document.querySelectorAll(".focus-item span");
+        if (focusLabels[0]) focusLabels[0].textContent = __t("View Mode");
+        if (focusLabels[1]) focusLabels[1].textContent = __t("Operations Priority");
+        if (focusLabels[2]) focusLabels[2].textContent = __t("Approval Queue");
+        if (focusLabels[3]) focusLabels[3].textContent = __t("Routing Queue");
+
+        setNodeText(".side-stack .panel:last-child h3", __t("Operational Snapshot"));
+        setNodeText(
+          ".side-stack .panel:last-child p",
+          __t("Side metrics that support your quick decision inside the page."),
+        );
+        const metricLabels = document.querySelectorAll(".metric-row span");
+        if (metricLabels[0]) metricLabels[0].textContent = __t("Total Open");
+        if (metricLabels[1]) metricLabels[1].textContent = __t("Total Quantity");
+        if (metricLabels[2]) metricLabels[2].textContent = __t("Visible Queue");
+        if (metricLabels[3]) metricLabels[3].textContent = __t("Last Updated");
+      }
+
+      function applyPageTypeShell() {
+        const approvalSection = document.getElementById("approvalSection");
+        const segmentationSection = document.getElementById("segmentationSection");
+        const quickWorkflowSection = document.getElementById("quickWorkflowSection");
+        const statApprovalCard = document.getElementById("statApprovalCard");
+        const statSegmentationCard = document.getElementById("statSegmentationCard");
+        const approvalNav = document.getElementById("navApproval");
+        const segmentationNav = document.getElementById("navSegmentation");
+        const approvalCard = document.getElementById("approvalCard");
+        const segmentationCard = document.getElementById("segmentationCard");
+
+        approvalSection.classList.remove("section-hidden");
+        segmentationSection.classList.remove("section-hidden");
+        quickWorkflowSection.classList.remove("section-hidden");
+        statApprovalCard.classList.remove("section-hidden");
+        statSegmentationCard.classList.remove("section-hidden");
+        approvalNav.classList.remove("active");
+        segmentationNav.classList.remove("active");
+        approvalCard.classList.remove("active");
+        segmentationCard.classList.remove("active");
+
+        if (pageType === "approval") {
+          quickWorkflowSection.classList.add("section-hidden");
+          segmentationSection.classList.add("section-hidden");
+          statSegmentationCard.classList.add("section-hidden");
+          approvalNav.classList.add("active");
+          approvalCard.classList.add("active");
+          setText("pageTitle", __t("Approval Center"));
+          setText(
+            "pageSubtitle",
+            __t("All shipments that need review and approval before moving into operations."),
+          );
+          setText("heroBadge", __t("Direct Approval"));
+          setText("heroTitle", __t("Make the call before the shipment moves"));
+          setText(
+            "heroText",
+            __t("This view focuses on every shipment that needs an operational sign-off or adjustment before approval."),
+          );
+        } else if (pageType === "segmentation") {
+          quickWorkflowSection.classList.add("section-hidden");
+          approvalSection.classList.add("section-hidden");
+          statApprovalCard.classList.add("section-hidden");
+          segmentationNav.classList.add("active");
+          segmentationCard.classList.add("active");
+          setText("pageTitle", __t("Segmentation & Routing Center"));
+          setText(
+            "pageSubtitle",
+            __t("All shipments ready to be assigned to vehicles and operational routes."),
+          );
+          setText("heroBadge", __t("Routing & Dispatch"));
+          setText("heroTitle", __t("Move from approval into logistics action"));
+          setText(
+            "heroText",
+            __t("Review shipments ready for routing and assign the best path with the fastest operational flow possible."),
+          );
+        } else {
+          approvalNav.classList.add("active");
+          segmentationNav.classList.add("active");
+          approvalCard.classList.add("active");
+          segmentationCard.classList.add("active");
+          setText("pageTitle", __t("Approvals and Routing"));
+          setText(
+            "pageSubtitle",
+            __t("One operations view to review shipments before approval or route assignment."),
+          );
+          setText("heroBadge", __t("Operations Need Attention"));
+          setText("heroTitle", __t("Control point before execution"));
+          setText(
+            "heroText",
+            __t("Use this screen to review pending requests, set priorities, and open the shipment directly from the table to take the right action."),
+          );
+        }
+      }
+
+      function renderTable(list, rowsId, emptyId, type) {
+        const rows = document.getElementById(rowsId);
+        const empty = document.getElementById(emptyId);
+        rows.innerHTML = "";
+
+        if (!list.length) {
+          empty.classList.remove("section-hidden");
+          return;
+        }
+
+        empty.classList.add("section-hidden");
+
+        list.forEach((item, index) => {
+          const destination = shipmentDestination(item, type);
+          const tr = document.createElement("tr");
+          tr.className = "clickable-row";
+          tr.onclick = () => go(destination);
+          tr.innerHTML = `
+            <td>${formatNumber(index + 1)}</td>
+            <td><span class="shipment-number">${item.shipmentNumber || "-"}</span></td>
+            <td>${formatNumber(quantityKg(item))} ${__t("KG")}</td>
+            <td><span class="status-chip ${statusClass(item.status)}">${statusLabel(item.status)}</span></td>
+            <td>${formatDateTime(item.createdAt)}</td>
+          `;
+          rows.appendChild(tr);
+        });
+      }
+
+      function renderSummary(approvals, segmentations) {
+        const visible = visibleCollection(approvals, segmentations);
+        const visibleQuantity = visible.reduce(
+          (sum, item) => sum + quantityKg(item),
+          0,
+        );
+        const totalOpen = approvals.length + segmentations.length;
+        const totalQuantity = approvals
+          .concat(segmentations)
+          .reduce((sum, item) => sum + quantityKg(item), 0);
+
+        setText("approvalCount", formatNumber(approvals.length));
+        setText("segmentationCount", formatNumber(segmentations.length));
+        setText("sidebarPendingApprovals", formatNumber(approvals.length));
+        setText("sidebarPendingSegmentation", formatNumber(segmentations.length));
+
+        setText("statApprovals", formatNumber(approvals.length));
+        setText("statSegmentations", formatNumber(segmentations.length));
+        setText("statVisible", formatNumber(visible.length));
+        setText("statVisibleQuantity", formatNumber(visibleQuantity));
+
+        setText("focusMode", pageModeLabel());
+        setText("focusPriority", visiblePriorityLabel());
+        setText("focusApprovals", formatNumber(approvals.length));
+        setText("focusSegmentations", formatNumber(segmentations.length));
+
+        setText("metricTotalOpen", formatNumber(totalOpen));
+        setText("metricTotalQuantity", `${formatNumber(totalQuantity)} ${__t("KG")}`);
+        setText("metricVisibleMode", pageModeLabel());
+        setText("metricLastUpdated", formatDateTime(new Date().toISOString()));
+      }
+
+      async function loadShipments() {
+        try {
+          setBanner("");
+          const response = await fetch(`${API_BASE}/admin/shipments?limit=100`, {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+
+          const text = await response.text();
+          let json = null;
+
+          try {
+            json = text ? JSON.parse(text) : null;
+          } catch (_) {
+            json = null;
+          }
+
+          if (!response.ok) {
+            throw new Error(json?.message || text || __t("Request failed"));
+          }
+
+          const allShipments = extractCollection(json);
+          const approvals = allShipments.filter(approvalStatus);
+          const segmentations = allShipments.filter(segmentationStatus);
+
+          renderTable(approvals, "approvalRows", "approvalEmpty", "approval");
+          renderTable(
+            segmentations,
+            "segmentationRows",
+            "segmentationEmpty",
+            "segmentation",
+          );
+          renderSummary(approvals, segmentations);
+        } catch (error) {
+          setBanner(
+            `${__t("Failed to load shipments data right now.")} ${error.message || ""}`.trim(),
+          );
+          renderTable([], "approvalRows", "approvalEmpty", "approval");
+          renderTable([], "segmentationRows", "segmentationEmpty", "segmentation");
+          renderSummary([], []);
+        }
+      }
+
+      function initMeta() {
+        const locale =
+          typeof window.__lang === "function" && window.__lang() === "ar"
+            ? "ar-EG"
+            : "en-US";
+        const formatted = new Date().toLocaleDateString(locale, {
+          weekday: "long",
+          day: "numeric",
+          month: "long",
+          year: "numeric",
+        });
+        setText("todayDate", formatted);
+      }
+
       window.onLanguageChange = () => {
+        translateShipments();
+        applyPageTypeShell();
         initMeta();
         loadShipments();
       };
+
+      if (typeof window.__t === "function") {
+        translateShipments();
+        applyPageTypeShell();
+        initMeta();
+        loadShipments();
+      }
     </script>
     <script src="./site-i18n.js"></script>
   </body>

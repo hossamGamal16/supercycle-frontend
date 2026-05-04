@@ -218,6 +218,14 @@
     "Redeem Info": "تفاصيل الطلب",
     "Created": "تم الإنشاء",
     "Actions": "الإجراءات",
+    "Description": "الوصف",
+    "Unit": "الوحدة",
+    "Range": "النطاق",
+    "Order": "الترتيب",
+    "Type": "النوع",
+    "Tier": "الفئة",
+    "Price": "السعر",
+    "Effective Window": "فترة السريان",
     "Approve": "قبول",
     "Reject": "رفض",
     "Mark Planted": "تحديد كمزروع",
@@ -488,6 +496,28 @@
     "awaiting_monthly_settlement": "بانتظار التسوية الشهرية",
   };
 
+  function looksMojibake(text) {
+    return /[ØÙÃÂðâ]/.test(String(text || ""));
+  }
+
+  function repairMojibake(text) {
+    const value = String(text ?? "");
+    if (!value || !looksMojibake(value)) return value;
+
+    try {
+      return decodeURIComponent(escape(value));
+    } catch (_) {
+      return value;
+    }
+  }
+
+  const translationEntries = Object.keys(translations)
+    .map((source) => ({
+      source: repairMojibake(source),
+      target: repairMojibake(translations[source]),
+    }))
+    .sort((a, b) => b.source.length - a.source.length);
+
   const rtlStyle = `
     .lang-switcher {
       position: fixed;
@@ -564,7 +594,7 @@
   const state = {
     textNodes: [],
     placeholders: [],
-    title: document.title,
+    title: repairMojibake(document.title),
     isApplying: false,
   };
 
@@ -586,14 +616,15 @@
   }
 
   function translateText(text, lang) {
-    if (lang !== "ar") return text;
+    const normalizedText = repairMojibake(text);
+    if (lang !== "ar") return normalizedText;
 
-    let result = String(text);
-    Object.keys(translations)
-      .sort((a, b) => b.length - a.length)
-      .forEach((source) => {
-        result = result.split(source).join(translations[source]);
-      });
+    let result = normalizedText;
+    translationEntries.forEach(({ source, target }) => {
+      if (source) {
+        result = result.split(source).join(target);
+      }
+    });
 
     return result;
   }
@@ -607,7 +638,7 @@
     if (node.__i18nTracked) return;
 
     node.__i18nTracked = true;
-    node.__i18nOriginal = node.nodeValue;
+    node.__i18nOriginal = repairMojibake(node.nodeValue);
     state.textNodes.push(node);
   }
 
@@ -617,7 +648,7 @@
     if (!placeholder || element.__i18nPlaceholderTracked) return;
 
     element.__i18nPlaceholderTracked = true;
-    element.__i18nPlaceholderOriginal = placeholder;
+    element.__i18nPlaceholderOriginal = repairMojibake(placeholder);
     state.placeholders.push(element);
   }
 
@@ -727,6 +758,62 @@
 
     document.body.appendChild(wrapper);
   }
+
+  Object.assign(translations, {
+    "Review incoming contact messages, respond professionally, and close resolved conversations.":
+      "Ø±Ø§Ø¬Ø¹ Ø±Ø³Ø§Ø¦Ù„ Ø§Ù„ØªÙˆØ§ØµÙ„ Ø§Ù„ÙˆØ§Ø±Ø¯Ø©ØŒ ÙˆØ§Ø±Ø¯ Ø¨Ø§Ø­ØªØ±Ø§ÙÙŠØ©ØŒ ÙˆØ£ØºÙ„Ù‚ Ø§Ù„Ù…Ø­Ø§Ø¯Ø«Ø§Øª Ø¨Ø¹Ø¯ Ø­Ù„Ù‘Ù‡Ø§.",
+    "Inbox Overview": "Ù†Ø¸Ø±Ø© Ø¹Ø§Ù…Ø© Ø¹Ù„Ù‰ Ø§Ù„Ø±Ø³Ø§Ø¦Ù„",
+    "Track new, replied, and closed messages without leaving the service queue.":
+      "ØªØ§Ø¨Ø¹ Ø§Ù„Ø±Ø³Ø§Ø¦Ù„ Ø§Ù„Ø¬Ø¯ÙŠØ¯Ø© ÙˆØ§Ù„Ù…Ø±Ø¯ÙˆØ¯ Ø¹Ù„ÙŠÙ‡Ø§ ÙˆØ§Ù„Ù…ØºÙ„Ù‚Ø© Ø¯ÙˆÙ† Ù…ØºØ§Ø¯Ø±Ø© Ø·Ø§Ø¨ÙˆØ± Ø®Ø¯Ù…Ø© Ø§Ù„Ø¹Ù…Ù„Ø§Ø¡.",
+    "Selection Insight": "Ù…Ù„Ø®Øµ Ø§Ù„Ø§Ø®ØªÙŠØ§Ø±",
+    "Current selected conversation stays visible while you work.":
+      "Ø§Ù„Ù…Ø­Ø§Ø¯Ø«Ø© Ø§Ù„Ù…Ø­Ø¯Ø¯Ø© ØªØ¸Ù„ Ù…Ø±Ø¦ÙŠØ© Ø£Ø«Ù†Ø§Ø¡ Ø§Ù„Ø¹Ù…Ù„.",
+    "Selected Sender": "Ø§Ù„Ù…Ø±Ø³Ù„ Ø§Ù„Ù…Ø­Ø¯Ø¯",
+    "Selected Status": "Ø§Ù„Ø­Ø§Ù„Ø© Ø§Ù„Ù…Ø­Ø¯Ø¯Ø©",
+    "No message selected": "Ù„Ø§ ØªÙˆØ¬Ø¯ Ø±Ø³Ø§Ù„Ø© Ù…Ø­Ø¯Ø¯Ø©",
+    "Contact Inbox": "ØµÙ†Ø¯ÙˆÙ‚ Ø±Ø³Ø§Ø¦Ù„ Ø§Ù„ØªÙˆØ§ØµÙ„",
+    "Search by sender, email, phone, subject, or message content.":
+      "Ø§Ø¨Ø­Ø« Ø¨Ø§Ø³Ù… Ø§Ù„Ù…Ø±Ø³Ù„ Ø£Ùˆ Ø§Ù„Ø¨Ø±ÙŠØ¯ Ø£Ùˆ Ø§Ù„Ù‡Ø§ØªÙ Ø£Ùˆ Ø§Ù„Ù…ÙˆØ¶ÙˆØ¹ Ø£Ùˆ Ù…Ø­ØªÙˆÙ‰ Ø§Ù„Ø±Ø³Ø§Ù„Ø©.",
+    "Page Size": "Ø­Ø¬Ù… Ø§Ù„ØµÙØ­Ø©",
+    "Loading contact messages...": "Ø¬Ø§Ø±Ù ØªØ­Ù…ÙŠÙ„ Ø±Ø³Ø§Ø¦Ù„ Ø§Ù„ØªÙˆØ§ØµÙ„...",
+    "Failed to load contact messages": "ØªØ¹Ø°Ø± ØªØ­Ù…ÙŠÙ„ Ø±Ø³Ø§Ø¦Ù„ Ø§Ù„ØªÙˆØ§ØµÙ„",
+    "No contact messages found": "Ù„Ø§ ØªÙˆØ¬Ø¯ Ø±Ø³Ø§Ø¦Ù„ ØªÙˆØ§ØµÙ„",
+    "Sender": "Ø§Ù„Ù…Ø±Ø³Ù„",
+    "Message Inspector": "ÙØ§Ø­Øµ Ø§Ù„Ø±Ø³Ø§Ù„Ø©",
+    "Open a popup to review, reply, close, or delete from one place.":
+      "Ø§ÙØªØ­ Ù†Ø§ÙØ°Ø© Ù…Ù†Ø¨Ø«Ù‚Ø© Ù„Ù„Ù…Ø±Ø§Ø¬Ø¹Ø© ÙˆØ§Ù„Ø±Ø¯ ÙˆØ§Ù„Ø¥ØºÙ„Ø§Ù‚ Ø£Ùˆ Ø§Ù„Ø­Ø°Ù Ù…Ù† Ù…ÙƒØ§Ù† ÙˆØ§Ø­Ø¯.",
+    "Current Selection": "Ø§Ù„Ø§Ø®ØªÙŠØ§Ø± Ø§Ù„Ø­Ø§Ù„ÙŠ",
+    "Next Step": "Ø§Ù„Ø®Ø·ÙˆØ© Ø§Ù„ØªØ§Ù„ÙŠØ©",
+    "Use Open to launch a focused conversation popup with full reply controls.":
+      "Ø§Ø³ØªØ®Ø¯Ù… ÙØªØ­ Ù„Ø¥Ø·Ù„Ø§Ù‚ Ù†Ø§ÙØ°Ø© Ù…Ø±ÙƒØ²Ø© Ù„Ù„Ù…Ø­Ø§Ø¯Ø«Ø© Ù…Ø¹ Ø£Ø¯ÙˆØ§Øª Ø±Ø¯ ÙƒØ§Ù…Ù„Ø©.",
+    "Open Conversation": "ÙØªØ­ Ø§Ù„Ù…Ø­Ø§Ø¯Ø«Ø©",
+    "Contact Conversation": "Ù…Ø­Ø§Ø¯Ø«Ø© Ø§Ù„ØªÙˆØ§ØµÙ„",
+    "Conversation inspector with reply and lifecycle controls.":
+      "Ù†Ø§ÙØ°Ø© ÙØ­Øµ Ø§Ù„Ù…Ø­Ø§Ø¯Ø«Ø© Ù…Ø¹ Ø£Ø¯ÙˆØ§Øª Ø§Ù„Ø±Ø¯ ÙˆØ¥Ø¯Ø§Ø±Ø© Ø­Ø§Ù„Ø© Ø§Ù„Ø±Ø³Ø§Ù„Ø©.",
+    "Admin Reply": "Ø±Ø¯ Ø§Ù„Ø¥Ø¯Ø§Ø±Ø©",
+    "Send Reply": "Ø¥Ø±Ø³Ø§Ù„ Ø§Ù„Ø±Ø¯",
+    "Close Message": "Ø¥ØºÙ„Ø§Ù‚ Ø§Ù„Ø±Ø³Ø§Ù„Ø©",
+    "Delete Message": "Ø­Ø°Ù Ø§Ù„Ø±Ø³Ø§Ù„Ø©",
+    "Reply text is required": "Ù†Øµ Ø§Ù„Ø±Ø¯ Ù…Ø·Ù„ÙˆØ¨",
+    "Reply sent successfully": "ØªÙ… Ø¥Ø±Ø³Ø§Ù„ Ø§Ù„Ø±Ø¯ Ø¨Ù†Ø¬Ø§Ø­",
+    "Failed to reply to message": "ØªØ¹Ø°Ø± Ø§Ù„Ø±Ø¯ Ø¹Ù„Ù‰ Ø§Ù„Ø±Ø³Ø§Ù„Ø©",
+    "Contact message closed successfully": "ØªÙ… Ø¥ØºÙ„Ø§Ù‚ Ø±Ø³Ø§Ù„Ø© Ø§Ù„ØªÙˆØ§ØµÙ„ Ø¨Ù†Ø¬Ø§Ø­",
+    "Failed to close message": "ØªØ¹Ø°Ø± Ø¥ØºÙ„Ø§Ù‚ Ø§Ù„Ø±Ø³Ø§Ù„Ø©",
+    "Contact message deleted successfully": "ØªÙ… Ø­Ø°Ù Ø±Ø³Ø§Ù„Ø© Ø§Ù„ØªÙˆØ§ØµÙ„ Ø¨Ù†Ø¬Ø§Ø­",
+    "Failed to delete message": "ØªØ¹Ø°Ø± Ø­Ø°Ù Ø§Ù„Ø±Ø³Ø§Ù„Ø©",
+    "Failed to load message details": "ØªØ¹Ø°Ø± ØªØ­Ù…ÙŠÙ„ ØªÙØ§ØµÙŠÙ„ Ø§Ù„Ø±Ø³Ø§Ù„Ø©",
+    "Open": "ÙØªØ­",
+    "Previous": "Ø§Ù„Ø³Ø§Ø¨Ù‚",
+    "Next": "Ø§Ù„ØªØ§Ù„ÙŠ",
+    "Page {page} of {total}": "ØµÙØ­Ø© {page} Ù…Ù† {total}",
+    "Customer follow-up": "Ù…ØªØ§Ø¨Ø¹Ø© Ø§Ù„Ø¹Ù…Ù„Ø§Ø¡",
+    "Create contractors": "Ø¥Ù†Ø´Ø§Ø¡ Ù…ØªØ¹Ø§Ù‚Ø¯ÙŠÙ†",
+    "Enrollment management": "Ø¥Ø¯Ø§Ø±Ø© Ø§Ù„Ø§Ù†Ø¶Ù…Ø§Ù…",
+    "Review and execution": "Ù…Ø±Ø§Ø¬Ø¹Ø© ÙˆØªÙ†ÙÙŠØ°",
+    "Replied": "ØªÙ… Ø§Ù„Ø±Ø¯",
+    "New": "Ø¬Ø¯ÙŠØ¯",
+    "Closed": "Ù…ØºÙ„Ù‚",
+  });
 
   function updateSwitcher(lang) {
     document.querySelectorAll(".lang-switcher button").forEach((button) => {

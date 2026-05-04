@@ -697,9 +697,14 @@
       .mix-chart-center {
         position: absolute;
         inset: 0;
-        display: grid;
-        place-items: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
         text-align: center;
+        padding: 0 18px;
+        pointer-events: none;
       }
 
       .mix-chart-center strong {
@@ -707,14 +712,16 @@
         font-size: 24px;
         line-height: 1;
         letter-spacing: -0.04em;
+        margin: 0;
       }
 
       .mix-chart-center span {
         display: block;
-        margin-top: 4px;
         color: var(--text-muted);
         font-size: 11px;
         font-weight: 700;
+        line-height: 1.25;
+        margin: 0;
       }
 
       .mix-legend {
@@ -1210,6 +1217,28 @@
           padding: 16px;
         }
 
+        .topbar-actions,
+        .hero-actions,
+        .quick-foot,
+        .panel-link {
+          width: 100%;
+        }
+
+        .topbar-actions {
+          flex-direction: column;
+          align-items: stretch;
+        }
+
+        .topbar-pill,
+        .icon-button,
+        .logout-btn,
+        .hero-actions button,
+        .panel-link {
+          width: 100%;
+          justify-content: center;
+          text-align: center;
+        }
+
         th,
         td {
           padding: 12px 8px;
@@ -1330,6 +1359,17 @@
                 <span>متابعة العملاء</span>
               </span>
               <span class="nav-badge" id="sidebarContactsNew">-</span>
+            </button>
+            <button
+              class="nav-item"
+              type="button"
+              onclick="go('contracts-create.html')"
+            >
+              <span class="nav-icon">CT</span>
+              <span class="nav-copy">
+                <strong>العقود</strong>
+                <span>إنشاء متعاقدين جدد</span>
+              </span>
             </button>
           </div>
         </div>
@@ -2430,7 +2470,7 @@
           followupTitle: "Follow-up Quality",
           followupText: "Service and support alerts that need review.",
           liveConnecting: "Connecting live updates...",
-          liveConnected: "Live updates connected",
+          liveConnected: "Live",
           liveReconnecting: "Reconnecting...",
           liveDisconnected: "Live updates disconnected",
           loading: "Loading...",

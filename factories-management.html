@@ -1,5 +1,5 @@
-<!doctype html>
-<html lang="en">
+﻿<!doctype html>
+<html lang="ar" dir="rtl">
   <head>
     <meta charset="UTF-8" />
     <title>SuperCycle - Factories Management</title>
@@ -12,43 +12,279 @@
       }
 
       :root {
-        --primary: #166534;
-        --primary-light: #22a06b;
-        --primary-dark: #14532d;
-        --accent: #1d4ed8;
-        --accent-soft: #dbeafe;
-        --warning: #b45309;
-        --warning-soft: #fef3c7;
-        --danger: #b91c1c;
-        --danger-soft: #fee2e2;
-        --success: #166534;
-        --success-soft: #dcfce7;
-        --gray-50: #f8fafc;
-        --gray-100: #f1f5f9;
-        --gray-200: #e2e8f0;
-        --gray-300: #cbd5e1;
-        --gray-500: #64748b;
-        --gray-700: #334155;
-        --gray-900: #0f172a;
+        --bg: #f3f7f2;
+        --bg-accent: #edf6ef;
+        --surface: rgba(255, 255, 255, 0.95);
+        --surface-strong: #ffffff;
+        --surface-soft: #f8fcf8;
+        --sidebar: #0f2516;
+        --sidebar-2: #173220;
+        --sidebar-text: #d6e5d5;
+        --sidebar-muted: #88a18e;
+        --primary: #217346;
+        --primary-2: #2ea05b;
+        --primary-soft: #e7f5eb;
+        --primary-border: #cfe7d5;
+        --warning: #f59e0b;
+        --warning-soft: #fff4d9;
+        --info: #2563eb;
+        --info-soft: #e8f0ff;
+        --danger: #d43f58;
+        --danger-soft: #fdecef;
+        --success: #138a4b;
+        --success-soft: #e5f7eb;
+        --text: #162418;
+        --text-soft: #5b7160;
+        --text-muted: #829486;
+        --border: #dce9de;
+        --border-strong: rgba(220, 233, 222, 0.92);
+        --shadow: 0 20px 45px rgba(24, 49, 31, 0.08);
+        --shadow-soft: 0 10px 25px rgba(24, 49, 31, 0.06);
+        --radius-xl: 26px;
+        --radius-lg: 20px;
+        --radius-md: 16px;
+        --radius-sm: 12px;
         --white: #ffffff;
       }
 
       body {
-        font-family: "Segoe UI", Tahoma, sans-serif;
+        min-height: 100vh;
+        font-family: "Segoe UI", Tahoma, Arial, sans-serif;
         background:
-          radial-gradient(circle at top right, rgba(34, 160, 107, 0.12), transparent 20%),
-          linear-gradient(180deg, #f5faf7 0%, #f4f7fb 100%);
-        color: var(--gray-900);
+          radial-gradient(
+            circle at top right,
+            rgba(46, 160, 91, 0.12),
+            transparent 24%
+          ),
+          radial-gradient(
+            circle at bottom left,
+            rgba(15, 155, 168, 0.08),
+            transparent 26%
+          ),
+          linear-gradient(180deg, #f8fbf8 0%, var(--bg) 100%);
+        color: var(--text);
       }
 
-      .header {
-        background: linear-gradient(135deg, #0f5132, #17844e 58%, #1ea768);
-        color: var(--white);
-        padding: 22px 32px;
+      html[dir="rtl"] .nav-item,
+      html[dir="rtl"] th,
+      html[dir="rtl"] td,
+      html[dir="rtl"] .field label,
+      html[dir="rtl"] .header,
+      html[dir="rtl"] .card-header,
+      html[dir="rtl"] .modal-header,
+      html[dir="rtl"] .modal-footer {
+        text-align: right;
+      }
+
+      html[dir="ltr"] .nav-item,
+      html[dir="ltr"] th,
+      html[dir="ltr"] td,
+      html[dir="ltr"] .field label,
+      html[dir="ltr"] .header,
+      html[dir="ltr"] .card-header,
+      html[dir="ltr"] .modal-header,
+      html[dir="ltr"] .modal-footer {
+        text-align: left;
+      }
+
+      .app-shell {
+        display: flex;
+        min-height: 100vh;
+      }
+
+      .sidebar {
+        width: 264px;
+        flex-shrink: 0;
+        background:
+          linear-gradient(180deg, rgba(46, 160, 91, 0.08), transparent 12%),
+          linear-gradient(180deg, var(--sidebar) 0%, #102819 100%);
+        color: var(--sidebar-text);
+        padding: 22px 16px 18px;
+        position: sticky;
+        top: 0;
+        height: 100vh;
+        overflow-y: auto;
+        border-left: 1px solid rgba(255, 255, 255, 0.04);
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 10px 10px 18px;
+      }
+
+      .brand-mark {
+        width: 46px;
+        height: 46px;
+        border-radius: 15px;
+        background: linear-gradient(135deg, #33a65f, #17653c);
+        display: grid;
+        place-items: center;
+        color: #fff;
+        font-size: 22px;
+        font-weight: 900;
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.24);
+      }
+
+      .brand h1 {
+        font-size: 26px;
+        line-height: 1;
+        font-weight: 900;
+        letter-spacing: -0.03em;
+      }
+
+      .brand p {
+        margin-top: 4px;
+        color: var(--sidebar-muted);
+        font-size: 12px;
+      }
+
+      .nav-group {
+        margin-top: 18px;
+      }
+
+      .nav-group-label {
+        color: #6d8472;
+        font-size: 11px;
+        font-weight: 800;
+        margin: 0 12px 10px;
+      }
+
+      .nav-list {
+        display: grid;
+        gap: 6px;
+      }
+
+      .nav-item {
+        border: 0;
+        background: transparent;
+        color: inherit;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 14px;
+        border-radius: 14px;
+        cursor: pointer;
+        transition:
+          background 0.2s ease,
+          transform 0.2s ease;
+        text-align: left;
+      }
+
+      .nav-item:hover {
+        background: rgba(255, 255, 255, 0.06);
+        transform: translateX(-2px);
+      }
+
+      .nav-item.active {
+        background: linear-gradient(
+          135deg,
+          rgba(46, 160, 91, 0.28),
+          rgba(33, 115, 70, 0.56)
+        );
+        color: #fff;
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12);
+      }
+
+      .nav-icon {
+        width: 34px;
+        height: 34px;
+        border-radius: 10px;
+        display: grid;
+        place-items: center;
+        background: rgba(255, 255, 255, 0.06);
+        color: #fff;
+        font-size: 13px;
+        font-weight: 800;
+        flex-shrink: 0;
+      }
+
+      .nav-copy {
+        flex: 1;
+      }
+
+      .nav-copy strong {
+        display: block;
+        font-size: 13px;
+      }
+
+      .nav-copy span {
+        display: block;
+        margin-top: 2px;
+        color: var(--sidebar-muted);
+        font-size: 11px;
+      }
+
+      .nav-item.active .nav-copy span {
+        color: rgba(255, 255, 255, 0.8);
+      }
+
+      .nav-badge {
+        min-width: 26px;
+        padding: 4px 8px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.12);
+        color: #fff;
+        font-size: 11px;
+        font-weight: 800;
+        text-align: center;
+      }
+
+      .sidebar-footer {
+        margin-top: 18px;
+        padding: 14px;
+        border-radius: 18px;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.06);
         display: flex;
         justify-content: space-between;
         align-items: center;
-        gap: 16px;
+        gap: 12px;
+      }
+
+      .sidebar-avatar {
+        width: 42px;
+        height: 42px;
+        border-radius: 14px;
+        background: linear-gradient(135deg, #2ea05b, #1c6b42);
+        display: grid;
+        place-items: center;
+        color: #fff;
+        font-size: 16px;
+        font-weight: 900;
+      }
+
+      .sidebar-footer strong {
+        display: block;
+        color: #fff;
+        font-size: 13px;
+      }
+
+      .sidebar-footer span {
+        color: var(--sidebar-muted);
+        font-size: 11px;
+      }
+
+      .main-content {
+        flex: 1;
+        min-width: 0;
+        padding: 22px;
+      }
+
+      .header {
+        padding: 20px 22px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 18px;
+        background: rgba(255, 255, 255, 0.78);
+        backdrop-filter: blur(12px);
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius-xl);
+        box-shadow: var(--shadow-soft);
+        color: var(--text);
       }
 
       .header h1 {
@@ -59,7 +295,7 @@
       }
 
       .header p {
-        color: rgba(255, 255, 255, 0.82);
+        color: var(--text-soft);
         font-size: 14px;
       }
 
@@ -67,44 +303,80 @@
         display: flex;
         gap: 10px;
         flex-wrap: wrap;
+        align-items: center;
       }
 
       .header-btn {
-        background: rgba(255, 255, 255, 0.14);
-        color: var(--white);
-        border: 1px solid rgba(255, 255, 255, 0.24);
-        padding: 10px 16px;
-        border-radius: 12px;
+        background: var(--surface-strong);
+        color: var(--text);
+        border: 1px solid var(--border);
+        padding: 11px 16px;
+        border-radius: 15px;
         cursor: pointer;
-        font-weight: 700;
+        font-weight: 800;
+        box-shadow: var(--shadow-soft);
+      }
+
+      .header-btn:hover {
+        transform: translateY(-1px);
       }
 
       .container {
-        max-width: 1480px;
         margin: 0 auto;
-        padding: 26px 20px 38px;
+        padding: 18px 20px 38px;
+      }
+
+      .action-card {
+        padding: 24px;
+        background:
+          radial-gradient(
+            circle at top right,
+            rgba(46, 160, 91, 0.18),
+            transparent 26%
+          ),
+          linear-gradient(135deg, #ffffff 0%, #f6fbf6 100%);
+      }
+
+      .action-card h2 {
+        font-size: 24px;
+        letter-spacing: -0.04em;
+        margin-bottom: 8px;
+      }
+
+      .action-card p {
+        color: var(--text-soft);
+        margin-bottom: 18px;
+      }
+
+      .cat-cta {
+        min-width: 170px;
+        padding: 16px 24px;
+        font-size: 18px;
+        font-weight: 900;
+        letter-spacing: 0.04em;
+        box-shadow: 0 18px 34px rgba(33, 115, 70, 0.22);
       }
 
       .banner {
         display: none;
         padding: 14px 16px;
-        border-radius: 14px;
+        border-radius: var(--radius-md);
         margin-bottom: 18px;
         font-weight: 700;
+        border: 1px solid var(--border);
+        box-shadow: var(--shadow-soft);
       }
 
       .banner.success {
         display: block;
         background: var(--success-soft);
         color: var(--success);
-        border: 1px solid #b8e3c7;
       }
 
       .banner.error {
         display: block;
         background: var(--danger-soft);
         color: var(--danger);
-        border: 1px solid #f2b7b7;
       }
 
       .hero-grid {
@@ -115,16 +387,16 @@
       }
 
       .card {
-        background: rgba(255, 255, 255, 0.96);
-        border: 1px solid rgba(226, 232, 240, 0.9);
-        border-radius: 22px;
-        box-shadow: 0 18px 42px rgba(15, 23, 42, 0.07);
+        background: var(--surface);
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius-xl);
+        box-shadow: var(--shadow);
         overflow: hidden;
       }
 
       .card-header {
         padding: 18px 20px;
-        border-bottom: 1px solid var(--gray-200);
+        border-bottom: 1px solid var(--border);
         display: flex;
         justify-content: space-between;
         align-items: flex-start;
@@ -138,7 +410,7 @@
 
       .card-hint {
         font-size: 13px;
-        color: var(--gray-500);
+        color: var(--text-soft);
         margin-top: 6px;
       }
 
@@ -153,22 +425,22 @@
       }
 
       .stat {
-        background: var(--gray-50);
-        border: 1px solid var(--gray-200);
-        border-radius: 16px;
+        background: rgba(255, 255, 255, 0.86);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-lg);
         padding: 16px;
       }
 
       .stat strong {
         display: block;
         font-size: 28px;
-        color: var(--primary-dark);
+        color: var(--text);
         line-height: 1.05;
         margin-bottom: 8px;
       }
 
       .stat span {
-        color: var(--gray-500);
+        color: var(--text-muted);
         font-size: 12px;
         text-transform: uppercase;
         letter-spacing: 0.05em;
@@ -182,21 +454,22 @@
       }
 
       .insight {
-        border: 1px solid var(--gray-200);
-        background: linear-gradient(135deg, #f7fbff 0%, #eef8f2 100%);
-        border-radius: 16px;
+        border: 1px solid var(--border);
+        background: linear-gradient(135deg, #ffffff 0%, #f6fbf6 100%);
+        border-radius: var(--radius-lg);
         padding: 14px 16px;
       }
 
       .insight span {
         display: block;
-        color: var(--gray-500);
+        color: var(--text-muted);
         font-size: 12px;
         margin-bottom: 4px;
       }
 
       .insight strong {
         font-size: 16px;
+        color: var(--text);
       }
 
       .layout {
@@ -243,18 +516,19 @@
       .field label {
         font-size: 13px;
         font-weight: 700;
-        color: var(--gray-700);
+        color: var(--text);
       }
 
       .field input,
       .field select,
       .field textarea {
         width: 100%;
-        border: 1px solid var(--gray-300);
-        border-radius: 12px;
-        padding: 11px 12px;
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        padding: 12px 14px;
         font-size: 14px;
-        background: var(--white);
+        background: var(--surface-strong);
+        color: var(--text);
       }
 
       .field textarea {
@@ -266,8 +540,8 @@
       .field select:focus,
       .field textarea:focus {
         outline: none;
-        border-color: var(--primary-light);
-        box-shadow: 0 0 0 3px rgba(34, 160, 107, 0.16);
+        border-color: var(--primary-2);
+        box-shadow: 0 0 0 3px rgba(46, 160, 91, 0.14);
       }
 
       .field-error {
@@ -277,7 +551,7 @@
       }
 
       .helper-text {
-        color: var(--gray-500);
+        color: var(--text-muted);
         font-size: 12px;
       }
 
@@ -293,9 +567,9 @@
         gap: 10px;
         align-items: flex-start;
         padding: 12px;
-        border-radius: 14px;
-        background: var(--gray-50);
-        border: 1px solid var(--gray-200);
+        border-radius: var(--radius-md);
+        background: var(--surface-soft);
+        border: 1px solid var(--border);
       }
 
       .chip-option input {
@@ -309,7 +583,7 @@
 
       .chip-option span {
         display: block;
-        color: var(--gray-500);
+        color: var(--text-muted);
         font-size: 12px;
       }
 
@@ -325,12 +599,13 @@
         align-items: center;
         gap: 8px;
         padding: 11px 12px;
-        border-radius: 12px;
-        border: 1px solid var(--gray-200);
-        background: var(--gray-50);
+        border-radius: 15px;
+        border: 1px solid var(--border);
+        background: var(--surface-strong);
         min-height: 46px;
         font-size: 14px;
-        font-weight: 600;
+        font-weight: 700;
+        box-shadow: var(--shadow-soft);
       }
 
       .actions,
@@ -348,11 +623,23 @@
       }
 
       button {
-        border: none;
-        border-radius: 12px;
-        padding: 10px 14px;
+        border: 1px solid transparent;
+        border-radius: 15px;
+        padding: 11px 15px;
         cursor: pointer;
-        font-weight: 700;
+        font-weight: 800;
+        transition:
+          transform 0.2s ease,
+          box-shadow 0.2s ease,
+          background 0.2s ease;
+      }
+
+      .clickable-row {
+        cursor: pointer;
+      }
+
+      button:hover:not(:disabled) {
+        transform: translateY(-1px);
       }
 
       button:disabled {
@@ -361,24 +648,30 @@
       }
 
       .btn-primary {
-        background: var(--primary-light);
+        background: linear-gradient(135deg, var(--primary), var(--primary-2));
         color: var(--white);
+        box-shadow: 0 12px 28px rgba(33, 115, 70, 0.2);
       }
 
       .btn-secondary {
-        background: var(--gray-100);
-        color: var(--gray-700);
+        background: var(--surface-strong);
+        color: var(--text);
+        border-color: var(--border);
+        box-shadow: var(--shadow-soft);
       }
 
       .btn-link {
         background: transparent;
-        color: var(--accent);
+        color: var(--info);
         padding: 0;
+        border: 0;
+        box-shadow: none;
       }
 
       .btn-danger {
-        background: #b91c1c;
+        background: linear-gradient(135deg, #c94159, var(--danger));
         color: var(--white);
+        box-shadow: 0 12px 28px rgba(212, 63, 88, 0.16);
       }
 
       .table-wrap {
@@ -393,21 +686,21 @@
       th,
       td {
         padding: 14px 12px;
-        border-bottom: 1px solid var(--gray-200);
+        border-bottom: 1px solid var(--border);
         font-size: 13px;
         text-align: left;
         vertical-align: top;
       }
 
       th {
-        background: var(--gray-50);
-        color: var(--gray-700);
+        background: var(--surface-soft);
+        color: var(--text-soft);
         font-size: 12px;
         text-transform: uppercase;
       }
 
       tbody tr:hover {
-        background: #fbfdfc;
+        background: #fbfefb;
       }
 
       .inline-stack {
@@ -417,7 +710,7 @@
       }
 
       .subtle {
-        color: var(--gray-500);
+        color: var(--text-muted);
         font-size: 12px;
       }
 
@@ -445,7 +738,7 @@
       .empty-state {
         padding: 30px 16px;
         text-align: center;
-        color: var(--gray-500);
+        color: var(--text-soft);
         font-weight: 600;
       }
 
@@ -462,22 +755,23 @@
       }
 
       .detail-item {
-        background: var(--gray-50);
-        border: 1px solid var(--gray-200);
-        border-radius: 14px;
+        background: var(--surface-soft);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-md);
         padding: 14px;
       }
 
       .detail-item strong {
         display: block;
         font-size: 12px;
-        color: var(--gray-500);
+        color: var(--text-muted);
         text-transform: uppercase;
         margin-bottom: 6px;
       }
 
       .detail-item span {
         font-size: 14px;
+        color: var(--text);
       }
 
       .logo-preview {
@@ -485,9 +779,9 @@
         max-width: 180px;
         aspect-ratio: 16 / 10;
         object-fit: cover;
-        border-radius: 16px;
-        border: 1px solid var(--gray-200);
-        background: var(--gray-50);
+        border-radius: var(--radius-md);
+        border: 1px solid var(--border);
+        background: var(--surface-soft);
       }
 
       .stats-row {
@@ -498,20 +792,20 @@
 
       .stats-box {
         padding: 14px;
-        border-radius: 16px;
-        border: 1px solid var(--gray-200);
-        background: linear-gradient(135deg, #f9fcff 0%, #f4fbf7 100%);
+        border-radius: var(--radius-lg);
+        border: 1px solid var(--border);
+        background: linear-gradient(135deg, #ffffff 0%, #f5fbf5 100%);
       }
 
       .stats-box strong {
         display: block;
         font-size: 24px;
-        color: var(--primary-dark);
+        color: var(--text);
         margin-bottom: 6px;
       }
 
       .stats-box span {
-        color: var(--gray-500);
+        color: var(--text-muted);
         font-size: 12px;
         text-transform: uppercase;
         letter-spacing: 0.05em;
@@ -536,8 +830,8 @@
         width: min(860px, 100%);
         max-height: calc(100vh - 48px);
         overflow-y: auto;
-        background: var(--white);
-        border-radius: 18px;
+        background: var(--surface-strong);
+        border-radius: var(--radius-xl);
         box-shadow: 0 18px 40px rgba(15, 23, 42, 0.18);
       }
 
@@ -553,10 +847,17 @@
         align-items: flex-start;
         gap: 16px;
         padding: 18px;
-        border-radius: 18px;
-        background: linear-gradient(135deg, #0f5132 0%, #17844e 58%, #1ea768 100%);
-        color: var(--white);
+        border-radius: var(--radius-lg);
+        background:
+          radial-gradient(
+            circle at top right,
+            rgba(46, 160, 91, 0.18),
+            transparent 26%
+          ),
+          linear-gradient(135deg, #ffffff 0%, #f6fbf6 100%);
+        color: var(--text);
         margin-bottom: 16px;
+        border: 1px solid var(--border);
       }
 
       .profile-hero h4 {
@@ -565,7 +866,7 @@
       }
 
       .profile-hero p {
-        color: rgba(255, 255, 255, 0.82);
+        color: var(--text-soft);
         font-size: 14px;
       }
 
@@ -574,14 +875,15 @@
         align-items: center;
         padding: 7px 12px;
         border-radius: 999px;
-        background: rgba(255, 255, 255, 0.16);
-        border: 1px solid rgba(255, 255, 255, 0.22);
+        background: var(--primary-soft);
+        border: 1px solid var(--primary-border);
+        color: var(--primary);
         font-size: 12px;
         font-weight: 800;
       }
 
       .modal-header {
-        border-bottom: 1px solid var(--gray-200);
+        border-bottom: 1px solid var(--border);
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -589,7 +891,7 @@
       }
 
       .modal-footer {
-        border-top: 1px solid var(--gray-200);
+        border-top: 1px solid var(--border);
         display: flex;
         justify-content: flex-end;
         gap: 10px;
@@ -597,6 +899,16 @@
       }
 
       @media (max-width: 1180px) {
+        .app-shell {
+          display: block;
+        }
+
+        .sidebar {
+          width: 100%;
+          height: auto;
+          position: static;
+        }
+
         .hero-grid,
         .layout {
           grid-template-columns: 1fr;
@@ -610,6 +922,10 @@
       }
 
       @media (max-width: 760px) {
+        .main-content {
+          padding: 14px;
+        }
+
         .header {
           padding: 18px 18px;
           flex-direction: column;
@@ -620,12 +936,16 @@
           justify-content: stretch;
         }
 
-        .header-btn {
-          flex: 1 1 0;
+        .header-btn,
+        .inline-actions button,
+        .pagination button,
+        .modal-footer button,
+        .actions button {
+          width: 100%;
         }
 
         .container {
-          padding: 18px 14px 28px;
+          padding: 18px 0 28px;
         }
 
         .form-grid,
@@ -646,18 +966,142 @@
     </style>
   </head>
   <body>
-    <div class="header">
-      <div>
-        <h1>Factories Management</h1>
-        <p>Admin control for factory onboarding, capacity, accepted Dosht types, and operating status.</p>
-      </div>
-      <div class="header-actions">
-        <button class="header-btn" onclick="goBack()">Back to Dashboard</button>
-        <button class="header-btn" onclick="logout()">Logout</button>
-      </div>
-    </div>
+    <div class="app-shell">
+      <aside class="sidebar">
+        <div class="brand">
+          <div class="brand-mark">SC</div>
+          <div>
+            <h1>SuperCycle</h1>
+            <p>لوحة تحكم الإدارة</p>
+          </div>
+        </div>
 
-    <div class="container">
+        <div class="nav-group">
+          <div class="nav-list">
+            <button class="nav-item" type="button" onclick="goBack()">
+              <span class="nav-icon">DB</span>
+              <span class="nav-copy">
+                <strong>الرئيسية</strong>
+                <span>ملخص الأداء والمؤشرات</span>
+              </span>
+            </button>
+          </div>
+        </div>
+
+        <div class="nav-group">
+          <div class="nav-group-label">العمليات</div>
+          <div class="nav-list">
+            <button class="nav-item" type="button" onclick="location.href='shipments.html?type=approval'">
+              <span class="nav-icon">AP</span>
+              <span class="nav-copy">
+                <strong>الموافقات</strong>
+                <span>شحنات بانتظار المراجعة</span>
+              </span>
+              <span class="nav-badge" id="sidebarPendingApprovals">-</span>
+            </button>
+            <button class="nav-item" type="button" onclick="location.href='shipments.html?type=segmentation'">
+              <span class="nav-icon">SG</span>
+              <span class="nav-copy">
+                <strong>التوجيه والتقسيم</strong>
+                <span>حمولات جاهزة للتشغيل</span>
+              </span>
+              <span class="nav-badge" id="sidebarPendingSegmentation">-</span>
+            </button>
+            <button class="nav-item" type="button" onclick="location.href='vehicles-management.html'">
+              <span class="nav-icon">VH</span>
+              <span class="nav-copy">
+                <strong>العربيات</strong>
+                <span>إدارة الأسطول والتكليفات</span>
+              </span>
+            </button>
+            <button class="nav-item active" type="button">
+              <span class="nav-icon">FC</span>
+              <span class="nav-copy">
+                <strong>المصانع</strong>
+                <span>شبكة الاستلام والتغطية</span>
+              </span>
+            </button>
+          </div>
+        </div>
+
+        <div class="nav-group">
+          <div class="nav-group-label">الإدارة</div>
+          <div class="nav-list">
+            <button class="nav-item" type="button" onclick="location.href='finance-management.html'">
+              <span class="nav-icon">FN</span>
+              <span class="nav-copy">
+                <strong>المالية</strong>
+                <span>تسويات وتحويلات</span>
+              </span>
+              <span class="nav-badge" id="sidebarFinancePending">-</span>
+            </button>
+            <button class="nav-item" type="button" onclick="location.href='dosh-management.html'">
+              <span class="nav-icon">DS</span>
+              <span class="nav-copy">
+                <strong>أنواع وأسعار الدوش</strong>
+                <span>التسعير والفئات</span>
+              </span>
+            </button>
+            <button class="nav-item" type="button" onclick="location.href='contact-management.html'">
+              <span class="nav-icon">CX</span>
+              <span class="nav-copy">
+                <strong>الرسائل الواردة</strong>
+                <span>متابعة العملاء</span>
+              </span>
+              <span class="nav-badge" id="sidebarContactsNew">-</span>
+            </button>
+            <button class="nav-item" type="button" onclick="location.href='contracts-create.html'">
+              <span class="nav-icon">CT</span>
+              <span class="nav-copy">
+                <strong>العقود</strong>
+                <span>إنشاء متعاقدين جدد</span>
+              </span>
+            </button>
+          </div>
+        </div>
+        <div class="nav-group">
+          <div class="nav-group-label">المنظومة البيئية</div>
+          <div class="nav-list">
+            <button class="nav-item" type="button" onclick="location.href='eco-participants.html'">
+              <span class="nav-icon">EP</span>
+              <span class="nav-copy">
+                <strong>المشاركون البيئيون</strong>
+                <span>إدارة الانضمام</span>
+              </span>
+            </button>
+            <button class="nav-item" type="button" onclick="location.href='eco-redeems.html'">
+              <span class="nav-icon">RD</span>
+              <span class="nav-copy">
+                <strong>طلبات الاستبدال</strong>
+                <span>مراجعة وتنفيذ</span>
+              </span>
+              <span class="nav-badge" id="sidebarRedeemsPending">-</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="sidebar-footer">
+          <div class="sidebar-avatar">AD</div>
+          <div>
+            <strong>مسؤول النظام</strong>
+            <span>تحكم إداري</span>
+          </div>
+        </div>
+      </aside>
+
+      <main class="main-content">
+        <div class="header">
+          <div>
+            <h1>إدارة المصانع</h1>
+            <p>إدارة احترافية لشبكة المصانع والطاقة الاستيعابية والاستقبال وحالة التشغيل.</p>
+          </div>
+          <div class="header-actions">
+            <button class="header-btn cat-cta" type="button" onclick="openCreateFactoryModal()">CAT</button>
+            <button class="header-btn" type="button" onclick="logout()">تسجيل الخروج</button>
+          </div>
+        </div>
+
+        <div class="container">
       <div id="pageBanner" class="banner"></div>
 
       <section class="hero-grid">
@@ -722,153 +1166,12 @@
       <section class="layout">
         <div class="section-block">
           <div class="card">
-            <div class="card-header">
-              <div>
-                <h2 id="factoryFormTitle">Create Factory</h2>
-                <p class="card-hint">Create or update a factory with receiver, accepted Dosht types, and operating status.</p>
-              </div>
-            </div>
-            <div class="card-body">
-              <form id="factoryForm" onsubmit="submitFactoryForm(event)">
-                <div class="form-grid">
-                  <div class="field">
-                    <label for="factoryName">Factory Name</label>
-                    <input id="factoryName" name="name" />
-                    <div class="field-error" data-error-for="factory.name"></div>
-                  </div>
-
-                  <div class="field">
-                    <label for="factoryCapacityKg">Capacity KG</label>
-                    <input id="factoryCapacityKg" name="capacityKg" type="number" min="0" step="0.01" />
-                    <div class="field-error" data-error-for="factory.capacityKg"></div>
-                  </div>
-
-                  <div class="field full">
-                    <label for="factoryAddress">Address</label>
-                    <input id="factoryAddress" name="address" />
-                    <div class="field-error" data-error-for="factory.address"></div>
-                  </div>
-
-                  <div class="field">
-                    <label for="factoryReceiverName">Receiver Name</label>
-                    <input id="factoryReceiverName" name="factoryReceiverName" />
-                    <div class="field-error" data-error-for="factory.factoryReceiverName"></div>
-                  </div>
-
-                  <div class="field">
-                    <label for="factoryReceiverPhone">Receiver Phone</label>
-                    <input id="factoryReceiverPhone" name="factoryReceiverPhone" />
-                    <div class="field-error" data-error-for="factory.factoryReceiverPhone"></div>
-                  </div>
-
-                  <div class="field full">
-                    <label for="factoryLogoUrl">Logo URL</label>
-                    <input id="factoryLogoUrl" name="logoUrl" placeholder="https://..." />
-                    <div class="field-error" data-error-for="factory.logoUrl"></div>
-                  </div>
-
-                  <div class="field full">
-                    <label>Accepted Dosht Types</label>
-                    <div id="acceptedDoshTypesList" class="chip-list"></div>
-                    <div class="helper-text">Choose one or more active Dosht types accepted by this factory.</div>
-                    <div class="field-error" data-error-for="factory.acceptedDoshTypes"></div>
-                  </div>
-
-                  <div class="field full">
-                    <label for="factoryNotes">Notes</label>
-                    <textarea id="factoryNotes" name="notes"></textarea>
-                    <div class="field-error" data-error-for="factory.notes"></div>
-                  </div>
-
-                  <label class="field checkbox">
-                    <input id="factoryIsActive" name="isActive" type="checkbox" checked />
-                    <span>Factory is active and selectable in routing workflows</span>
-                  </label>
-                </div>
-
-                <div class="actions">
-                  <button id="factorySubmitBtn" class="btn-primary" type="submit">Create Factory</button>
-                  <button class="btn-secondary" type="button" onclick="resetFactoryForm()">Clear</button>
-                </div>
-              </form>
-            </div>
-          </div>
-
-          <div class="card">
-            <div class="card-header">
-              <div>
-                <h3>Selected Factory</h3>
-                <p class="card-hint">Review loaded details, accepted Dosht types, and stats before making changes.</p>
-              </div>
-              <div class="inline-actions">
-                <button class="btn-secondary" type="button" onclick="reloadSelectedFactory()" id="selectedRefreshBtn" disabled>
-                  Refresh Selection
-                </button>
-              </div>
-            </div>
-            <div class="card-body">
-              <div id="factoryDetailState" class="empty-state">Choose a factory from the list to load full details and stats.</div>
-              <div id="factoryDetailWrap" hidden>
-                <div class="detail-grid">
-                  <div class="detail-item">
-                    <strong>Name</strong>
-                    <span id="detailName">-</span>
-                  </div>
-                  <div class="detail-item">
-                    <strong>Status</strong>
-                    <span id="detailStatus">-</span>
-                  </div>
-                  <div class="detail-item">
-                    <strong>Receiver</strong>
-                    <span id="detailReceiver">-</span>
-                  </div>
-                  <div class="detail-item">
-                    <strong>Phone</strong>
-                    <span id="detailPhone">-</span>
-                  </div>
-                  <div class="detail-item">
-                    <strong>Capacity KG</strong>
-                    <span id="detailCapacity">-</span>
-                  </div>
-                  <div class="detail-item">
-                    <strong>Accepted Types</strong>
-                    <span id="detailAcceptedTypes">-</span>
-                  </div>
-                  <div class="detail-item">
-                    <strong>Address</strong>
-                    <span id="detailAddress">-</span>
-                  </div>
-                  <div class="detail-item">
-                    <strong>Notes</strong>
-                    <span id="detailNotes">-</span>
-                  </div>
-                </div>
-
-                <div style="margin-bottom:16px">
-                  <img id="detailLogo" class="logo-preview" alt="Factory logo preview" hidden />
-                </div>
-
-                <div class="stats-row" id="factoryStatsGrid">
-                  <div class="stats-box">
-                    <strong id="factoryStatsA">-</strong>
-                    <span id="factoryStatsALabel">Stat A</span>
-                  </div>
-                  <div class="stats-box">
-                    <strong id="factoryStatsB">-</strong>
-                    <span id="factoryStatsBLabel">Stat B</span>
-                  </div>
-                  <div class="stats-box">
-                    <strong id="factoryStatsC">-</strong>
-                    <span id="factoryStatsCLabel">Stat C</span>
-                  </div>
-                </div>
-
-                <div class="actions">
-                  <button class="btn-primary" type="button" onclick="editSelectedFactory()">Edit Selected Factory</button>
-                  <button class="btn-secondary" type="button" onclick="toggleSelectedFactoryStatus()" id="toggleFactoryStatusBtn">
-                    Toggle Status
-                  </button>
-                </div>
+            <div class="card-body action-card">
+              <h2>CAT</h2>
+              <p>Create and add a factory from one focused action.</p>
+              <div class="actions">
+                <button class="btn-primary cat-cta" type="button" onclick="openCreateFactoryModal()">CAT</button>
+                <button class="btn-secondary" type="button" onclick="refreshAll()">Refresh Overview</button>
               </div>
             </div>
           </div>
@@ -943,14 +1246,16 @@
           </div>
         </div>
       </section>
+        </div>
+      </main>
     </div>
 
     <div id="factoryEditModal" class="modal">
       <div class="modal-content">
         <div class="modal-header">
           <div>
-            <h3>Edit Factory</h3>
-            <p class="card-hint">Update the selected factory without leaving the current list context.</p>
+            <h3 id="factoryEditModalTitle">Edit Factory</h3>
+            <p class="card-hint" id="factoryEditModalHint">Update the selected factory without leaving the current list context.</p>
           </div>
           <button class="btn-secondary" type="button" onclick="closeFactoryEditModal()">Close</button>
         </div>
@@ -969,7 +1274,7 @@
         </div>
         <div class="modal-footer">
           <button class="btn-secondary" type="button" onclick="closeFactoryEditModal()">Cancel</button>
-          <button class="btn-primary" type="button" onclick="submitFactoryEditModal()">Save Changes</button>
+          <button class="btn-primary" id="factoryEditModalSubmitBtn" type="button" onclick="submitFactoryEditModal()">Save Changes</button>
         </div>
       </div>
     </div>
@@ -1016,16 +1321,419 @@
 
       if (!token) location.href = "index.html";
 
+      const factoryI18n = {
+        ar: {
+          pageTitle: "SuperCycle - إدارة المصانع",
+          brandSub: "لوحة تحكم الإدارة",
+          sidebarAdmin: "مسؤول النظام",
+          sidebarAdminSub: "تحكم إداري",
+          navHomeTitle: "الرئيسية",
+          navHomeSub: "ملخص الأداء والمؤشرات",
+          navOperations: "العمليات",
+          navApprovalsTitle: "الموافقات",
+          navApprovalsSub: "شحنات بانتظار المراجعة",
+          navSegmentationTitle: "التوجيه والتقسيم",
+          navSegmentationSub: "حمولات جاهزة للتشغيل",
+          navVehiclesTitle: "العربيات",
+          navVehiclesSub: "إدارة الأسطول والتكليفات",
+          navFactoriesTitle: "المصانع",
+          navFactoriesSub: "شبكة الاستلام والتغطية",
+          navAdminGroup: "الإدارة",
+          navFinanceTitle: "المالية",
+          navFinanceSub: "التسويات والتحويلات",
+          navDoshTitle: "أنواع وأسعار الدوش",
+          navDoshSub: "التسعير والفئات",
+          navContactsTitle: "الرسائل الواردة",
+          navContactsSub: "متابعة العملاء",
+          navEcoGroup: "المنظومة البيئية",
+          navParticipantsTitle: "المشاركون البيئيون",
+          navParticipantsSub: "إدارة الانضمام",
+          navRedeemsTitle: "طلبات الاستبدال",
+          navRedeemsSub: "مراجعة وتنفيذ",
+          headerTitle: "إدارة المصانع",
+          headerText: "إدارة احترافية لشبكة المصانع والطاقة الاستيعابية والاستقبال وحالة التشغيل.",
+          addFactory: "إضافة مصنع",
+          logout: "تسجيل الخروج",
+          overviewTitle: "نظرة شاملة على شبكة المصانع",
+          overviewText: "متابعة فورية للتغطية التشغيلية والطاقة الاستيعابية وحالة شبكة المصانع.",
+          refreshAll: "تحديث الكل",
+          totalFactories: "إجمالي المصانع",
+          active: "نشط",
+          inactive: "غير نشط",
+          totalCapacityKg: "إجمالي السعة بالكيلو",
+          insightsTitle: "مؤشرات تشغيلية",
+          insightsText: "قراءة سريعة للمشهد الحالي اعتمادًا على البيانات المعروضة.",
+          largestFactory: "أعلى مصنع من حيث السعة",
+          doshCoverage: "تغطية أنواع الدوش",
+          currentSelection: "العنصر المحدد حاليًا",
+          noSelection: "لا يوجد مصنع محدد",
+          addNewFactoryTitle: "إضافة مصنع",
+          addNewFactoryText: "إجراء سريع وواضح لإضافة مصنع جديد من نافذة مركزة.",
+          openFactoryForm: "اضافه مصنع",
+          refreshOverview: "تحديث الملخص",
+          selectedFactoryTitle: "",
+          selectedFactoryText: "",
+          refreshSelection: "",
+          selectFactoryPrompt: "",
+          labelName: "الاسم",
+          labelStatus: "الحالة",
+          labelReceiver: "المستلم",
+          labelPhone: "الهاتف",
+          labelCapacityKg: "السعة بالكيلو",
+          labelAcceptedTypes: "الأنواع المقبولة",
+          labelAddress: "العنوان",
+          labelNotes: "ملاحظات",
+          editSelectedFactory: "تعديل المصنع",
+          toggleStatus: "تغيير الحالة",
+          deactivateFactory: "تعطيل المصنع",
+          activateFactory: "تفعيل المصنع",
+          directoryTitle: "دليل المصانع",
+          directoryText: "فلترة شبكة المصانع، التنقل بين الصفحات، وفتح أي صف مباشرة للمراجعة أو التعديل.",
+          resetFilters: "إعادة ضبط الفلاتر",
+          applyFilters: "تطبيق الفلاتر",
+          filterStatus: "الحالة",
+          allStatuses: "كل الحالات",
+          activeOnly: "النشطة فقط",
+          inactiveOnly: "غير النشطة فقط",
+          filterAcceptedDosh: "نوع الدوش المقبول",
+          filterMinCapacity: "الحد الأدنى للسعة بالكيلو",
+          filterPageSize: "حجم الصفحة",
+          loadingFactories: "جارٍ تحميل المصانع...",
+          tableFactory: "المصنع",
+          tableReceiver: "المستلم",
+          tableAcceptedTypes: "الأنواع المقبولة",
+          tableCapacity: "السعة",
+          tableStatus: "الحالة",
+          tableAction: "الإجراء",
+          previous: "السابق",
+          next: "التالي",
+          pageOf: "صفحة {page} من {total}",
+          modalEditTitle: "تعديل المصنع",
+          modalEditHint: "حدّث بيانات المصنع المحدد دون مغادرة سياق العمل الحالي.",
+          modalCreateTitle: "إضافة مصنع",
+          modalCreateHint: "أضف مصنعًا جديدًا من نافذة مركزة بدون مغادرة الدليل.",
+          close: "إغلاق",
+          cancel: "إلغاء",
+          saveChanges: "حفظ التعديلات",
+          createFactory: "إنشاء مصنع",
+          fieldFactoryName: "اسم المصنع",
+          fieldFactoryCapacity: "السعة بالكيلو",
+          fieldFactoryAddress: "العنوان",
+          fieldReceiverName: "اسم المستلم",
+          fieldReceiverPhone: "هاتف المستلم",
+          fieldLogoUrl: "رابط الشعار",
+          fieldAcceptedDoshTypes: "أنواع الدوش المقبولة",
+          fieldNotes: "ملاحظات",
+          fieldActiveCheckbox: "المصنع نشط ومتاح ضمن مسارات التشغيل",
+          fieldAcceptedDoshHelp: "اختر نوعًا واحدًا أو أكثر من أنواع الدوش النشطة التي يستقبلها المصنع.",
+          profileTitle: "ملف المصنع",
+          profileText: "راجع بيانات المصنع الكاملة والإحصاءات من نافذة مركزة.",
+          editFactory: "تعديل المصنع",
+          view: "عرض",
+          edit: "تعديل",
+          noFactoriesFound: "لا توجد مصانع مطابقة للفلاتر الحالية.",
+          loadingFactoryDetails: "جارٍ تحميل تفاصيل المصنع...",
+          failedToLoadFactoryDetails: "تعذر تحميل تفاصيل المصنع.",
+          doshTypesRepresented: "{count} نوع دوش ممثل",
+          highestFactoryFormat: "{name} ({capacity} كجم)",
+          factoryUpdatedSuccessfully: "تم تحديث المصنع بنجاح",
+          factoryCreatedSuccessfully: "تم إنشاء المصنع بنجاح",
+          factoryDeactivatedSuccessfully: "تم تعطيل المصنع بنجاح",
+          factoryActivatedSuccessfully: "تم تفعيل المصنع بنجاح",
+          failedToSaveFactory: "تعذر حفظ بيانات المصنع",
+          failedToUpdateStatus: "تعذر تحديث حالة المصنع",
+          failedToLoadFactories: "تعذر تحميل المصانع",
+          failedToInitialize: "تعذر تهيئة صفحة إدارة المصانع",
+          noActiveDoshTypes: "لا توجد أنواع دوش نشطة",
+          createDoshTypesFirst: "أنشئ أنواع الدوش أولًا من صفحة إدارة الدوش.",
+          allDoshTypes: "كل أنواع الدوش",
+          acceptedMaterialCategory: "فئة المواد المقبولة",
+          factoryNameRequired: "اسم المصنع مطلوب",
+          addressRequired: "العنوان مطلوب",
+          acceptedDoshRequired: "اختر نوع دوش واحدًا على الأقل",
+          receiverNameRequired: "اسم المستلم مطلوب",
+          receiverPhoneRequired: "هاتف المستلم مطلوب",
+          validCapacity: "أدخل سعة صحيحة",
+          validLogoUrl: "أدخل رابط شعار صحيح",
+          statA: "مؤشر أ",
+          statB: "مؤشر ب",
+          statC: "مؤشر ج",
+          statusActive: "نشط",
+          statusInactive: "غير نشط",
+        },
+        en: {
+          pageTitle: "SuperCycle - Factories Management",
+          brandSub: "Admin Dashboard",
+          sidebarAdmin: "System Admin",
+          sidebarAdminSub: "Admin Control",
+          navHomeTitle: "Dashboard",
+          navHomeSub: "Daily performance summary",
+          navOperations: "Operations",
+          navApprovalsTitle: "Approvals",
+          navApprovalsSub: "Shipments pending review",
+          navSegmentationTitle: "Routing & Segmentation",
+          navSegmentationSub: "Ready for operations",
+          navVehiclesTitle: "Vehicles",
+          navVehiclesSub: "Fleet management",
+          navFactoriesTitle: "Factories",
+          navFactoriesSub: "Coverage and intake",
+          navAdminGroup: "Administration",
+          navFinanceTitle: "Finance",
+          navFinanceSub: "Settlements and transfers",
+          navDoshTitle: "Dosh Types & Prices",
+          navDoshSub: "Pricing and tiers",
+          navContactsTitle: "Inbox Messages",
+          navContactsSub: "Customer follow-up",
+          navEcoGroup: "Eco System",
+          navParticipantsTitle: "Eco Participants",
+          navParticipantsSub: "Enrollment management",
+          navRedeemsTitle: "Redeem Requests",
+          navRedeemsSub: "Review and execution",
+          headerTitle: "Factories Management",
+          headerText: "Professional management for factory network coverage, intake capacity, and operating status.",
+          addFactory: "add factory",
+          logout: "Logout",
+          overviewTitle: "Factory Network Overview",
+          overviewText: "A fast executive view of operating coverage, total intake capacity, and current factory readiness.",
+          refreshAll: "Refresh All",
+          totalFactories: "Total Factories",
+          active: "Active",
+          inactive: "Inactive",
+          totalCapacityKg: "Total Capacity KG",
+          insightsTitle: "Operational Insights",
+          insightsText: "A concise operational snapshot based on the currently visible data.",
+          largestFactory: "Highest Capacity Factory",
+          doshCoverage: "Accepted Dosh Coverage",
+          currentSelection: "Current Selection",
+          noSelection: "No factory selected",
+          addNewFactoryTitle: "CAT",
+          addNewFactoryText: "A clear primary action to create a new factory from one focused modal.",
+          openFactoryForm: "CAT",
+          refreshOverview: "Refresh Overview",
+          selectedFactoryTitle: "",
+          selectedFactoryText: "",
+          refreshSelection: "",
+          selectFactoryPrompt: "",
+          labelName: "Name",
+          labelStatus: "Status",
+          labelReceiver: "Receiver",
+          labelPhone: "Phone",
+          labelCapacityKg: "Capacity KG",
+          labelAcceptedTypes: "Accepted Types",
+          labelAddress: "Address",
+          labelNotes: "Notes",
+          editSelectedFactory: "Edit Factory",
+          toggleStatus: "Toggle Status",
+          deactivateFactory: "Deactivate Factory",
+          activateFactory: "Activate Factory",
+          directoryTitle: "Factories Directory",
+          directoryText: "Filter the factory network, paginate results, and open any row directly for review or editing.",
+          resetFilters: "Reset Filters",
+          applyFilters: "Apply Filters",
+          filterStatus: "Status",
+          allStatuses: "All statuses",
+          activeOnly: "Active only",
+          inactiveOnly: "Inactive only",
+          filterAcceptedDosh: "Accepted Dosh Type",
+          filterMinCapacity: "Min Capacity KG",
+          filterPageSize: "Page Size",
+          loadingFactories: "Loading factories...",
+          tableFactory: "Factory",
+          tableReceiver: "Receiver",
+          tableAcceptedTypes: "Accepted Types",
+          tableCapacity: "Capacity",
+          tableStatus: "Status",
+          tableAction: "Action",
+          previous: "Previous",
+          next: "Next",
+          pageOf: "Page {page} of {total}",
+          modalEditTitle: "Edit Factory",
+          modalEditHint: "Update the selected factory without leaving the current working context.",
+          modalCreateTitle: "Create Factory",
+          modalCreateHint: "Add a new factory from a focused modal without leaving the directory.",
+          close: "Close",
+          cancel: "Cancel",
+          saveChanges: "Save Changes",
+          createFactory: "Create Factory",
+          fieldFactoryName: "Factory Name",
+          fieldFactoryCapacity: "Capacity KG",
+          fieldFactoryAddress: "Address",
+          fieldReceiverName: "Receiver Name",
+          fieldReceiverPhone: "Receiver Phone",
+          fieldLogoUrl: "Logo URL",
+          fieldAcceptedDoshTypes: "Accepted Dosh Types",
+          fieldNotes: "Notes",
+          fieldActiveCheckbox: "Factory is active and selectable in routing workflows",
+          fieldAcceptedDoshHelp: "Choose one or more active Dosh types accepted by this factory.",
+          profileTitle: "Factory Profile",
+          profileText: "Review complete factory details and statistics in a focused modal.",
+          editFactory: "Edit Factory",
+          view: "View",
+          edit: "Edit",
+          noFactoriesFound: "No factories found for the current filters.",
+          loadingFactoryDetails: "Loading factory details...",
+          failedToLoadFactoryDetails: "Failed to load factory details.",
+          doshTypesRepresented: "{count} dosh types represented",
+          highestFactoryFormat: "{name} ({capacity} KG)",
+          factoryUpdatedSuccessfully: "Factory updated successfully",
+          factoryCreatedSuccessfully: "Factory created successfully",
+          factoryDeactivatedSuccessfully: "Factory deactivated successfully",
+          factoryActivatedSuccessfully: "Factory activated successfully",
+          failedToSaveFactory: "Failed to save factory",
+          failedToUpdateStatus: "Failed to update factory status",
+          failedToLoadFactories: "Failed to load factories",
+          failedToInitialize: "Failed to initialize factories management",
+          noActiveDoshTypes: "No active Dosh types found",
+          createDoshTypesFirst: "Create Dosh types first from Dosh Management.",
+          allDoshTypes: "All Dosh types",
+          acceptedMaterialCategory: "Accepted material category",
+          factoryNameRequired: "Factory name is required",
+          addressRequired: "Address is required",
+          acceptedDoshRequired: "Select at least one accepted Dosh type",
+          receiverNameRequired: "Receiver name is required",
+          receiverPhoneRequired: "Receiver phone is required",
+          validCapacity: "Enter a valid capacity",
+          validLogoUrl: "Enter a valid logo URL",
+          statA: "Stat A",
+          statB: "Stat B",
+          statC: "Stat C",
+          statusActive: "Active",
+          statusInactive: "Inactive",
+        },
+      };
+
+      function factoryText(key, vars = {}) {
+        const lang = typeof window.__lang === "function" ? window.__lang() : "ar";
+        const template = factoryI18n[lang]?.[key] || factoryI18n.ar[key] || key;
+        return template.replace(/\{(\w+)\}/g, (_, token) => vars[token] ?? "");
+      }
+
+      function setNodeText(selector, value) {
+        const node = document.querySelector(selector);
+        if (node) node.textContent = value;
+      }
+
       const state = {
         factories: [],
         meta: { page: 1, limit: 10, total: 0, totalPages: 1 },
         doshTypes: [],
-        editingFactoryId: null,
         selectedFactoryId: null,
         selectedFactoryDetail: null,
         selectedFactoryStats: null,
         modalFactoryId: null,
+        modalMode: "edit",
       };
+
+      function translateFactories() {
+        document.title = factoryText("pageTitle");
+        setNodeText(".brand p", factoryText("brandSub"));
+        setNodeText(".sidebar-footer strong", factoryText("sidebarAdmin"));
+        setNodeText(".sidebar-footer span", factoryText("sidebarAdminSub"));
+
+        const navItems = document.querySelectorAll(".sidebar .nav-item");
+        const navMap = [
+          ["DB", "navHomeTitle", "navHomeSub"],
+          ["AP", "navApprovalsTitle", "navApprovalsSub"],
+          ["SG", "navSegmentationTitle", "navSegmentationSub"],
+          ["VH", "navVehiclesTitle", "navVehiclesSub"],
+          ["FC", "navFactoriesTitle", "navFactoriesSub"],
+          ["FN", "navFinanceTitle", "navFinanceSub"],
+          ["DS", "navDoshTitle", "navDoshSub"],
+          ["CX", "navContactsTitle", "navContactsSub"],
+          ["EP", "navParticipantsTitle", "navParticipantsSub"],
+          ["RD", "navRedeemsTitle", "navRedeemsSub"],
+        ];
+        navItems.forEach((item, index) => {
+          const map = navMap[index];
+          if (!map) return;
+          const [iconText, titleKey, subKey] = map;
+          const icon = item.querySelector(".nav-icon");
+          const title = item.querySelector(".nav-copy strong");
+          const sub = item.querySelector(".nav-copy span");
+          if (icon) icon.textContent = iconText;
+          if (title) title.textContent = factoryText(titleKey);
+          if (sub) sub.textContent = factoryText(subKey);
+        });
+
+        const navGroups = document.querySelectorAll(".nav-group-label");
+        if (navGroups[0]) navGroups[0].textContent = factoryText("navOperations");
+        if (navGroups[1]) navGroups[1].textContent = factoryText("navAdminGroup");
+        if (navGroups[2]) navGroups[2].textContent = factoryText("navEcoGroup");
+
+        setNodeText(".header h1", factoryText("headerTitle"));
+        setNodeText(".header p", factoryText("headerText"));
+        setNodeText(".header-actions .header-btn:first-child", factoryText("addFactory"));
+        setNodeText(".header-actions .header-btn:last-child", factoryText("logout"));
+        setNodeText(".hero-grid .card:first-child .card-header h2", factoryText("overviewTitle"));
+        setNodeText(".hero-grid .card:first-child .card-header .card-hint", factoryText("overviewText"));
+        setNodeText(".hero-grid .card:first-child .inline-actions .btn-secondary", factoryText("refreshAll"));
+        setNodeText("#factoriesTotal + span", factoryText("totalFactories"));
+        setNodeText("#factoriesActive + span", factoryText("active"));
+        setNodeText("#factoriesInactive + span", factoryText("inactive"));
+        setNodeText("#factoriesCapacity + span", factoryText("totalCapacityKg"));
+        setNodeText(".hero-grid .card:nth-child(2) .card-header h3", factoryText("insightsTitle"));
+        setNodeText(".hero-grid .card:nth-child(2) .card-header .card-hint", factoryText("insightsText"));
+        setNodeText(".insight:nth-child(1) span", factoryText("largestFactory"));
+        setNodeText(".insight:nth-child(2) span", factoryText("doshCoverage"));
+        setNodeText(".insight:nth-child(3) span", factoryText("currentSelection"));
+        setNodeText(".action-card h2", factoryText("addNewFactoryTitle"));
+        setNodeText(".action-card p", factoryText("addNewFactoryText"));
+        setNodeText(".action-card .btn-primary", factoryText("openFactoryForm"));
+        setNodeText(".action-card .btn-secondary", factoryText("refreshOverview"));
+        setNodeText("#insightSelection", state.selectedFactoryDetail?.name || factoryText("noSelection"));
+        setNodeText(".section-block:last-child .card-header h2", factoryText("directoryTitle"));
+        setNodeText(".section-block:last-child .card-header .card-hint", factoryText("directoryText"));
+        setNodeText(".section-block:last-child .inline-actions .btn-secondary", factoryText("resetFilters"));
+        setNodeText(".section-block:last-child .inline-actions .btn-primary", factoryText("applyFilters"));
+        setNodeText("label[for='filterIsActive']", factoryText("filterStatus"));
+        setNodeText("label[for='filterAcceptedDoshType']", factoryText("filterAcceptedDosh"));
+        setNodeText("label[for='filterMinCapacityKg']", factoryText("filterMinCapacity"));
+        setNodeText("label[for='filterLimit']", factoryText("filterPageSize"));
+        const filterStatus = document.getElementById("filterIsActive");
+        if (filterStatus) {
+          filterStatus.options[0].text = factoryText("allStatuses");
+          filterStatus.options[1].text = factoryText("activeOnly");
+          filterStatus.options[2].text = factoryText("inactiveOnly");
+        }
+        const headers = document.querySelectorAll("#factoriesTable th");
+        const headerTexts = [
+          factoryText("tableFactory"),
+          factoryText("tableReceiver"),
+          factoryText("tableAcceptedTypes"),
+          factoryText("tableCapacity"),
+          factoryText("tableStatus"),
+          factoryText("tableAction"),
+        ];
+        headers.forEach((node, index) => {
+          node.textContent = headerTexts[index] || node.textContent;
+        });
+        setNodeText("#prevPageBtn", factoryText("previous"));
+        setNodeText("#nextPageBtn", factoryText("next"));
+        setNodeText("#factoryEditModal .modal-header h3", factoryText(state.modalMode === "create" ? "modalCreateTitle" : "modalEditTitle"));
+        setNodeText("#factoryEditModal .modal-header .card-hint", factoryText(state.modalMode === "create" ? "modalCreateHint" : "modalEditHint"));
+        setNodeText("#factoryEditModal .modal-header .btn-secondary", factoryText("close"));
+        setNodeText("#factoryEditModal .modal-footer .btn-secondary", factoryText("cancel"));
+        setNodeText("#factoryEditModalSubmitBtn", factoryText(state.modalMode === "create" ? "createFactory" : "saveChanges"));
+        setNodeText("label[for='modalFactoryName']", factoryText("fieldFactoryName"));
+        setNodeText("label[for='modalFactoryCapacityKg']", factoryText("fieldFactoryCapacity"));
+        setNodeText("label[for='modalFactoryAddress']", factoryText("fieldFactoryAddress"));
+        setNodeText("label[for='modalFactoryReceiverName']", factoryText("fieldReceiverName"));
+        setNodeText("label[for='modalFactoryReceiverPhone']", factoryText("fieldReceiverPhone"));
+        setNodeText("label[for='modalFactoryLogoUrl']", factoryText("fieldLogoUrl"));
+        document.querySelector("#modalAcceptedDoshTypesList")?.previousElementSibling && (document.querySelector("#modalAcceptedDoshTypesList").previousElementSibling.textContent = factoryText("fieldAcceptedDoshTypes"));
+        setNodeText("label[for='modalFactoryNotes']", factoryText("fieldNotes"));
+        document.querySelector("#modalFactoryIsActive")?.nextElementSibling && (document.querySelector("#modalFactoryIsActive").nextElementSibling.textContent = factoryText("fieldActiveCheckbox"));
+        setNodeText("#factoryViewModal .modal-header h3", factoryText("profileTitle"));
+        setNodeText("#factoryViewModal .modal-header .card-hint", factoryText("profileText"));
+        setNodeText("#factoryViewModal .modal-header .btn-secondary", factoryText("close"));
+        document.querySelector("#factoryViewReceiver")?.previousElementSibling && (document.querySelector("#factoryViewReceiver").previousElementSibling.textContent = factoryText("labelReceiver"));
+        document.querySelector("#factoryViewPhone")?.previousElementSibling && (document.querySelector("#factoryViewPhone").previousElementSibling.textContent = factoryText("labelPhone"));
+        document.querySelector("#factoryViewCapacity")?.previousElementSibling && (document.querySelector("#factoryViewCapacity").previousElementSibling.textContent = factoryText("labelCapacityKg"));
+        document.querySelector("#factoryViewAcceptedTypes")?.previousElementSibling && (document.querySelector("#factoryViewAcceptedTypes").previousElementSibling.textContent = factoryText("labelAcceptedTypes"));
+        document.querySelector("#factoryViewNotes")?.previousElementSibling && (document.querySelector("#factoryViewNotes").previousElementSibling.textContent = factoryText("labelNotes"));
+        setNodeText("#factoryViewModal .modal-footer .btn-primary", factoryText("editFactory"));
+        setNodeText("#factoryViewToggleBtn", state.selectedFactoryDetail?.isActive !== false ? factoryText("deactivateFactory") : factoryText("toggleStatus"));
+      }
 
       function goBack() {
         location.href = "dashboard.html";
@@ -1057,17 +1765,6 @@
         if (Array.isArray(json?.items)) return json.items;
         if (Array.isArray(json?.results)) return json.results;
         return [];
-      }
-
-      function clearErrors(scope) {
-        document.querySelectorAll(`[data-error-for^="${scope}."]`).forEach((el) => {
-          el.textContent = "";
-        });
-      }
-
-      function setFieldError(key, message) {
-        const el = document.querySelector(`[data-error-for="${key}"]`);
-        if (el) el.textContent = message;
       }
 
       function showBanner(type, message) {
@@ -1177,34 +1874,6 @@
 
       function renderDoshTypeOptions() {
         const activeTypes = state.doshTypes.filter((item) => item.isActive !== false);
-        const container = document.getElementById("acceptedDoshTypesList");
-
-        if (!activeTypes.length) {
-          container.innerHTML = `
-            <div class="chip-option" style="grid-column:1 / -1">
-              <div>
-                <strong>No active Dosht types found</strong>
-                <span>Create Dosht types first from Dosht Management.</span>
-              </div>
-            </div>
-          `;
-        } else {
-          container.innerHTML = activeTypes
-            .map((item) => {
-              const id = getId(item);
-              return `
-                <label class="chip-option">
-                  <input type="checkbox" value="${id}" data-dosh-checkbox />
-                  <div>
-                    <strong>${escapeHtml(buildDoshTypeLabel(item))}</strong>
-                    <span>${escapeHtml(item.description || "Accepted material category")}</span>
-                  </div>
-                </label>
-              `;
-            })
-            .join("");
-        }
-
         const filterOptions = ['<option value="">All Dosht types</option>'].concat(
           state.doshTypes.map(
             (item) =>
@@ -1213,21 +1882,19 @@
         );
 
         document.getElementById("filterAcceptedDoshType").innerHTML = filterOptions.join("");
-      }
+        document.getElementById("filterAcceptedDoshType").options[0].text = factoryText("allDoshTypes");
 
-      function getCheckedDoshTypeIds() {
-        return Array.from(document.querySelectorAll("[data-dosh-checkbox]:checked")).map(
-          (input) => input.value,
-        );
+        if (!activeTypes.length) {
+          document.getElementById("modalAcceptedDoshTypesList").innerHTML = `
+            <div class="chip-option" style="grid-column:1 / -1">
+              <div>
+                <strong>${escapeHtml(factoryText("noActiveDoshTypes"))}</strong>
+                <span>${escapeHtml(factoryText("createDoshTypesFirst"))}</span>
+              </div>
+            </div>
+          `;
+        }
       }
-
-      function setCheckedDoshTypeIds(ids) {
-        const values = new Set(ids || []);
-        document.querySelectorAll("[data-dosh-checkbox]").forEach((input) => {
-          input.checked = values.has(input.value);
-        });
-      }
-
       function clearFactoryModalErrors() {
         document.querySelectorAll("[data-modal-error-for]").forEach((el) => {
           el.textContent = "";
@@ -1250,7 +1917,7 @@
                 <input type="checkbox" value="${id}" data-modal-dosh-checkbox ${selected.has(id) ? "checked" : ""} />
                 <div>
                   <strong>${escapeHtml(buildDoshTypeLabel(item))}</strong>
-                  <span>${escapeHtml(item.description || "Accepted material category")}</span>
+                    <span>${escapeHtml(item.description || factoryText("acceptedMaterialCategory"))}</span>
                 </div>
               </label>
             `;
@@ -1264,102 +1931,38 @@
         );
       }
 
-      function validateFactoryForm() {
-        clearErrors("factory");
-
-        const name = document.getElementById("factoryName").value.trim();
-        const address = document.getElementById("factoryAddress").value.trim();
-        const acceptedDoshTypes = getCheckedDoshTypeIds();
-        const factoryReceiverName = document.getElementById("factoryReceiverName").value.trim();
-        const factoryReceiverPhone = document.getElementById("factoryReceiverPhone").value.trim();
-        const notes = document.getElementById("factoryNotes").value.trim();
-        const logoUrl = document.getElementById("factoryLogoUrl").value.trim();
-        const capacityKg = toNumber(document.getElementById("factoryCapacityKg").value);
-        const isActive = document.getElementById("factoryIsActive").checked;
-        let isValid = true;
-
-        if (!name) {
-          setFieldError("factory.name", "Factory name is required");
-          isValid = false;
-        }
-
-        if (!address) {
-          setFieldError("factory.address", "Address is required");
-          isValid = false;
-        }
-
-        if (!acceptedDoshTypes.length) {
-          setFieldError("factory.acceptedDoshTypes", "Select at least one accepted Dosht type");
-          isValid = false;
-        }
-
-        if (!factoryReceiverName) {
-          setFieldError("factory.factoryReceiverName", "Receiver name is required");
-          isValid = false;
-        }
-
-        if (!factoryReceiverPhone) {
-          setFieldError("factory.factoryReceiverPhone", "Receiver phone is required");
-          isValid = false;
-        }
-
-        if (capacityKg != null && Number.isNaN(capacityKg)) {
-          setFieldError("factory.capacityKg", "Enter a valid capacity");
-          isValid = false;
-        }
-
-        if (capacityKg != null && capacityKg < 0) {
-          setFieldError("factory.capacityKg", "Capacity must be zero or greater");
-          isValid = false;
-        }
-
-        if (logoUrl && !isValidUrl(logoUrl)) {
-          setFieldError("factory.logoUrl", "Enter a valid logo URL");
-          isValid = false;
-        }
-
-        if (!isValid) return null;
-
-        return {
-          name,
-          address,
-          acceptedDoshTypes,
-          factoryReceiverName,
-          factoryReceiverPhone,
-          notes: notes || undefined,
-          logoUrl: logoUrl || undefined,
-          capacityKg: capacityKg == null ? undefined : capacityKg,
-          isActive,
-        };
+      function setFactoryModalMode(mode) {
+        state.modalMode = mode;
+        document.getElementById("factoryEditModalTitle").textContent = factoryText(
+          mode === "create" ? "modalCreateTitle" : "modalEditTitle",
+        );
+        document.getElementById("factoryEditModalHint").textContent = factoryText(
+          mode === "create" ? "modalCreateHint" : "modalEditHint",
+        );
+        document.getElementById("factoryEditModalSubmitBtn").textContent = factoryText(
+          mode === "create" ? "createFactory" : "saveChanges",
+        );
       }
 
-      function resetFactoryForm() {
-        state.editingFactoryId = null;
-        clearErrors("factory");
-        document.getElementById("factoryFormTitle").textContent = "Create Factory";
-        document.getElementById("factorySubmitBtn").textContent = "Create Factory";
-        document.getElementById("factoryForm").reset();
-        document.getElementById("factoryIsActive").checked = true;
-        setCheckedDoshTypeIds([]);
-      }
-
-      function fillFactoryForm(item) {
-        state.editingFactoryId = getId(item);
-        document.getElementById("factoryFormTitle").textContent = "Edit Factory";
-        document.getElementById("factorySubmitBtn").textContent = "Save Changes";
-        document.getElementById("factoryName").value = item.name || "";
-        document.getElementById("factoryAddress").value = item.address || "";
-        document.getElementById("factoryReceiverName").value = item.factoryReceiverName || "";
-        document.getElementById("factoryReceiverPhone").value = item.factoryReceiverPhone || "";
-        document.getElementById("factoryLogoUrl").value = item.logoUrl || "";
-        document.getElementById("factoryCapacityKg").value = item.capacityKg ?? "";
-        document.getElementById("factoryNotes").value = item.notes || "";
-        document.getElementById("factoryIsActive").checked = item.isActive !== false;
-        setCheckedDoshTypeIds(item.acceptedDoshTypes || []);
+      function openCreateFactoryModal() {
+        state.modalFactoryId = null;
+        setFactoryModalMode("create");
+        clearFactoryModalErrors();
+        document.getElementById("modalFactoryName").value = "";
+        document.getElementById("modalFactoryCapacityKg").value = "";
+        document.getElementById("modalFactoryAddress").value = "";
+        document.getElementById("modalFactoryReceiverName").value = "";
+        document.getElementById("modalFactoryReceiverPhone").value = "";
+        document.getElementById("modalFactoryLogoUrl").value = "";
+        document.getElementById("modalFactoryNotes").value = "";
+        document.getElementById("modalFactoryIsActive").checked = true;
+        renderFactoryModalDoshOptions([]);
+        document.getElementById("factoryEditModal").classList.add("open");
       }
 
       function openFactoryEditModal(item) {
         state.modalFactoryId = getId(item);
+        setFactoryModalMode("edit");
         clearFactoryModalErrors();
         document.getElementById("modalFactoryName").value = item.name || "";
         document.getElementById("modalFactoryCapacityKg").value = item.capacityKg ?? "";
@@ -1375,6 +1978,7 @@
 
       function closeFactoryEditModal() {
         state.modalFactoryId = null;
+        setFactoryModalMode("edit");
         document.getElementById("factoryEditModal").classList.remove("open");
       }
 
@@ -1392,31 +1996,31 @@
         let isValid = true;
 
         if (!name) {
-          setFactoryModalError("factory.name", "Factory name is required");
+          setFactoryModalError("factory.name", factoryText("factoryNameRequired"));
           isValid = false;
         }
         if (!address) {
-          setFactoryModalError("factory.address", "Address is required");
+          setFactoryModalError("factory.address", factoryText("addressRequired"));
           isValid = false;
         }
         if (!acceptedDoshTypes.length) {
-          setFactoryModalError("factory.acceptedDoshTypes", "Select at least one accepted Dosht type");
+          setFactoryModalError("factory.acceptedDoshTypes", factoryText("acceptedDoshRequired"));
           isValid = false;
         }
         if (!factoryReceiverName) {
-          setFactoryModalError("factory.factoryReceiverName", "Receiver name is required");
+          setFactoryModalError("factory.factoryReceiverName", factoryText("receiverNameRequired"));
           isValid = false;
         }
         if (!factoryReceiverPhone) {
-          setFactoryModalError("factory.factoryReceiverPhone", "Receiver phone is required");
+          setFactoryModalError("factory.factoryReceiverPhone", factoryText("receiverPhoneRequired"));
           isValid = false;
         }
         if (capacityKg != null && Number.isNaN(capacityKg)) {
-          setFactoryModalError("factory.capacityKg", "Enter a valid capacity");
+          setFactoryModalError("factory.capacityKg", factoryText("validCapacity"));
           isValid = false;
         }
         if (logoUrl && !isValidUrl(logoUrl)) {
-          setFactoryModalError("factory.logoUrl", "Enter a valid logo URL");
+          setFactoryModalError("factory.logoUrl", factoryText("validLogoUrl"));
           isValid = false;
         }
         if (!isValid) return null;
@@ -1435,21 +2039,34 @@
       }
 
       async function submitFactoryEditModal() {
-        if (!state.modalFactoryId) return;
-        const currentId = state.modalFactoryId;
         const payload = validateFactoryModalPayload();
         if (!payload) return;
 
         try {
-          const json = await fetchJson(`/admin/factories/${currentId}`, {
-            method: "PATCH",
+          const isEditing = Boolean(state.modalFactoryId);
+          const currentId = state.modalFactoryId;
+          const json = await fetchJson(isEditing ? `/admin/factories/${currentId}` : "/admin/factories", {
+            method: isEditing ? "PATCH" : "POST",
             body: JSON.stringify(payload),
           });
+          const createdId =
+            json?.data?._id || json?.data?.id || json?.data?.factoryId || currentId;
           closeFactoryEditModal();
-          showBanner("success", getMessage(json, "Factory updated successfully"));
-          await Promise.all([loadFactories(state.meta.page || 1), selectFactory(currentId)]);
+          showBanner(
+            "success",
+            getMessage(
+              json,
+              isEditing
+                ? factoryText("factoryUpdatedSuccessfully")
+                : factoryText("factoryCreatedSuccessfully"),
+            ),
+          );
+          await loadFactories(isEditing ? state.meta.page || 1 : 1);
+          if (createdId) {
+            await selectFactory(createdId);
+          }
         } catch (error) {
-          showBanner("error", error.message || "Failed to save factory");
+          showBanner("error", error.message || factoryText("failedToSaveFactory"));
         }
       }
 
@@ -1472,17 +2089,23 @@
         document.getElementById("factoriesInactive").textContent = formatNumber(inactive);
         document.getElementById("factoriesCapacity").textContent = formatNumber(totalCapacity);
         document.getElementById("insightLargestFactory").textContent =
-          largest ? `${largest.name || "-"} (${formatNumber(largest.capacityKg)} KG)` : "-";
+          largest
+            ? factoryText("highestFactoryFormat", {
+                name: largest.name || "-",
+                capacity: formatNumber(largest.capacityKg),
+              })
+            : "-";
         document.getElementById("insightDoshCoverage").textContent =
-          `${uniqueAcceptedTypes.size} Dosht types represented`;
-        document.getElementById("insightSelection").textContent = state.selectedFactoryDetail?.name || "No factory selected";
+          factoryText("doshTypesRepresented", { count: uniqueAcceptedTypes.size });
+        document.getElementById("insightSelection").textContent =
+          state.selectedFactoryDetail?.name || factoryText("noSelection");
       }
 
       function renderFactories() {
         updateOverviewCards();
 
         if (!state.factories.length) {
-          setEmpty("factories", "No factories found for the current filters");
+          setEmpty("factories", factoryText("noFactoriesFound"));
           return;
         }
 
@@ -1491,7 +2114,7 @@
           .map((item) => {
             const accepted = (item.acceptedDoshTypes || []).map(findDoshTypeName).join(", ") || "-";
             return `
-              <tr>
+              <tr class="clickable-row" onclick="openFactoryFromRow('${getId(item)}')">
                 <td>
                   <div class="inline-stack">
                     <strong>${escapeHtml(item.name || "-")}</strong>
@@ -1508,13 +2131,13 @@
                 <td>${formatNumber(item.capacityKg)}</td>
                 <td>
                   <span class="status-pill ${item.isActive !== false ? "active" : "inactive"}">
-                    ${item.isActive !== false ? "Active" : "Inactive"}
+                    ${item.isActive !== false ? factoryText("statusActive") : factoryText("statusInactive")}
                   </span>
                 </td>
                 <td>
                   <div class="row-actions">
-                    <button class="btn-link" type="button" onclick="selectFactory('${getId(item)}', true)">View</button>
-                    <button class="btn-link" type="button" onclick="quickEditFactory('${getId(item)}')">Edit</button>
+                    <button class="btn-link" type="button" onclick="event.stopPropagation(); selectFactory('${getId(item)}', true)">${factoryText("view")}</button>
+                    <button class="btn-link" type="button" onclick="event.stopPropagation(); quickEditFactory('${getId(item)}')">${factoryText("edit")}</button>
                   </div>
                 </td>
               </tr>
@@ -1530,7 +2153,10 @@
         const page = state.meta.page || 1;
         const totalPages = state.meta.totalPages || 1;
 
-        document.getElementById("paginationLabel").textContent = `Page ${page} of ${totalPages}`;
+        document.getElementById("paginationLabel").textContent = factoryText("pageOf", {
+          page,
+          total: totalPages,
+        });
         document.getElementById("prevPageBtn").disabled = page <= 1;
         document.getElementById("nextPageBtn").disabled = page >= totalPages;
       }
@@ -1562,44 +2188,17 @@
 
       function renderSelectedFactory() {
         const detail = state.selectedFactoryDetail;
-        const detailWrap = document.getElementById("factoryDetailWrap");
-        const detailState = document.getElementById("factoryDetailState");
-        const refreshBtn = document.getElementById("selectedRefreshBtn");
-        const toggleBtn = document.getElementById("toggleFactoryStatusBtn");
-
-        refreshBtn.disabled = !detail;
-        toggleBtn.disabled = !detail;
+        document.getElementById("insightSelection").textContent =
+          detail?.name || factoryText("noSelection");
 
         if (!detail) {
-          detailWrap.hidden = true;
-          detailState.hidden = false;
-          detailState.className = "empty-state";
-          detailState.textContent = "Choose a factory from the list to load full details and stats.";
-          document.getElementById("insightSelection").textContent = "No factory selected";
           return;
         }
 
-        detailState.hidden = true;
-        detailWrap.hidden = false;
-
-        document.getElementById("detailName").textContent = detail.name || "-";
-        document.getElementById("detailStatus").innerHTML = `
-          <span class="status-pill ${detail.isActive !== false ? "active" : "inactive"}">
-            ${detail.isActive !== false ? "Active" : "Inactive"}
-          </span>
-        `;
-        document.getElementById("detailReceiver").textContent = detail.factoryReceiverName || "-";
-        document.getElementById("detailPhone").textContent = detail.factoryReceiverPhone || "-";
-        document.getElementById("detailCapacity").textContent = formatNumber(detail.capacityKg);
-        document.getElementById("detailAcceptedTypes").textContent =
-          (detail.acceptedDoshTypes || []).map(findDoshTypeName).join(", ") || "-";
-        document.getElementById("detailAddress").textContent = detail.address || "-";
-        document.getElementById("detailNotes").textContent = detail.notes || "-";
-        document.getElementById("insightSelection").textContent = detail.name || "Selected";
-        toggleBtn.textContent = detail.isActive !== false ? "Deactivate Factory" : "Activate Factory";
         document.getElementById("factoryViewName").textContent = detail.name || "-";
         document.getElementById("factoryViewAddress").textContent = detail.address || "-";
-        document.getElementById("factoryViewStatus").textContent = detail.isActive !== false ? "Active" : "Inactive";
+        document.getElementById("factoryViewStatus").textContent =
+          detail.isActive !== false ? factoryText("statusActive") : factoryText("statusInactive");
         document.getElementById("factoryViewReceiver").textContent = detail.factoryReceiverName || "-";
         document.getElementById("factoryViewPhone").textContent = detail.factoryReceiverPhone || "-";
         document.getElementById("factoryViewCapacity").textContent = formatNumber(detail.capacityKg);
@@ -1607,16 +2206,9 @@
           (detail.acceptedDoshTypes || []).map(findDoshTypeName).join(", ") || "-";
         document.getElementById("factoryViewNotes").textContent = detail.notes || "-";
         document.getElementById("factoryViewToggleBtn").textContent =
-          detail.isActive !== false ? "Deactivate Factory" : "Activate Factory";
-
-        const logo = document.getElementById("detailLogo");
-        if (detail.logoUrl) {
-          logo.hidden = false;
-          logo.src = detail.logoUrl;
-        } else {
-          logo.hidden = true;
-          logo.removeAttribute("src");
-        }
+          detail.isActive !== false
+            ? factoryText("deactivateFactory")
+            : factoryText("activateFactory");
 
         renderFactoryStats();
       }
@@ -1625,18 +2217,12 @@
         const stats = state.selectedFactoryStats;
 
         if (!stats || typeof stats !== "object") {
-          document.getElementById("factoryStatsA").textContent = "-";
-          document.getElementById("factoryStatsALabel").textContent = "Stat A";
-          document.getElementById("factoryStatsB").textContent = "-";
-          document.getElementById("factoryStatsBLabel").textContent = "Stat B";
-          document.getElementById("factoryStatsC").textContent = "-";
-          document.getElementById("factoryStatsCLabel").textContent = "Stat C";
           document.getElementById("factoryViewStatsA").textContent = "-";
-          document.getElementById("factoryViewStatsALabel").textContent = "Stat A";
+          document.getElementById("factoryViewStatsALabel").textContent = factoryText("statA");
           document.getElementById("factoryViewStatsB").textContent = "-";
-          document.getElementById("factoryViewStatsBLabel").textContent = "Stat B";
+          document.getElementById("factoryViewStatsBLabel").textContent = factoryText("statB");
           document.getElementById("factoryViewStatsC").textContent = "-";
-          document.getElementById("factoryViewStatsCLabel").textContent = "Stat C";
+          document.getElementById("factoryViewStatsCLabel").textContent = factoryText("statC");
           return;
         }
 
@@ -1652,9 +2238,9 @@
         const usedEntries = entries.length ? entries : fallback;
 
         const ids = [
-          ["factoryStatsA", "factoryStatsALabel"],
-          ["factoryStatsB", "factoryStatsBLabel"],
-          ["factoryStatsC", "factoryStatsCLabel"],
+          ["factoryViewStatsA", "factoryViewStatsALabel"],
+          ["factoryViewStatsB", "factoryViewStatsBLabel"],
+          ["factoryViewStatsC", "factoryViewStatsCLabel"],
         ];
 
         ids.forEach(([valueId, labelId], index) => {
@@ -1666,18 +2252,11 @@
           document.getElementById(labelId).textContent = label
             .replace(/([a-z])([A-Z])/g, "$1 $2")
             .replace(/_/g, " ");
-          const viewValueId = valueId.replace("factoryStats", "factoryViewStats");
-          const viewLabelId = labelId.replace("factoryStats", "factoryViewStats");
-          document.getElementById(viewValueId).textContent =
-            typeof value === "number" ? formatNumber(value) : String(value);
-          document.getElementById(viewLabelId).textContent = label
-            .replace(/([a-z])([A-Z])/g, "$1 $2")
-            .replace(/_/g, " ");
         });
       }
 
       async function loadFactories(page = 1) {
-        setLoading("factories", "Loading factories...");
+        setLoading("factories", factoryText("loadingFactories"));
 
         try {
           const json = await fetchJson(`/admin/factories${buildFactoryQuery(page)}`);
@@ -1694,7 +2273,7 @@
           renderFactories();
         } catch (error) {
           state.factories = [];
-          setEmpty("factories", error.message || "Failed to load factories");
+          setEmpty("factories", error.message || factoryText("failedToLoadFactories"));
         }
       }
 
@@ -1710,11 +2289,6 @@
         state.selectedFactoryStats = null;
         renderSelectedFactory();
 
-        const detailState = document.getElementById("factoryDetailState");
-        detailState.hidden = false;
-        detailState.className = "loading-state";
-        detailState.textContent = "Loading factory details...";
-
         try {
           const [detailJson] = await Promise.all([
             fetchJson(`/admin/factories/${id}`),
@@ -1728,19 +2302,17 @@
           state.selectedFactoryDetail = null;
           state.selectedFactoryStats = null;
           renderSelectedFactory();
-          detailState.className = "empty-state";
-          detailState.textContent = error.message || "Failed to load factory details";
+          showBanner("error", error.message || factoryText("failedToLoadFactoryDetails"));
         }
-      }
-
-      async function reloadSelectedFactory() {
-        if (!state.selectedFactoryId) return;
-        await selectFactory(state.selectedFactoryId);
       }
 
       async function quickEditFactory(id) {
         await selectFactory(id);
         if (state.selectedFactoryDetail) openFactoryEditModal(state.selectedFactoryDetail);
+      }
+
+      async function openFactoryFromRow(id) {
+        await quickEditFactory(id);
       }
 
       function editSelectedFactory() {
@@ -1776,44 +2348,14 @@
             "success",
             getMessage(
               json,
-              detail.isActive !== false ? "Factory deactivated successfully" : "Factory activated successfully",
+              detail.isActive !== false
+                ? factoryText("factoryDeactivatedSuccessfully")
+                : factoryText("factoryActivatedSuccessfully"),
             ),
           );
           await Promise.all([loadFactories(state.meta.page || 1), selectFactory(id)]);
         } catch (error) {
-          showBanner("error", error.message || "Failed to update factory status");
-        }
-      }
-
-      async function submitFactoryForm(event) {
-        event.preventDefault();
-        const payload = validateFactoryForm();
-        if (!payload) return;
-
-        const isEditing = Boolean(state.editingFactoryId);
-
-        try {
-          const json = await fetchJson(
-            isEditing ? `/admin/factories/${state.editingFactoryId}` : "/admin/factories",
-            {
-              method: isEditing ? "PATCH" : "POST",
-              body: JSON.stringify(payload),
-            },
-          );
-
-          const createdId = json?.data?.id || state.editingFactoryId;
-          resetFactoryForm();
-          showBanner(
-            "success",
-            getMessage(
-              json,
-              isEditing ? "Factory updated successfully" : "Factory created successfully",
-            ),
-          );
-          await loadFactories(isEditing ? state.meta.page || 1 : 1);
-          if (createdId) await selectFactory(createdId);
-        } catch (error) {
-          showBanner("error", error.message || "Failed to save factory");
+          showBanner("error", error.message || factoryText("failedToUpdateStatus"));
         }
       }
 
@@ -1843,17 +2385,21 @@
 
       async function init() {
         try {
+          translateFactories();
           await Promise.all([loadDoshTypes(), loadFactories(1)]);
           renderSelectedFactory();
         } catch (error) {
-          showBanner("error", error.message || "Failed to initialize factories management");
+          showBanner("error", error.message || factoryText("failedToInitialize"));
         }
       }
 
       window.onLanguageChange = () => {
+        translateFactories();
+        renderDoshTypeOptions();
         updateOverviewCards();
         renderFactories();
         renderSelectedFactory();
+        updatePagination();
       };
 
       init();
@@ -1861,3 +2407,5 @@
     <script src="./site-i18n.js"></script>
   </body>
 </html>
+
+
