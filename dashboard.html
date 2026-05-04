@@ -556,11 +556,11 @@
         font-size: 15px;
       }
 
-      .stats-grid {
-        display: grid;
-        grid-template-columns: repeat(6, minmax(0, 1fr));
-        gap: 12px;
-      }
+     .stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+}
 
       .stat-card {
         border-radius: var(--radius-lg);
@@ -604,12 +604,14 @@
         font-weight: 800;
       }
 
-      .stat-value {
-        font-size: 31px;
-        font-weight: 900;
-        line-height: 1;
-        letter-spacing: -0.04em;
-      }
+  .stat-value {
+  font-size: clamp(22px, 2vw, 36px); /* 👈 responsive */
+  font-weight: 900;
+  line-height: 1.2;
+
+  word-break: break-word;   /* 👈 مهم جدًا */
+  overflow-wrap: anywhere;  /* 👈 يحل مشكلة الأرقام الكبيرة */
+}
 
       .stat-label {
         margin-top: 8px;
@@ -1183,7 +1185,7 @@
         display: block;
       }
 
-      @media (max-width: 1380px) {
+      @media (max-width: 1500px) {
         .stats-grid {
           grid-template-columns: repeat(3, minmax(0, 1fr));
         }
@@ -1644,7 +1646,7 @@
                     <div
                       class="stat-value"
                       id="statPendingFinanceAmount"
-                      style="font-size: 24px"
+                     <div class="stat-value" id="statPendingFinanceAmount">
                     >
                       -
                     </div>
